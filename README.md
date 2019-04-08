@@ -6,16 +6,16 @@ The code of a distributed modular co-simulation engine.
 
 The tool requires some python packages for the backend:
 
-python | 3.7.0
-requests | 2.18.4
-aiohttp | 3.3.2
-aiohttp_cors | 0.7.0
-json | 2.0.9
-re | 2.2.1
-sqlite | 2.6.0
-pyads | <>
-fmpy | <>
-xknx | <>
+python | 3.7.0  
+requests | 2.18.4  
+aiohttp | 3.3.2  
+aiohttp_cors | 0.7.0  
+json | 2.0.9  
+re | 2.2.1  
+sqlite | 2.6.0  
+pyads | <>  
+fmpy | <>  
+xknx | <>  
 
 Also NPM is needed for front end:
 

@@ -1,0 +1,1786 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CoSimulationOrchestrator &#8212; COE 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DatabaseManager" href="dbm.html" />
+    <link rel="prev" title="CoSimulationManager" href="csm.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cosimulationorchestrator">
+<h1>CoSimulationOrchestrator<a class="headerlink" href="#cosimulationorchestrator" title="Permalink to this headline">¶</a></h1>
+<p>Created on Fri Nov  9 15:04:57 2018</p>
+<span class="target" id="module-CoSimulationOrchestrator"></span><p>&#64;author: geos + viho</p>
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">createConfig</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#createConfig"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>function to create simulation configuration to  specific logging table</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">POST</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/create/config">http://127.0.0.1:3030/cso/create/config</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with created simulation configuration id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;rid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">rid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;startTime&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">stime</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;endTime&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">etime</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;stepSize&quot;</span> <span class="o">&lt;</span><span class="n">ssize</span><span class="o">&gt;</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Simulation configuration successfully set to run. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">cid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;cid&gt; : simulation configuration identifier ( integer ) , 
+&lt;stime&gt; , &lt;etime&gt; : starting time and ending time of simulation run ( integer )
+&lt;ssize&gt; : step size of time steps ( float )</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">createGroup</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#createGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to create a group using the DatabaseManager</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON-Body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">POST</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/create/group">http://127.0.0.1:3030/cso/create/group</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with created group id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_group</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Group successfully created. &quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;gid&gt; : Group identifier ( integer )</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">createInput</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#createInput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to create Input</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">POST</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/create/input">http://127.0.0.1:3030/cso/create/input</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with created input id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;sid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">siid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;name&quot;</span>      <span class="p">:</span> <span class="o">&lt;</span><span class="n">iname</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;initialValue&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">ivalue</span><span class="o">&gt;</span> 
+<span class="p">}</span>               
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Input successfully created. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;siid&gt; : service input identifier ( integer )
+&lt;ivalue&gt; : input initial value ( float )</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">createMapping</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#createMapping"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>function to create mapping</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> – <p>Request is sent with JSON body
+:type request: POST</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/create/mapping">http://127.0.0.1:3030/cso/create/mapping</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with created mapping id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;gid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;soid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">soid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;oid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;siid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">siid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;iid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Mapping successfully set. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">mid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;mid&gt; : mapping identifier ( integer )
+&lt;soid&gt; , &lt;siid&gt; : service of output/input identifier ( integer )
+&lt;gid&gt; : group identifier ( integer )
+&lt;oid&gt; , &lt;iid&gt; : output/input identifier ( integer )</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">createOutput</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#createOutput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to create Output</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">POST</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/create/output">http://127.0.0.1:3030/cso/create/output</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with created output id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;sid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">soid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;name&quot;</span>      <span class="p">:</span> <span class="o">&lt;</span><span class="n">oname</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;initialValue&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">ovalue</span><span class="o">&gt;</span> 
+<span class="p">}</span>               
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Output successfully created. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;soid&gt; : service output identifier ( integer )
+&lt;ovalue&gt; : output initial value ( float )</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">createRun</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#createRun"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to create run to save table of values and corresponding configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> – <p>Request is sent with JSON body
+:type request: POST</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/create/run">http://127.0.0.1:3030/cso/create/run</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with created run id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;tableName&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">tname</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;group&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> 
+<span class="p">}</span>               
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Run successfully initiated. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;tname&gt; : name of table where the values are logged ( string )</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">createService</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#createService"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to create a service of a group using the DatabaseManager</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON-Body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">POST</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/create/service">http://127.0.0.1:3030/cso/create/service</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with created service id , HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;name&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">sname</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;ip&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">sip</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;port&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">sport</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">starget</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;gid&quot;</span> <span class="p">:</span>       <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Service successfully created. &quot;</span> <span class="p">,</span>  <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;sid&gt; : service identifier</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">deleteConfig</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#deleteConfig"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>function to delete config with given ID</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with configuration id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">DELETE</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/delete/config?id=1">http://127.0.0.1:3030/cso/delete/config?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with deleted config id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Successfully deleted config. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">cid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">deleteGroup</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#deleteGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to delete a group</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with group id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">DELETE</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">Additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/delete/group?id=1">http://127.0.0.1:3030/cso/delete/group?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with deleted group id , HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Group successfully deleted. &quot;</span> <span class="p">,</span>  <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;gid&gt; : group identifier</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">deleteInput</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#deleteInput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to delete specific input of given ID</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with input id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">DELETE</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">Input id as additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/delete/input?id=1">http://127.0.0.1:3030/cso/delete/input?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with deleted input id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Input successfully deleted. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">deleteMapping</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#deleteMapping"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to delete mapping</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with mapping id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">DELETE</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">mapping identifier</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/delete/mapping?id=1">http://127.0.0.1:3030/cso/delete/mapping?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with deleted mapping id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Mapping successfully deleted. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">mid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">deleteOutput</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#deleteOutput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to delete specific output of given ID</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with output id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">DELETE</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">Output id as additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/delete/output?id=1">http://127.0.0.1:3030/cso/delete/output?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with deleted output id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Output successfully deleted. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">deleteRun</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#deleteRun"><span class="viewcode-link">[source]</span></a></dt>
+<dd><dl class="docutils">
+<dt>Function to edit run using the DatabaseManager</dt>
+<dd><p class="first">specific editting is possible -&gt; split request to attribute instead of full json body</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">DELETE</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/delete/run">http://127.0.0.1:3030/cso/delete/run</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with edited mapping id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Run successfully deleted. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">rid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;rid&gt; : run identifier ( integer )</p>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">deleteService</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#deleteService"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to delete Service with given ID</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request with service id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">DELETE</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">Service id as additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/delete/service?id=1">http://127.0.0.1:3030/cso/delete/service?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with deleted service id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Service successfully deleted. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">deleteValueTable</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#deleteValueTable"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>function to delete log table of given table id</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with run id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">DELETE</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/delete/valueTable?id=1">http://127.0.0.1:3030/cso/delete/valueTable?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with deleted table name and id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Table successfully deleted. &quot;</span> <span class="p">,</span> <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">tname</span><span class="o">&gt;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">tid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;tid&gt; : table identifier ( integer )</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">editConfig</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#editConfig"><span class="viewcode-link">[source]</span></a></dt>
+<dd><dl class="docutils">
+<dt>Function to edit an input using the DatabaseManager</dt>
+<dd><p class="first">specific editting is possible -&gt; split request to attribute instead of full json body</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">PUT</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/edit/config">http://127.0.0.1:3030/cso/edit/config</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with edited simulation configuration id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;runid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">rid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;id&quot;</span>    <span class="p">:</span> <span class="o">&lt;</span><span class="n">cid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;startTime&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">stime</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;endTime&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">etime</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;stepSize&quot;</span> <span class="o">&lt;</span><span class="n">ssize</span><span class="o">&gt;</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Simulation configuration successfully edited. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">cid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">editGroup</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#editGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to edit a group using the DatabaseManager</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON-Body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">PUT</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/edit/group">http://127.0.0.1:3030/cso/edit/group</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with edited group id , HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_group</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;id&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Group successfully edited. &quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;gid&gt; : Group identifier ( integer )</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">editInput</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#editInput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><dl class="docutils">
+<dt>Function to edit an input using the DatabaseManager</dt>
+<dd><p class="first">specific editting is possible -&gt; split request to attribute instead of full json body</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">PUT</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/edit/input">http://127.0.0.1:3030/cso/edit/input</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with edited input id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;sid&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">siid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;id&quot;</span>          <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span>        <span class="p">:</span> <span class="o">&lt;</span><span class="n">iname</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;initialValue&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">ivalue</span><span class="o">&gt;</span> 
+<span class="p">}</span>               
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Input successfully edited. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">editMapping</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#editMapping"><span class="viewcode-link">[source]</span></a></dt>
+<dd><dl class="docutils">
+<dt>Function to edit mapping using the DatabaseManager</dt>
+<dd><p class="first">specific editting is possible -&gt; split request to attribute instead of full json body</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">PUT</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/edit/mapping">http://127.0.0.1:3030/cso/edit/mapping</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with edited mapping id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;id&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">mid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;gid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;soid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">soid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;oid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;siid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">siid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;iid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Mapping successfully edited. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">mid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;mid&gt; : mapping identifier ( integer )</p>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">editOutput</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#editOutput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><dl class="docutils">
+<dt>Function to edit an output using the DatabaseManager</dt>
+<dd><p class="first">specific editting is possible -&gt; split request to attribute instead of full json body</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with JSON body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">PUT</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/edit/output">http://127.0.0.1:3030/cso/edit/output</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with edited output id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;serviceid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">soid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;id&quot;</span>        <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span>      <span class="p">:</span> <span class="o">&lt;</span><span class="n">oname</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;initialValue&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">ovalue</span><span class="o">&gt;</span> 
+<span class="p">}</span>               
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Output successfully edited. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;oid&gt; : output identifier ( integer )</p>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">editRunTable</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#editRunTable"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to create run to save table of values and corresponding configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> – <p>Request is sent with JSON body
+:type request: POST</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/edit/run">http://127.0.0.1:3030/cso/edit/run</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with created run id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> 
+  <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">rid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;tableName&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">tname</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;group&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> 
+<span class="p">}</span>               
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Run successfully edited. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">rid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;tname&gt; : name of table where the values are logged ( string )</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">editService</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#editService"><span class="viewcode-link">[source]</span></a></dt>
+<dd><dl class="docutils">
+<dt>Function to edit a service using the DatabaseManager</dt>
+<dd><p class="first">specific editting is possible -&gt; split request to attribute instead of full json body ( implemented on request )</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request with JSON Body</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">PUT</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/edit/service">http://127.0.0.1:3030/cso/edit/service</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage , HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;gid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;id&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sname</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;ip&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">sip</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;port&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">sport</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">starget</span><span class="o">&gt;</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Service successfully edited. &quot;</span> <span class="p">,</span>  <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;gid&gt; : group identifier ( integer )</p>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">getService</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#getService"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to get specific service of given ID</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request with service id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">Service id as additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/service?id=1">http://127.0.0.1:3030/cso/service?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested service , HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">LIST of JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;gid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;id&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sname</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;ip&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">sip</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;port&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">sport</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">starget</span><span class="o">&gt;</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">getServicesOfGroup</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#getServicesOfGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to retrieve all services of given group id</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request with group id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">Additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/services?group=1">http://127.0.0.1:3030/cso/services?group=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested service of given group id , HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;gid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;id&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sname</span><span class="o">&gt;</span> <span class="p">,</span>
+        <span class="s2">&quot;ip&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">sip</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;port&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">sport</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">starget</span><span class="o">&gt;</span> 
+        <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">Serivce</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">groups</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#groups"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to retrieve all groups</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Http request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/groups">http://127.0.0.1:3030/cso/groups</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">All groups saved in the database , HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">gname</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;services&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span> <span class="p">,</span> 
+                <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sname</span><span class="o">&gt;</span> <span class="p">,</span> 
+                <span class="s2">&quot;ip&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">sip</span><span class="o">&gt;</span> <span class="p">,</span> 
+                <span class="s2">&quot;port&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sport</span><span class="o">&gt;</span> <span class="p">,</span> 
+                <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">starget</span><span class="o">&gt;</span> <span class="p">,</span> 
+                <span class="s2">&quot;inputs&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> <span class="p">,</span> 
+                        <span class="s2">&quot;inputName&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iname</span><span class="o">&gt;</span> <span class="p">,</span> 
+                        <span class="s2">&quot;initialVal&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iinitvalue</span><span class="o">&gt;</span> <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="nb">input</span> <span class="p">}</span> 
+                <span class="p">]</span> <span class="p">,</span> 
+                <span class="s2">&quot;outputs&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">,</span> 
+                        <span class="s2">&quot;outputName&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oname</span><span class="o">&gt;</span> <span class="p">,</span> 
+                        <span class="s2">&quot;initialVal&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oinitvalue</span><span class="o">&gt;</span> <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">output</span> <span class="p">}</span> 
+                <span class="p">]</span> <span class="p">}</span> <span class="p">,</span> 
+                <span class="p">{</span>  <span class="n">another</span> <span class="n">Service</span> <span class="p">}</span> 
+        <span class="p">]</span>
+  <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">Group</span> <span class="p">}</span> 
+<span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">initiateCSM</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#initiateCSM"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>function to initiate CoSimulationManager</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">inputs</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#inputs"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to get all inputs</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Simple</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/allinputs">http://127.0.0.1:3030/cso/allinputs</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested inputs, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iname</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;initialValue&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">ivalue</span><span class="o">&gt;</span>
+        <span class="s2">&quot;sid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span>
+        <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="nb">input</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">logValues</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#logValues"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to log run into table</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> – <p>Request is sent with JSON body
+:type request: POST</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/logValues">http://127.0.0.1:3030/cso/logValues</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage with row id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">JSON Body</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;runid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">rid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;inputValues&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="o">&lt;</span><span class="n">ival1</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">ival2</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">ival3</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">...</span> <span class="p">]</span>
+  <span class="s2">&quot;outputValues&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="o">&lt;</span><span class="n">oval1</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">oval2</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">oval3</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">...</span> <span class="p">]</span>
+<span class="p">}</span>               
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Run successfully initiated. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;ivalX&gt; : float values of respective input names ( float ), ORDER HAS TO BE FIXED
+&lt;ovalX&gt; : same as above for output</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">outputs</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#outputs"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to get all outputs</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Simple</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/alloutputs">http://127.0.0.1:3030/cso/alloutputs</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested inputs, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oname</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;initialValue&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">ivalue</span><span class="o">&gt;</span>
+        <span class="s2">&quot;sid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span>
+        <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="nb">input</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveConfig</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveConfig"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>function to retrieve configuration of given config id</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with configuration id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/config?id=1">http://127.0.0.1:3030/cso/config?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested configuration, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;runid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">rid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">cid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;startTime&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">stime</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;endTime&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">etime</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;stepSize&quot;</span> <span class="o">&lt;</span><span class="n">ssize</span><span class="o">&gt;</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveConfigsOfGroup</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveConfigsOfGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to retrieve all configurations of a given group</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with group id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/configs?group=1">http://127.0.0.1:3030/cso/configs?group=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested configurations of given group, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;rid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">rid</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">cid</span><span class="o">&gt;</span> <span class="p">,</span> 
+    <span class="s2">&quot;startTime&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">stime</span><span class="o">&gt;</span> <span class="p">,</span> 
+    <span class="s2">&quot;endTime&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">etime</span><span class="o">&gt;</span> <span class="p">,</span> 
+    <span class="s2">&quot;stepSize&quot;</span> <span class="o">&lt;</span><span class="n">ssize</span><span class="o">&gt;</span> 
+        <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">config</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveGroup</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to retrieve a group</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request with group id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">Additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/group?id=1">http://127.0.0.1:3030/cso/group?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested group of given group identifier , HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;services&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span> 
+                <span class="s2">&quot;id&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span> <span class="p">,</span> 
+                <span class="s2">&quot;name&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+                <span class="s2">&quot;ip&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">ip_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+                <span class="s2">&quot;port&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">port_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+                <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">address_of_service</span><span class="o">&gt;</span><span class="p">,</span> 
+                <span class="s2">&quot;inputs&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span> 
+                        <span class="s2">&quot;id&quot;</span>         <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_input</span><span class="o">&gt;</span> <span class="p">,</span> 
+                        <span class="s2">&quot;inputName&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_input</span><span class="o">&gt;</span> <span class="p">,</span>
+                        <span class="s2">&quot;initialVal&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">float_value</span><span class="o">&gt;</span>
+                <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">anotherInput</span> <span class="p">}</span>  <span class="p">]</span>  <span class="p">,</span>  
+                <span class="s2">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> 
+                        <span class="s2">&quot;id&quot;</span>         <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_output</span><span class="o">&gt;</span> <span class="p">,</span> 
+                        <span class="s2">&quot;inputName&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_output</span><span class="o">&gt;</span><span class="p">,</span>
+                        <span class="s2">&quot;initialVal&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">float_value</span><span class="o">&gt;</span> 
+                <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">anotherOutput</span> <span class="p">}</span> <span class="p">]</span>  
+  <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">service</span> <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveInput</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveInput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to get specific output of given ID</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with input id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/input?id=1">http://127.0.0.1:3030/cso/input?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested input, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;serviceid&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">siid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;id&quot;</span>          <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span>        <span class="p">:</span> <span class="o">&lt;</span><span class="n">iname</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;initialValue&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">ivalue</span><span class="o">&gt;</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveMapping</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveMapping"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to retrieve one specified mapping</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> – <p>Request is sent with mapping id
+:type request: GET</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">mapping identifier</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/mapping?id=1">http://127.0.0.1:3030/cso/mapping?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested mapping of given mapping id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;id&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">mid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;gid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;soid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">soid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;oid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;siid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">siid</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;iid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveMappings</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveMappings"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to retrieve all existing mappings of a group</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> – <p>Request is sent with group id
+:type request: GET</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param group:</th><td class="field-body">group identifier</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type group:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/mappings?group=1">http://127.0.0.1:3030/cso/mappings?group=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested mapping of given group id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">mid</span><span class="o">&gt;</span> <span class="p">,</span>
+        <span class="s2">&quot;gid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;soid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">soid</span><span class="o">&gt;</span> <span class="p">,</span>
+        <span class="s2">&quot;oid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">,</span>
+        <span class="s2">&quot;siid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">siid</span><span class="o">&gt;</span> <span class="p">,</span>
+        <span class="s2">&quot;iid&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> 
+        <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">Mapping</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveOutput</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveOutput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to get specific output of given ID</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with output id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">Output id as additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/output?id=1">http://127.0.0.1:3030/cso/output?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested output, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oname</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;initialValue&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">ovalue</span><span class="o">&gt;</span>
+  <span class="s2">&quot;serviceid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;sid&gt; : reference to service identifier ( integer )</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveRuns</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveRuns"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to get all runs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<em>GET</em>) – Simple get request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/runs">http://127.0.0.1:3030/cso/runs</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Requested runs, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">rid</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;valueTableName&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">tname</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;group&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">group</span><span class="o">&gt;</span>
+        <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">run</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveService</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveService"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to get specific service of given ID</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request with service id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param id:</th><td class="field-body">Service id as additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type id:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/service?id=1">http://127.0.0.1:3030/cso/service?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested service , HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">LIST of JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;gid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">gid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;id&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sname</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;ip&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">sip</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;port&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">sport</span><span class="o">&gt;</span> <span class="p">,</span> 
+  <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">starget</span><span class="o">&gt;</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveTableKeys</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveTableKeys"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>function to retrieve coloumn keys of a table</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<em>GET</em>) – Request is sent with name of table</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/tableKeys?tname=tableName">http://127.0.0.1:3030/cso/tableKeys?tname=tableName</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Requested coloumn names of a table</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">JSON list, HTTP-Statuscode<p>Returns:</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="s2">&quot;value_id&quot;</span> <span class="p">,</span> <span class="s2">&quot;run_id&quot;</span> <span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span> <span class="p">,</span> <span class="s2">&quot;var1_service_input&quot;</span> <span class="p">,</span> <span class="o">....</span> <span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveTableName</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveTableName"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>function to retrieve table name of a run.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<em>GET</em>) – Request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/tables?run=1">http://127.0.0.1:3030/cso/tables?run=1</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Name of requested table</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">JSON, HTTP-Statuscode</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;table&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">tname</span><span class="o">&gt;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">retrieveValues</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#retrieveValues"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>function to retrieve value of given run id</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with run id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/values?id=1">http://127.0.0.1:3030/cso/values?id=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested values of given run id, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+        <span class="p">[</span> <span class="o">&lt;</span><span class="n">vid</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">val1</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">val2</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">...</span> <span class="p">]</span> <span class="p">,</span> <span class="c1">#first row of value loggs </span>
+        <span class="p">[</span> <span class="o">&lt;</span><span class="n">vid</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">val1</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">val2</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">...</span> <span class="p">]</span> <span class="p">,</span> <span class="c1">#second row of value loggs </span>
+        <span class="p">[</span> <span class="o">&lt;</span><span class="n">vid</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">val1</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">val2</span><span class="o">&gt;</span> <span class="p">,</span> <span class="o">...</span> <span class="p">]</span> <span class="c1">#third row of value loggs </span>
+        <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&lt;vid&gt; : identifier of value set ( integer )</p>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">runCSM</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#runCSM"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>function to start CoSimulationManager</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">serviceInputs</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#serviceInputs"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to get all inputs of specific service</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with service id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param service:</th><td class="field-body">Service id as additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type service:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/inputs?service=1">http://127.0.0.1:3030/cso/inputs?service=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested outputs of given service, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iid</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">iname</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;initialValue&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">ivalue</span><span class="o">&gt;</span>
+        <span class="s2">&quot;sid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span>
+        <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="nb">input</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">serviceOutputs</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#serviceOutputs"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to get all outputs of specific service</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body">Request is sent with service id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type request:</th><td class="field-body">GET</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param service:</th><td class="field-body">Service id as additional request parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type service:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/outputs?service=1">http://127.0.0.1:3030/cso/outputs?service=1</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Requested outputs of given service, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON , HTTP-statuscode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oname</span><span class="o">&gt;</span> <span class="p">,</span> 
+        <span class="s2">&quot;initialValue&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">ovalue</span><span class="o">&gt;</span>
+        <span class="s2">&quot;serviceid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span>
+        <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">output</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">testConnection</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#testConnection"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Function to test if CSO is online and operative</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param request:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">type http-request:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Endpoint:</th><td class="field-body"><a class="reference external" href="http://127.0.0.1:3030/cso/testConnection">http://127.0.0.1:3030/cso/testConnection</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">returns:</th><td class="field-body">Statusmessage, HTTP statuscode = 200</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body">JSON</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">CoSimulationOrchestrator.</code><code class="descname">uploadYAML</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationOrchestrator.html#uploadYAML"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Endpoint to receive json encoded full group from YAML file
+Load to database afterwards</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">COE</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csm.html">CoSimulationManager</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CoSimulationOrchestrator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbm.html">DatabaseManager</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="csm.html" title="previous chapter">CoSimulationManager</a></li>
+      <li>Next: <a href="dbm.html" title="next chapter">DatabaseManager</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, geos.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/cso.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

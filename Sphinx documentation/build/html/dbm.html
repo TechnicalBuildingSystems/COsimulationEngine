@@ -1,0 +1,1572 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>DatabaseManager &#8212; COE 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="CoSimulationOrchestrator" href="cso.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="databasemanager">
+<h1>DatabaseManager<a class="headerlink" href="#databasemanager" title="Permalink to this headline">¶</a></h1>
+<p>Created on Thu Oct 18 16:06:53 2018</p>
+<span class="target" id="module-DatabaseManager"></span><dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">DatabaseManager.</code><code class="descname">DatabaseManager</code><span class="sig-paren">(</span><em>pathToDB</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>THIS IS THE DBM CLASS</p>
+<dl class="method">
+<dt>
+<code class="descname">createGroup</code><span class="sig-paren">(</span><em>groupName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.createGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Creates a group, as an entry in connected Database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>groupName</strong> (<em>string</em>) – Name of group.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ID of inserted entry.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">createInput</code><span class="sig-paren">(</span><em>serviceID</em>, <em>varName</em>, <em>initialVal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.createInput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Creates input as an entry in database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</li>
+<li><strong>varName</strong> (<em>string</em>) – Name of input.</li>
+<li><strong>initialVal</strong> (<em>float</em>) – The initial value of the input</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of created row</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">createMapping</code><span class="sig-paren">(</span><em>mapping</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.createMapping"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets a mapping of output to input of a group.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mapping</strong> (<em>dict</em>) – Output to Input mapping.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of IDs of mappings set.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">createOutput</code><span class="sig-paren">(</span><em>serviceID</em>, <em>varName</em>, <em>initialVal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.createOutput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Creates output as an entry in database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</li>
+<li><strong>varName</strong> (<em>string</em>) – Name of output.</li>
+<li><strong>initialVal</strong> (<em>float</em>) – The initial value of the output</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of created row</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">createRun</code><span class="sig-paren">(</span><em>tableName</em>, <em>groupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.createRun"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Creates a run as an entry in database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tableName</strong> (<em>string</em>) – Name of table to log values of run.</li>
+<li><strong>groupID</strong> (<em>integer</em>) – Reference to group the run belongs to.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of created run.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">createService</code><span class="sig-paren">(</span><em>serviceName</em>, <em>ip</em>, <em>port</em>, <em>target</em>, <em>groupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.createService"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Creates a service as an entry in database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>serviceName</strong> (<em>string</em>) – Name of service.</li>
+<li><strong>ip</strong> (<em>string</em>) – IP address of service.</li>
+<li><strong>port</strong> (<em>string</em>) – Port, service is listening on.</li>
+<li><strong>target</strong> (<em>string</em>) – Either a path to a file or a specific address.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ID of created service.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">deleteConfig</code><span class="sig-paren">(</span><em>configID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.deleteConfig"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Deletes a configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configID</strong> (<em>integer</em>) – Simulation configuration identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Id of deleted config.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">deleteGroup</code><span class="sig-paren">(</span><em>groupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.deleteGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Deletes a group with given group identifier</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>groupID</strong> (<em>integer</em>) – Group identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Deleted row ID.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">deleteInput</code><span class="sig-paren">(</span><em>inputID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.deleteInput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Deletes input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>inputID</strong> (<em>integer</em>) – Input identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Id of deleted row.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">deleteMapping</code><span class="sig-paren">(</span><em>mapID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.deleteMapping"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Deletes a row of mapping</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mapID</strong> (<em>Integer</em>) – Mapping identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Id of last deleted row.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Integer.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">deleteMappingOfGroup</code><span class="sig-paren">(</span><em>groupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.deleteMappingOfGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Deletes mapping of a group</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>groupID</strong> (<em>Integer</em>) – Mapping identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Id of deleted rows.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Integer.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">deleteOutput</code><span class="sig-paren">(</span><em>outputID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.deleteOutput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Deletes output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outputID</strong> (<em>integer</em>) – Output identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Id of deleted row.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">deleteRun</code><span class="sig-paren">(</span><em>runID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.deleteRun"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Deletes run and corresponding configuration and table of logged values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runID</strong> (<em>integer</em>) – Run identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Id of deleted run.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">deleteService</code><span class="sig-paren">(</span><em>serviceID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.deleteService"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Deletes a service</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Id of deleted service.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">deleteValueTable</code><span class="sig-paren">(</span><em>runID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.deleteValueTable"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Deletes(completely dropping) table of values of a run</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runID</strong> (<em>integer</em>) – Run identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Name of deleted table.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">deleteValues</code><span class="sig-paren">(</span><em>tableName</em>, <em>valuesID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.deleteValues"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Deletes single value row from log</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tableName</strong> (<em>string</em>) – Name of table with logs.</li>
+<li><strong>valuesID</strong> (<em>integer</em>) – Value identifier.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of deleted row.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editConfig</code><span class="sig-paren">(</span><em>cid</em>, <em>runID</em>, <em>start_time</em>, <em>end_time</em>, <em>stepsize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editConfig"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the configuration of a run.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> – config identifier.</li>
+<li><strong>runID</strong> (<em>integer</em>) – Run identifier.</li>
+<li><strong>start_time</strong> (<em>integer</em>) – Start time.</li>
+<li><strong>end_time</strong> (<em>integer</em>) – End time.</li>
+<li><strong>stepsize</strong> (<em>integer</em>) – Stepsize of timeinterval.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of set configuration</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editEndTime</code><span class="sig-paren">(</span><em>runID</em>, <em>configID</em>, <em>newEndTime</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editEndTime"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the ending time of the configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>runID</strong> (<em>integer</em>) – Run identifier.</li>
+<li><strong>configID</strong> (<em>integer</em>) – Configuration identifier.</li>
+<li><strong>newEndTime</strong> (<em>integer</em>) – New starting time.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited configuration.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editGroup</code><span class="sig-paren">(</span><em>groupIdentifier</em>, <em>groupName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits a group of given group identifier</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>groupIdentifier</strong> (<em>integer</em>) – Group identifier.</li>
+<li><strong>groupName</strong> (<em>string</em>) – New name of group.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ID of edited row.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editGroupOfMap</code><span class="sig-paren">(</span><em>mapID</em>, <em>newGroupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editGroupOfMap"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits group reference of map</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mapID</strong> (<em>Integer</em>) – Mapping identifier.</li>
+<li><strong>newGroupID</strong> (<em>Integer</em>) – Group identifier.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited row.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Integer.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editInitValueOfInput</code><span class="sig-paren">(</span><em>inputID</em>, <em>newVal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editInitValueOfInput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits initial value of input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>inputID</strong> (<em>integer</em>) – Input identifier</li>
+<li><strong>newVal</strong> (<em>float</em>) – New initial value of input</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of row edited</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editInitValueOfOutput</code><span class="sig-paren">(</span><em>outputID</em>, <em>newVal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editInitValueOfOutput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits initial value of output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>outputID</strong> (<em>integer</em>) – Output identifier</li>
+<li><strong>newVal</strong> (<em>float</em>) – New initial value of output</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of row edited</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editInputOfMap</code><span class="sig-paren">(</span><em>mapID</em>, <em>newInputID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editInputOfMap"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits input reference of map</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mapID</strong> (<em>Integer</em>) – Mapping identifier.</li>
+<li><strong>newInputID</strong> (<em>Integer</em>) – Input identifier.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited row.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Integer.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editInputServiceOfMap</code><span class="sig-paren">(</span><em>mapID</em>, <em>newInputServiceID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editInputServiceOfMap"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits input’s service reference of map</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mapID</strong> (<em>Integer</em>) – Mapping identifier.</li>
+<li><strong>newInputServiceID</strong> (<em>Integer</em>) – Input’s Service identifier.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited row.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Integer.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editMapping</code><span class="sig-paren">(</span><em>mapping</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editMapping"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits a mapping.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mapping</strong> – Mapping of output to input</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Typer mapping:</th><td class="field-body">integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">id of edited mapping.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editNameOfInput</code><span class="sig-paren">(</span><em>inputID</em>, <em>newName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editNameOfInput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits name of input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>inputID</strong> (<em>integer</em>) – Input identifier</li>
+<li><strong>newName</strong> (<em>string</em>) – New name of input</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of row edited</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editNameOfOutput</code><span class="sig-paren">(</span><em>outputID</em>, <em>newName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editNameOfOutput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits name of output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>outputID</strong> (<em>integer</em>) – Output identifier</li>
+<li><strong>newName</strong> (<em>string</em>) – New name of output</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of row edited</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editOutputOfMap</code><span class="sig-paren">(</span><em>mapID</em>, <em>newOutputID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editOutputOfMap"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits output reference of map</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mapID</strong> (<em>Integer</em>) – Mapping identifier.</li>
+<li><strong>newOutputID</strong> (<em>Integer</em>) – Input identifier.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited row.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Integer.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editOutputServiceOfMap</code><span class="sig-paren">(</span><em>mapID</em>, <em>newOutputServiceID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editOutputServiceOfMap"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits output’s service reference of map</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mapID</strong> (<em>Integer</em>) – Mapping identifier.</li>
+<li><strong>newOutputServiceID</strong> (<em>Integer</em>) – Input’s Service identifier.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited row.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Integer.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editRunGroupRef</code><span class="sig-paren">(</span><em>runID</em>, <em>newGroupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editRunGroupRef"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the group references of a run.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>runID</strong> (<em>integer</em>) – Run identifier.</li>
+<li><strong>newGroupID</strong> (<em>integer</em>) – New reference of group.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited run.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editRunTableName</code><span class="sig-paren">(</span><em>runID</em>, <em>tableName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editRunTableName"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the table name where values of runs are logged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>runID</strong> (<em>integer</em>) – Run identifier.</li>
+<li><strong>tableName</strong> (<em>string</em>) – New name of table.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited run.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editServiceGroup</code><span class="sig-paren">(</span><em>serviceID</em>, <em>newGroup</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editServiceGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the group reference of a service</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</li>
+<li><strong>newGroup</strong> (<em>string</em>) – New group reference of service.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited service.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editServiceIP</code><span class="sig-paren">(</span><em>serviceID</em>, <em>newIP</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editServiceIP"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the IP of a service</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</li>
+<li><strong>newIP</strong> (<em>string</em>) – New ip of service.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited service.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editServiceName</code><span class="sig-paren">(</span><em>serviceID</em>, <em>newName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editServiceName"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the name of a service</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</li>
+<li><strong>newName</strong> (<em>string</em>) – New name of service.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited service.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editServiceOfInput</code><span class="sig-paren">(</span><em>inputID</em>, <em>newServiceID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editServiceOfInput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits service reference of input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>inputID</strong> (<em>integer</em>) – Input identifier</li>
+<li><strong>newServiceID</strong> (<em>integer</em>) – New service reference of input</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of row edited</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editServiceOfOutput</code><span class="sig-paren">(</span><em>outputID</em>, <em>newServiceID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editServiceOfOutput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits service reference of output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>outputID</strong> (<em>integer</em>) – Output identifier</li>
+<li><strong>newServiceID</strong> (<em>integer</em>) – New service reference of output</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of row edited</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editServicePort</code><span class="sig-paren">(</span><em>serviceID</em>, <em>newPort</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editServicePort"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the port of a service</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</li>
+<li><strong>newPort</strong> (<em>string</em>) – New port of service.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited service.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editServiceTarget</code><span class="sig-paren">(</span><em>serviceID</em>, <em>newTarget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editServiceTarget"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the target of a service</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</li>
+<li><strong>newTarget</strong> (<em>string</em>) – New target of service.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited service.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editStartTime</code><span class="sig-paren">(</span><em>runID</em>, <em>configID</em>, <em>newStartTime</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editStartTime"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the starting time of the configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>runID</strong> (<em>integer</em>) – Run identifier.</li>
+<li><strong>configID</strong> (<em>integer</em>) – Configuration identifier.</li>
+<li><strong>newStartTime</strong> (<em>integer</em>) – New starting time.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited configuration.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">editStepSize</code><span class="sig-paren">(</span><em>runID</em>, <em>configID</em>, <em>newStepSize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.editStepSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Edits the stepsize time of the configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>runID</strong> (<em>integer</em>) – Run identifier.</li>
+<li><strong>configID</strong> (<em>integer</em>) – Configuration identifier.</li>
+<li><strong>newStartTime</strong> (<em>integer</em>) – New starting time.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of edited configuration.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getAllGroups</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.getAllGroups"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Gets all groups and its contents</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of all groups in the database.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> 
+    <span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span>       <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_group</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_group</span><span class="o">&gt;</span> <span class="p">,</span> 
+    <span class="s2">&quot;services&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_service</span><span class="o">&gt;</span> <span class="p">,</span> 
+                        <span class="s2">&quot;name&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+                        <span class="s2">&quot;ip&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+                        <span class="s2">&quot;port&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+                        <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+                        <span class="s2">&quot;inputs&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+                                        <span class="s2">&quot;id&quot;</span>         <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_input</span><span class="o">&gt;</span> <span class="p">,</span>
+                                        <span class="s2">&quot;inputName&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_input</span><span class="o">&gt;</span> <span class="p">,</span>
+                                        <span class="s2">&quot;initialVal&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">float_value</span><span class="o">&gt;</span>
+                                    <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="nb">input</span> <span class="p">}</span> 
+                                    <span class="p">]</span> <span class="p">,</span> 
+                        <span class="s2">&quot;outputs&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+                                        <span class="s2">&quot;id&quot;</span>         <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_output</span><span class="o">&gt;</span> <span class="p">,</span>
+                                        <span class="s2">&quot;outputName&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_output</span><span class="o">&gt;</span> <span class="p">,</span>
+                                        <span class="s2">&quot;initialVal&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">float_value</span><span class="o">&gt;</span>
+                                    <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">output</span> <span class="p">}</span> 
+                                    <span class="p">]</span> 
+                    <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">Service</span> <span class="p">}</span>
+                 <span class="p">]</span> 
+    <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">group</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">initTables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.initTables"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>create table statements for sql queries, initiate tables with constraints</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">insertValues</code><span class="sig-paren">(</span><em>runID</em>, <em>timestamp</em>, <em>lVarIn</em>, <em>lVarOut</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.insertValues"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Writes values to database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>runID</strong> (<em>integer</em>) – Run identifier.</li>
+<li><strong>timestamp</strong> (<em>float</em>) – Timestamp of valueset.</li>
+<li><strong>lVarIn</strong> (<em>list</em>) – List of input values.</li>
+<li><strong>lVarOut</strong> (<em>list</em>) – List of output values.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of inserted values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveConfig</code><span class="sig-paren">(</span><em>runID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveConfig"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves configuration of corresponding run.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runID</strong> (<em>integer</em>) – Run identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Configuration of run.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;id&quot;</span>           <span class="p">:</span> <span class="n">id_of_config</span> <span class="p">,</span> 
+  <span class="s2">&quot;run_id&quot;</span>       <span class="p">:</span> <span class="n">id_of_run_ref</span> <span class="p">,</span> 
+  <span class="s2">&quot;start_time&quot;</span> <span class="p">:</span> <span class="n">starting_time</span> <span class="p">,</span> 
+  <span class="s2">&quot;end_time&quot;</span>   <span class="p">:</span> <span class="n">end_time</span> <span class="p">,</span> 
+  <span class="s2">&quot;stepsize&quot;</span>   <span class="p">:</span> <span class="n">size_of_timesteps</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveConfigsOfGroup</code><span class="sig-paren">(</span><em>groupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveConfigsOfGroup"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves all corresponding configurations of a group.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>groupID</strong> (<em>integer</em>) – Group identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a list of configurations</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;config_id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">idOfconfig</span><span class="o">&gt;</span> <span class="p">,</span>
+        <span class="s2">&quot;run_id&quot;</span>      <span class="p">:</span> <span class="o">&lt;</span><span class="n">idOfrun</span><span class="o">&gt;</span> <span class="p">,</span>
+        <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">starttime</span><span class="o">&gt;</span> <span class="p">,</span>
+        <span class="s2">&quot;end_time&quot;</span>    <span class="p">:</span> <span class="o">&lt;</span><span class="n">endtime</span><span class="o">&gt;</span> <span class="p">,</span>
+        <span class="s2">&quot;step_size&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">stepsize</span><span class="o">&gt;</span>
+    <span class="p">}</span> <span class="p">,</span>
+    <span class="p">{</span>
+        <span class="n">another</span> <span class="n">config</span>
+    <span class="p">}</span> <span class="p">,</span>
+
+    <span class="p">[</span> <span class="o">...</span> <span class="p">]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveInput</code><span class="sig-paren">(</span><em>inputID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveInput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>inputID</strong> (<em>integer</em>) – Input identifier</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">input as a dict object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;id&quot;</span>             <span class="p">:</span> <span class="n">id_of_service</span> <span class="p">,</span>
+  <span class="s2">&quot;inputName&quot;</span>      <span class="p">:</span> <span class="n">name_of_input</span> <span class="p">,</span>
+  <span class="s2">&quot;serviceOfinput&quot;</span> <span class="p">:</span> <span class="n">id_of_service</span> <span class="p">,</span>
+  <span class="s2">&quot;initial_value&quot;</span>  <span class="p">:</span> <span class="n">float_value</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveInputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveInputs"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">inputs as a list object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span>              <span class="p">:</span> <span class="n">id_of_input</span> <span class="p">,</span>
+   <span class="s2">&quot;name&quot;</span>      <span class="p">:</span> <span class="n">name_of_input</span> <span class="p">,</span>
+   <span class="s2">&quot;sid&quot;</span> <span class="p">:</span> <span class="n">id_of_service</span> <span class="p">,</span>
+   <span class="s2">&quot;initialValue&quot;</span>   <span class="p">:</span> <span class="n">float_value</span>
+ <span class="p">},</span> <span class="p">{</span> <span class="n">another</span> <span class="nb">input</span> <span class="p">}</span> <span class="p">,</span> <span class="o">...</span> 
+ <span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveInputsOfService</code><span class="sig-paren">(</span><em>serviceID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveInputsOfService"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves inputs of a service</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Inputs of a service.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">{</span> <span class="s2">&quot;id&quot;</span>           <span class="p">:</span> <span class="n">___</span> <span class="p">,</span> 
+      <span class="s2">&quot;name&quot;</span>         <span class="p">:</span> <span class="n">___</span> <span class="p">,</span>
+      <span class="s2">&quot;sid&quot;</span>          <span class="p">:</span> <span class="n">___</span> <span class="p">,</span>
+      <span class="s2">&quot;initialValue&quot;</span> <span class="p">:</span> <span class="n">___</span>
+    <span class="p">}</span> <span class="p">,</span>
+  <span class="p">{</span> <span class="n">another</span> <span class="nb">input</span> <span class="p">}</span> <span class="p">,</span>
+  <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveMap</code><span class="sig-paren">(</span><em>mapID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveMap"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves a single row of mapping.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mapID</strong> (<em>integer</em>) – Mapping identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Mapping item as dict</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_map</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;gid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_group</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;iid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_input</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;siid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;oid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_output</span><span class="o">&gt;</span> <span class="p">,</span>
+  <span class="s2">&quot;soid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_service</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveMappings</code><span class="sig-paren">(</span><em>groupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveMappings"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>retrieves mappings of a group.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>groupID</strong> (<em>integer</em>) – Groupd identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">All mappings of a group</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">mapping_id</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;gid&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">group_id</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;iid&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">input_id</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;siid&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">service_input_id</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;oid&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">output_id</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;soid&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">service_output_id</span><span class="o">&gt;</span>
+  <span class="p">}</span> <span class="p">,</span>
+  <span class="p">{</span> <span class="s2">&quot;id&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">mapping_id</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;gid&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">group_id</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;iid&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">input_id</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;siid&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">service_input_id</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;oid&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">output_id</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;soid&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">service_output_id</span><span class="o">&gt;</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveOutput</code><span class="sig-paren">(</span><em>outputID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveOutput"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outputID</strong> (<em>integer</em>) – Output identifier</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">output as a dict object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;id&quot;</span>              <span class="p">:</span> <span class="n">id_of_service</span> <span class="p">,</span>
+  <span class="s2">&quot;outputName&quot;</span>      <span class="p">:</span> <span class="n">name_of_output</span> <span class="p">,</span>
+  <span class="s2">&quot;serviceOfoutput&quot;</span> <span class="p">:</span> <span class="n">id_of_service</span> <span class="p">,</span>
+  <span class="s2">&quot;initial_value&quot;</span>   <span class="p">:</span> <span class="n">float_value</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveOutputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveOutputs"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves outputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">output as a list object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span>              <span class="p">:</span> <span class="n">id_of_service</span> <span class="p">,</span>
+   <span class="s2">&quot;name&quot;</span>      <span class="p">:</span> <span class="n">name_of_output</span> <span class="p">,</span>
+   <span class="s2">&quot;sid&quot;</span> <span class="p">:</span> <span class="n">id_of_service</span> <span class="p">,</span>
+   <span class="s2">&quot;initialValue&quot;</span>   <span class="p">:</span> <span class="n">float_value</span>
+ <span class="p">},</span> <span class="p">{</span> <span class="n">another</span> <span class="n">Output</span> <span class="p">}</span> <span class="p">,</span> <span class="o">...</span> 
+ <span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveOutputsOfService</code><span class="sig-paren">(</span><em>serviceID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveOutputsOfService"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves outputs of a service</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">All outputs of a service.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oid</span><span class="o">&gt;</span> <span class="p">,</span> 
+    <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">oname</span><span class="o">&gt;</span> <span class="p">,</span> 
+    <span class="s2">&quot;initialValue&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">ovalue</span><span class="o">&gt;</span>
+    <span class="s2">&quot;serviceid&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">sid</span><span class="o">&gt;</span>
+  <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="n">another</span> <span class="n">output</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveRuns</code><span class="sig-paren">(</span><em>groupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveRuns"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves runs of a group</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>groupID</strong> (<em>integer</em>) – Group identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Runs of a group.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveService</code><span class="sig-paren">(</span><em>serviceID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveService"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves a single service</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>serviceID</strong> (<em>integer</em>) – Service identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Service with contents.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> 
+    <span class="s2">&quot;id&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;ip&quot;</span>     <span class="p">:</span> <span class="o">&lt;</span><span class="n">ip_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;port&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">port_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">target_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+    <span class="s2">&quot;group&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">group_of_service</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveServices</code><span class="sig-paren">(</span><em>groupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveServices"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves services to given group id</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>groupID</strong> (<em>integer</em>) – Group identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Services with contents.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;id&quot;</span>       <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+      <span class="s2">&quot;name&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+      <span class="s2">&quot;ip&quot;</span>       <span class="p">:</span> <span class="o">&lt;</span><span class="n">ip_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+      <span class="s2">&quot;port&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">port_of_service</span><span class="o">&gt;</span><span class="p">,</span>
+      <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">target_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+      <span class="s2">&quot;group&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_group</span><span class="o">&gt;</span>
+    <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveServicesDetailed</code><span class="sig-paren">(</span><em>groupID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveServicesDetailed"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves services to given group id</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>groupID</strong> (<em>integer</em>) – Group identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Services with contents.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;id&quot;</span>       <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+      <span class="s2">&quot;name&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">name_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+      <span class="s2">&quot;ip&quot;</span>       <span class="p">:</span> <span class="o">&lt;</span><span class="n">ip_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+      <span class="s2">&quot;port&quot;</span>   <span class="p">:</span> <span class="o">&lt;</span><span class="n">port_of_service</span><span class="o">&gt;</span><span class="p">,</span>
+      <span class="s2">&quot;target&quot;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">target_of_service</span><span class="o">&gt;</span> <span class="p">,</span>
+      <span class="s2">&quot;group&quot;</span>  <span class="p">:</span> <span class="o">&lt;</span><span class="n">id_of_group</span><span class="o">&gt;</span>
+    <span class="p">}</span> <span class="p">,</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveTableKeys</code><span class="sig-paren">(</span><em>tableName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveTableKeys"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves coloumn keys of a table</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tableName</strong> (<em>string</em>) – Name of table.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of coloumn keys</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveTableName</code><span class="sig-paren">(</span><em>runID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveTableName"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves table name of a run</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runID</strong> (<em>integer</em>) – Run identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Name of table of given run id</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">String.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">retrieveValues</code><span class="sig-paren">(</span><em>runID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.retrieveValues"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retrieves all values logged of a run</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runID</strong> (<em>integer</em>) – Run identifier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of tuples of values ( id , ValueOfVar1 , ValueOfVar2 , [ … ] )</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setSimConfig</code><span class="sig-paren">(</span><em>runID</em>, <em>start_time</em>, <em>end_time</em>, <em>stepsize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabaseManager.html#DatabaseManager.setSimConfig"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the configuration of a run.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>runID</strong> (<em>integer</em>) – Run identifier.</li>
+<li><strong>start_time</strong> (<em>integer</em>) – Start time.</li>
+<li><strong>end_time</strong> (<em>integer</em>) – End time.</li>
+<li><strong>stepsize</strong> (<em>integer</em>) – Stepsize of timeinterval.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Id of set configuration</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">COE</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csm.html">CoSimulationManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cso.html">CoSimulationOrchestrator</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DatabaseManager</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="cso.html" title="previous chapter">CoSimulationOrchestrator</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, geos.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/dbm.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,46 @@
+---
+# Specify a group and all its information
+name: TestSetupRuleBaseControl
+services:
+    RuleBasedControl:
+      ip: 127.0.0.1
+      port: 3030
+      target: 10.39.190.25.1.1
+      inputs:
+          - name: MAIN.TemperatureOut
+            initialValue: 22.0
+          - name: MAIN.TemperatureOut1
+            initialValue: 22.0
+      outputs:
+          - name: MAIN.u
+            initialValue: 0.0
+    
+    ControlledTemperature:
+      ip: 127.0.0.1
+      port: 3031
+      target: \\netapp1\Projekte\EnCNProject\Projects\09_VirtualBuilding\VirtualCommissioning\00_AdditionalFiles\03_ControlledTemperature\ControlledTemperature.fmu
+      inputs:
+          - name: u
+            initialValue: 0.0
+      outputs:
+          - name: TemperatureOut
+            initialValue: 22.0
+
+mappings:
+    -   oservice: RuleBasedControl
+        oname: MAIN.u
+        iservice: ControlledTemperature
+        iname: u
+    -   oservice: ControlledTemperature
+        oname: TemperatureOut
+        iservice: RuleBasedControl
+        iname: MAIN.TemperatureOut
+
+simconfigs:
+    -   startTime: 0
+        endTime: 10
+        stepSize: 0.1
+    -   startTime: 0
+        endTime: 20
+        stepSize: 1
+...

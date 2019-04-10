@@ -1,0 +1,1 @@
+docker run -it --name csoContainer -p 3030:3030 -v c:/users/nuernberg_lokal/Desktop/COE/sharedFolder:/database cso

@@ -33,13 +33,17 @@ import aiohttp_cors #version 0.7.0
 
 ###   ###   ###   ###   
 # Global properties and initialisation
-# 1 DatabaseManager:
-pathToDB = os.path.join( "C:/" ,
+# 1 DatabaseManager: C:\Users\nuernberg_lokal\Desktop\COE\sharedFolder
+"""pathToDB = os.path.join( "C:/" ,
                          "Users" ,
-                         "viho" ,
-                         "Documents" ,
-						 "06a_GitRepo" ,
+                         "nuernberg_lokal" ,
+                         "Desktop" ,
 						 "COE" ,
+						 "sharedFolder" , 
+                         "test.db" )
+"""
+pathToDB = os.path.join( "/" ,
+						 "database" , 
                          "test.db" )
 dbm = DatabaseManager( pathToDB )
 dbm.initTables()

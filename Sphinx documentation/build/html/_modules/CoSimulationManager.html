@@ -1,0 +1,332 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CoSimulationManager &#8212; COE 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CoSimulationManager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Tue Oct 23 11:27:51 2018</span>
+
+<span class="sd">.. module:: CoSimulationManager</span>
+<span class="sd">    :synopsis: Something about CSM</span>
+
+<span class="sd">.. moduleauthor: geos</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">requests</span> <span class="c1"># version 2.18.4</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<div class="viewcode-block" id="CoSimulationManager"><a class="viewcode-back" href="../csm.html#CoSimulationManager.CoSimulationManager">[docs]</a><span class="k">class</span> <span class="nc">CoSimulationManager</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class of the data base manager</span>
+<span class="sd">    Introduced nomenclature in current values</span>
+<span class="sd">    For inputs:</span>
+<span class="sd">    serviceid_inputs_inputid</span>
+<span class="sd">    For outputs:</span>
+<span class="sd">    serviceid_outputs_outputid</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">startTime</span> <span class="p">,</span> <span class="n">endTime</span> <span class="p">,</span> <span class="n">stepSize</span> <span class="p">,</span> <span class="n">services</span> <span class="p">,</span> <span class="n">mappings</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor of the class</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span>    <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentValues</span>  <span class="o">=</span> <span class="p">{</span> <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span>      <span class="o">=</span> <span class="p">{</span> <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupID</span>        <span class="o">=</span> <span class="n">groupID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runID</span>          <span class="o">=</span> <span class="n">runID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span>      <span class="o">=</span> <span class="n">startTime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endTime</span>        <span class="o">=</span> <span class="n">endTime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stepSize</span>       <span class="o">=</span> <span class="n">stepSize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">services</span>       <span class="o">=</span> <span class="n">services</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mappings</span>       <span class="o">=</span> <span class="n">mappings</span>
+        
+        
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Magic string function of class </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;This csm has the following properties: startTime</span><span class="se">\n</span><span class="s2"> endTime</span><span class="se">\n</span><span class="s2"> stepSize</span><span class="se">\n</span><span class="s2"> servicesGroup</span><span class="se">\n</span><span class="s2"> mappingGroup</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="s2">, </span><span class="si">{}</span><span class="se">\n</span><span class="s2">, </span><span class="si">{}</span><span class="se">\n</span><span class="s2">, </span><span class="si">{}</span><span class="se">\n</span><span class="s2">, </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="p">,</span>
+                                                             <span class="bp">self</span><span class="o">.</span><span class="n">endTime</span> <span class="p">,</span> 
+                                                             <span class="bp">self</span><span class="o">.</span><span class="n">stepSize</span> <span class="p">,</span> 
+                                                             <span class="bp">self</span><span class="o">.</span><span class="n">services</span> <span class="p">,</span> 
+                                                             <span class="bp">self</span><span class="o">.</span><span class="n">mappings</span> <span class="p">)</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="CoSimulationManager.initialiseServices"><a class="viewcode-back" href="../csm.html#CoSimulationManager.CoSimulationManager.initialiseServices">[docs]</a>    <span class="k">def</span> <span class="nf">initialiseServices</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        (1): Set current time to startTime and initial values to be logged</span>
+<span class="sd">        </span>
+<span class="sd">        (2):            </span>
+<span class="sd">        Function which sends an init request for all services included in this </span>
+<span class="sd">        co-simulation run.</span>
+<span class="sd">        Provides the services with:</span>
+<span class="sd">            - target -&gt; item, e.g. AMSNetID of Beckhoff PLC or path to FMU</span>
+<span class="sd">            - startTime -&gt; Time where simulation starts, usually 0</span>
+<span class="sd">            - endTime -&gt; Time where simulation is supposed to stop</span>
+<span class="sd">            - stepSize -&gt; Simulation step size, i.e. time in between which </span>
+<span class="sd">                          co-simulation entities needs to sync</span>
+<span class="sd">        </span>
+<span class="sd">        (3):</span>
+<span class="sd">        Writes initial values to inputs and outputs of services as obtained </span>
+<span class="sd">        from data base. # ??? TODO Does not happen</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># (1) Set current time and currentValues to be logged</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentValues</span><span class="p">[</span> <span class="s2">&quot;time&quot;</span> <span class="p">]</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span><span class="p">[</span> <span class="s2">&quot;time&quot;</span> <span class="p">]</span> <span class="o">=</span>  <span class="p">[</span> <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span><span class="p">[</span> <span class="s2">&quot;time&quot;</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span> <span class="p">)</span>
+                
+        <span class="c1"># (2)</span>
+        <span class="c1"># Initialise the services</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span> <span class="o">+</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;ip&quot;</span> <span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;port&quot;</span> <span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/Service/initialize&quot;</span>
+            <span class="n">pl</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;target&quot;</span>    <span class="p">:</span> <span class="nb">str</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;target&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">,</span>
+                   <span class="s2">&quot;startTime&quot;</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="p">)</span> <span class="p">,</span>
+                   <span class="s2">&quot;endTime&quot;</span>   <span class="p">:</span> <span class="nb">int</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">endTime</span> <span class="p">)</span> <span class="p">,</span>
+                   <span class="s2">&quot;stepSize&quot;</span>  <span class="p">:</span> <span class="nb">float</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepSize</span> <span class="p">)</span>
+                 <span class="p">}</span>
+            
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="n">url</span> <span class="p">,</span> <span class="n">json</span> <span class="o">=</span> <span class="n">pl</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="c1"># Initialise all inputs and outputs in current values</span>
+                <span class="k">for</span> <span class="n">aInput</span> <span class="ow">in</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;inputs&quot;</span> <span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">currentValues</span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_inputs_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aInput</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="n">aInput</span><span class="p">[</span> <span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_inputs_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aInput</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_inputs_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aInput</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">aInput</span><span class="p">[</span> <span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="p">)</span>
+                <span class="k">for</span> <span class="n">aOutput</span> <span class="ow">in</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;outputs&quot;</span> <span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">currentValues</span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_outputs_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aOutput</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="n">aOutput</span><span class="p">[</span> <span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_outputs_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aOutput</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_outputs_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aOutput</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">aOutput</span><span class="p">[</span> <span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;/initialize works - Status code is 200&quot;</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;/initialize - Status code is not 200.&quot;</span> <span class="p">)</span>
+                <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+    
+<div class="viewcode-block" id="CoSimulationManager.setInputsOfServices"><a class="viewcode-back" href="../csm.html#CoSimulationManager.CoSimulationManager.setInputsOfServices">[docs]</a>    <span class="k">def</span> <span class="nf">setInputsOfServices</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function which writes for all services and all inputs the last value to a </span>
+<span class="sd">        respective input of a service.</span>
+<span class="sd">        Provides the service resource with:</span>
+<span class="sd">            - id -&gt; id of input variable in namespace of service</span>
+<span class="sd">            - value -&gt; value to which the input should be set</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;debugging services: &quot;</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span> <span class="o">+</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;ip&quot;</span> <span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;port&quot;</span> <span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/Service/write&quot;</span>
+            <span class="n">lInputs</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;inputs&quot;</span> <span class="p">]</span>
+            <span class="k">for</span> <span class="n">aInput</span> <span class="ow">in</span> <span class="n">lInputs</span><span class="p">:</span>
+                
+                <span class="n">pl</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span>    <span class="p">:</span> <span class="n">aInput</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="p">,</span>
+                    <span class="s2">&quot;value&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_inputs_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aInput</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">][</span> <span class="o">-</span><span class="mi">1</span> <span class="p">]</span>
+                    <span class="p">}</span>
+                
+                <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span> <span class="n">url</span> <span class="p">,</span> <span class="n">json</span> <span class="o">=</span> <span class="n">pl</span> <span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span> <span class="n">r</span><span class="o">.</span><span class="n">url</span> <span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;set inputs of services works - Status code is 200&quot;</span> <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;/write - Status code is not 200.&quot;</span> <span class="p">)</span>
+                    <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+    
+<div class="viewcode-block" id="CoSimulationManager.getOutputsOfServices"><a class="viewcode-back" href="../csm.html#CoSimulationManager.CoSimulationManager.getOutputsOfServices">[docs]</a>    <span class="k">def</span> <span class="nf">getOutputsOfServices</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function which reads for all services and all outputs the current value</span>
+<span class="sd">        Provides the service resource with:</span>
+<span class="sd">            - id -&gt; id of output variable in namespace of service</span>
+<span class="sd">        Services provide in response the current values in a json structure</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentValues</span><span class="p">[</span> <span class="s2">&quot;time&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span><span class="p">[</span> <span class="s2">&quot;time&quot;</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span> <span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span> <span class="o">+</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;ip&quot;</span> <span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;port&quot;</span> <span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/Service/read&quot;</span>
+            <span class="n">lOutputs</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;outputs&quot;</span> <span class="p">]</span>
+            <span class="k">for</span> <span class="n">aOutput</span> <span class="ow">in</span> <span class="n">lOutputs</span><span class="p">:</span>
+                
+                <span class="n">pl</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">aOutput</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="p">}</span>
+                
+                <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">url</span> <span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">pl</span> <span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span> <span class="n">r</span><span class="o">.</span><span class="n">url</span> <span class="p">)</span>
+                    <span class="c1"># Update outputs with new value</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span> <span class="s2">&quot;value&quot;</span> <span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">currentValues</span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_outputs_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aOutput</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_outputs_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aOutput</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
+                    <span class="c1"># Update inputs mapped to the output</span>
+                    <span class="k">for</span> <span class="n">aMap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mappings</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">aMap</span><span class="p">[</span> <span class="s2">&quot;soid&quot;</span> <span class="p">]</span> <span class="o">==</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="ow">and</span> <span class="n">aMap</span><span class="p">[</span> <span class="s2">&quot;oid&quot;</span> <span class="p">]</span> <span class="o">==</span> <span class="n">aOutput</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aMap</span><span class="p">[</span> <span class="s2">&quot;siid&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_inputs_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span> <span class="n">aMap</span><span class="p">[</span> <span class="s2">&quot;iid&quot;</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;/read - Status code is not 200.&quot;</span> <span class="p">)</span>
+                    <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+    
+<div class="viewcode-block" id="CoSimulationManager.shutDownServices"><a class="viewcode-back" href="../csm.html#CoSimulationManager.CoSimulationManager.shutDownServices">[docs]</a>    <span class="k">def</span> <span class="nf">shutDownServices</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function which shut downs a service.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span> <span class="o">+</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;ip&quot;</span> <span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">service</span><span class="p">[</span> <span class="s2">&quot;port&quot;</span> <span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/Service&quot;</span> <span class="o">+</span> <span class="s2">&quot;/shutdown&quot;</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="n">url</span> <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span> <span class="n">r</span><span class="o">.</span><span class="n">url</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;/shutdown - Status code is not 200.&quot;</span> <span class="p">)</span>
+                <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+    
+<div class="viewcode-block" id="CoSimulationManager.getResults"><a class="viewcode-back" href="../csm.html#CoSimulationManager.CoSimulationManager.getResults">[docs]</a>    <span class="k">def</span> <span class="nf">getResults</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to return results</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">allValues</span></div>
+
+<div class="viewcode-block" id="CoSimulationManager.runCoSimulation"><a class="viewcode-back" href="../csm.html#CoSimulationManager.CoSimulationManager.runCoSimulation">[docs]</a>    <span class="k">def</span> <span class="nf">runCoSimulation</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function performs the actual co-simulation task</span>
+<span class="sd">        (1) Initialise the services and write initial values</span>
+<span class="sd">        while loop</span>
+<span class="sd">        (2) write current value to inputs of services</span>
+<span class="sd">        (3) wait and increase time step</span>
+<span class="sd">        (4) read and update current values of inputs from retrieved outputs</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># (1)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialiseServices</span><span class="p">()</span>
+        
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">endTime</span><span class="p">:</span>            
+            <span class="c1"># (2) write current values</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setInputsOfServices</span><span class="p">()</span>
+          
+            <span class="c1"># (3) increase and wait</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepSize</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepSize</span> <span class="p">)</span>
+                        
+            <span class="c1"># (4) read and update</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">getOutputsOfServices</span><span class="p">()</span>       
+            <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;DEBUG | Current values is: &quot;</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentValues</span> <span class="p">)</span>
+            
+        <span class="c1"># end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shutDownServices</span><span class="p">()</span>    
+        
+        <span class="k">return</span> <span class="mi">0</span></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">COE</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../csm.html">CoSimulationManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cso.html">CoSimulationOrchestrator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dbm.html">DatabaseManager</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, geos.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

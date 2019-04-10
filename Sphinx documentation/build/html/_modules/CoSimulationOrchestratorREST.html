@@ -1,0 +1,1593 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CoSimulationOrchestratorREST &#8212; COE 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CoSimulationOrchestratorREST</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Fri Nov  9 15:04:57 2018</span>
+
+<span class="sd">.. module:: CoSimulationOrchestratorREST</span>
+
+<span class="sd">@author: geos + viho</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">aiohttp</span> <span class="k">import</span> <span class="n">web</span>
+<span class="kn">from</span> <span class="nn">CoSimulationManager</span> <span class="k">import</span> <span class="n">CoSimulationManager</span>
+<span class="kn">from</span> <span class="nn">DatabaseManager</span> <span class="k">import</span> <span class="n">DatabaseManager</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1">###   ###   ###   ###   </span>
+<span class="c1"># Global properties and initialisation</span>
+<span class="c1"># 1 DatabaseManager:</span>
+
+<span class="n">pathToDB</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="s2">&quot;T:/&quot;</span> <span class="p">,</span>
+                         <span class="s2">&quot;VirtualCommissioning&quot;</span> <span class="p">,</span>
+                         <span class="s2">&quot;01_Codetesting&quot;</span> <span class="p">,</span>
+                         <span class="s2">&quot;03_Database&quot;</span> <span class="p">,</span>
+                         <span class="s2">&quot;test.db&quot;</span> <span class="p">)</span>
+<span class="n">dbm</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">(</span> <span class="n">pathToDB</span> <span class="p">)</span>
+<span class="n">dbm</span><span class="o">.</span><span class="n">initTables</span><span class="p">()</span>
+
+<span class="c1"># 2 CoSimulationManager</span>
+<span class="n">csm</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1">###   ###   ###   ###   </span>
+<span class="c1"># REST API resources</span>
+
+<span class="c1"># http://127.0.0.1:3030/cso/testConnection</span>
+<div class="viewcode-block" id="testConnection"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.testConnection">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">testConnection</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to test if CSO is online and operative</span>
+
+<span class="sd">	:param request:</span>
+<span class="sd">	:type http-request:</span>
+
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/testConnection</span>
+
+<span class="sd">	:returns: Statusmessage, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON</span>
+
+<span class="sd">	:Example:</span>
+
+<span class="sd">	.. code-block:: python</span>
+
+<span class="sd">		{ &quot;Status&quot; : &quot;OK&quot;}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;HEUREKA&quot;</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;OK&quot;</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/uploadYAML</span>
+<div class="viewcode-block" id="uploadYAML"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.uploadYAML">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">uploadYAML</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint to receive json encoded full group from YAML file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;yep&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;yep&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;received data&quot;</span> <span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;OK&quot;</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/create/group</span>
+<div class="viewcode-block" id="createGroup"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.createGroup">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">createGroup</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to create a group using the DatabaseManager</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with JSON-Body </span>
+<span class="sd">	:type request: POST</span>
+
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/create/group</span>
+
+<span class="sd">	:returns: Statusmessage with created group id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON</span>
+
+<span class="sd">	:Example: JSON Body</span>
+
+<span class="sd">	.. code-block:: python</span>
+
+<span class="sd">		{ &quot;name&quot; : &lt;name_of_group&gt; }</span>
+<span class="sd">	</span>
+<span class="sd">	Returns:</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Group successfully created. &quot;, &quot;id&quot; : &lt;gid&gt; }</span>
+<span class="sd">	</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">		</span>
+<span class="sd">		&lt;gid&gt; : Group identifier ( integer )</span>
+<span class="sd">		</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">gname</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> 
+        <span class="n">gid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">createGroup</span><span class="p">(</span> <span class="n">gname</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Group successfully created. &quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span> <span class="n">gid</span> <span class="p">)</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/edit/group</span>
+<div class="viewcode-block" id="editGroup"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.editGroup">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">editGroup</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   Function to edit a group using the DatabaseManager</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with JSON-Body </span>
+<span class="sd">	:type request: PUT</span>
+
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/edit/group</span>
+
+<span class="sd">	:returns: Statusmessage with edited group id , HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON</span>
+<span class="sd">		</span>
+<span class="sd">	:Example: JSON Body</span>
+
+<span class="sd">	.. code-block:: python</span>
+
+<span class="sd">		{ &quot;name&quot; : &lt;name_of_group&gt; , </span>
+<span class="sd">		  &quot;id&quot;   : &lt;gid&gt; }</span>
+<span class="sd">	</span>
+<span class="sd">	Returns:</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Group successfully edited. &quot;, &quot;id&quot; : &lt;gid&gt; }</span>
+
+<span class="sd">	.. note:: </span>
+<span class="sd">		</span>
+<span class="sd">		&lt;gid&gt; : Group identifier ( integer )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">gname</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> 
+        <span class="n">gid</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> 
+        <span class="n">gid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">editGroup</span><span class="p">(</span> <span class="n">gid</span> <span class="p">,</span> <span class="n">gname</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span> <span class="n">gname</span> <span class="p">)</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span> <span class="n">gid</span> <span class="p">)</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/group?id=1</span>
+<div class="viewcode-block" id="retrieveGroup"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.retrieveGroup">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">retrieveGroup</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to retrieve a group</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request with group id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	:param id: Additional request parameter</span>
+<span class="sd">	:type id: integer</span>
+
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/group?id=1</span>
+
+<span class="sd">	:returns: Requested group of given group identifier , HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+
+<span class="sd">	.. code-block:: python</span>
+
+<span class="sd">		{ &quot;services&quot; : [ { </span>
+<span class="sd">				&quot;id&quot;     : &lt;sid&gt; , </span>
+<span class="sd">				&quot;name&quot;   : &lt;name_of_service&gt; ,</span>
+<span class="sd">				&quot;ip&quot;     : &lt;ip_of_service&gt; ,</span>
+<span class="sd">				&quot;port&quot;   : &lt;port_of_service&gt; ,</span>
+<span class="sd">				&quot;target&quot; : &lt;address_of_service&gt;, </span>
+<span class="sd">				&quot;inputs&quot; : [ { </span>
+<span class="sd">					&quot;id&quot;         : &lt;id_of_input&gt; , </span>
+<span class="sd">					&quot;inputName&quot;  : &lt;name_of_input&gt; ,</span>
+<span class="sd">					&quot;initialVal&quot; : &lt;float_value&gt;</span>
+<span class="sd">				} , { anotherInput }  ]  ,  </span>
+<span class="sd">				&quot;outputs&quot;: [ { </span>
+<span class="sd">					&quot;id&quot;         : &lt;id_of_output&gt; , </span>
+<span class="sd">					&quot;inputName&quot;  : &lt;name_of_output&gt;,</span>
+<span class="sd">					&quot;initialVal&quot; : &lt;float_value&gt; </span>
+<span class="sd">				} , { anotherOutput } ]  </span>
+<span class="sd">		  } , { another service }</span>
+<span class="sd">		  ]</span>
+<span class="sd">		}</span>
+<span class="sd">		</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">gid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveGroup</span><span class="p">(</span> <span class="n">gid</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">group</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">group</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ERROR&quot;</span> <span class="p">,</span> <span class="s2">&quot;description&quot;</span> <span class="p">:</span> <span class="s2">&quot;ID provided not known&quot;</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">404</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/groups</span>
+<div class="viewcode-block" id="groups"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.groups">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">groups</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to retrieve all groups</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Http request</span>
+<span class="sd">	:type request: GET</span>
+
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/groups</span>
+
+<span class="sd">	:returns: All groups saved in the database , HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON</span>
+<span class="sd">	</span>
+<span class="sd">	:Example:</span>
+
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">	</span>
+<span class="sd">		[ { &quot;id&quot;  : &lt;gid&gt; ,</span>
+<span class="sd">			&quot;name&quot; : &lt;gname&gt; , </span>
+<span class="sd">			&quot;services&quot; : [ {</span>
+<span class="sd">				&quot;id&quot;   : &lt;sid&gt; , </span>
+<span class="sd">				&quot;name&quot; : &lt;sname&gt; , </span>
+<span class="sd">				&quot;ip&quot;   : &lt;sip&gt; , </span>
+<span class="sd">				&quot;port&quot; : &lt;sport&gt; , </span>
+<span class="sd">				&quot;target&quot; : &lt;starget&gt; , </span>
+<span class="sd">				&quot;inputs&quot; : [ {</span>
+<span class="sd">					&quot;id&quot; : &lt;iid&gt; , </span>
+<span class="sd">					&quot;inputName&quot; : &lt;iname&gt; , </span>
+<span class="sd">					&quot;initialVal&quot; : &lt;iinitvalue&gt; } , { another input } </span>
+<span class="sd">				] , </span>
+<span class="sd">				&quot;outputs&quot; : [ {</span>
+<span class="sd">					&quot;id&quot; : &lt;oid&gt; , </span>
+<span class="sd">					&quot;outputName&quot; : &lt;oname&gt; , </span>
+<span class="sd">					&quot;initialVal&quot; : &lt;oinitvalue&gt; } , { another output } </span>
+<span class="sd">				] } , </span>
+<span class="sd">				{  another Service } </span>
+<span class="sd">			]</span>
+<span class="sd">		  } , { another Group } </span>
+<span class="sd">		]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">lGroup</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">getAllGroups</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">lGroup</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/delete/group?id=1</span>
+<div class="viewcode-block" id="deleteGroup"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.deleteGroup">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">deleteGroup</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to delete a group</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with group id</span>
+<span class="sd">	:type request: DELETE</span>
+<span class="sd">	:param id: Additional request parameter</span>
+<span class="sd">	:type id: integer</span>
+<span class="sd">	</span>
+
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/delete/group?id=1</span>
+
+<span class="sd">	:returns: Statusmessage with deleted group id , HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+<span class="sd">	</span>
+<span class="sd">	Returns:</span>
+
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Group successfully deleted. &quot; ,  &quot;id&quot; : &lt;gid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">	.. note::</span>
+<span class="sd">	</span>
+<span class="sd">		&lt;gid&gt; : group identifier</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">gid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    <span class="n">dbm</span><span class="o">.</span><span class="n">deleteGroup</span><span class="p">(</span> <span class="n">gid</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Group successfully created. &quot;</span> <span class="p">,</span>  <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">gid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/create/service</span>
+<div class="viewcode-block" id="createService"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.createService">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">createService</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to create a service of a group using the DatabaseManager</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with JSON-Body </span>
+<span class="sd">	:type request: POST</span>
+
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/create/service</span>
+
+<span class="sd">	:returns: Statusmessage with created service id , HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;name&quot;   : &lt;sname&gt; , </span>
+<span class="sd">		  &quot;ip&quot;     : &lt;sip&gt; , </span>
+<span class="sd">		  &quot;port&quot;   : &lt;sport&gt; , </span>
+<span class="sd">		  &quot;target&quot; : &lt;starget&gt; ,</span>
+<span class="sd">		  &quot;groupid&quot;: &lt;gid&gt;</span>
+<span class="sd">		}</span>
+<span class="sd">	</span>
+<span class="sd">	Returns:</span>
+
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Service successfully created. &quot; ,  &quot;id&quot; : &lt;sid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">	.. note::</span>
+<span class="sd">	</span>
+<span class="sd">		&lt;sid&gt; : service identifier</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>        
+                
+        <span class="n">sid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">createService</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">],</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;ip&quot;</span> <span class="p">]</span> <span class="p">,</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;port&quot;</span> <span class="p">]</span> <span class="p">,</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;target&quot;</span> <span class="p">]</span> <span class="p">,</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;groupid&quot;</span> <span class="p">])</span>
+        
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Service successfully created. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">sid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span>    </div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/edit/service</span>
+<div class="viewcode-block" id="editService"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.editService">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">editService</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to edit a service using the DatabaseManager</span>
+<span class="sd">	specific editting is possible -&gt; split request to attribute instead of full json body ( implemented on request )</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request with JSON Body</span>
+<span class="sd">	:type request: PUT</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/edit/service</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage , HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;gid&quot; : &lt;gid&gt; , </span>
+<span class="sd">		  &quot;id&quot;  : &lt;sid&gt; , </span>
+<span class="sd">		  &quot;name&quot; : &lt;sname&gt; ,</span>
+<span class="sd">		  &quot;ip&quot;     : &lt;sip&gt; , </span>
+<span class="sd">		  &quot;port&quot;   : &lt;sport&gt; , </span>
+<span class="sd">		  &quot;target&quot; : &lt;starget&gt; </span>
+<span class="sd">		}</span>
+<span class="sd">	</span>
+<span class="sd">	Returns:</span>
+
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Service successfully edited. &quot; ,  &quot;id&quot; : &lt;sid&gt; }</span>
+<span class="sd">	</span>
+<span class="sd">	.. note::</span>
+<span class="sd">		</span>
+<span class="sd">		&lt;gid&gt; : group identifier ( integer )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">sname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">gid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;gid&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">sid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span> 
+        <span class="n">sip</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;ip&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">sport</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;port&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">starget</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;target&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editServiceGroup</span><span class="p">(</span> <span class="n">sid</span> <span class="p">,</span> <span class="n">gid</span> <span class="p">)</span> 
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editServiceName</span><span class="p">(</span> <span class="n">sid</span> <span class="p">,</span> <span class="n">sname</span> <span class="p">)</span>
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editServiceIP</span><span class="p">(</span> <span class="n">sid</span> <span class="p">,</span> <span class="n">sip</span> <span class="p">)</span>
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editServicePort</span><span class="p">(</span> <span class="n">sid</span> <span class="p">,</span> <span class="n">sport</span> <span class="p">)</span>
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editServiceTarget</span><span class="p">(</span> <span class="n">sid</span> <span class="p">,</span> <span class="n">starget</span> <span class="p">)</span>
+        
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;Service successfully edited. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span> <span class="n">sid</span> <span class="p">)</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/service?id=1</span>
+<div class="viewcode-block" id="getService"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.getService">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">getService</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to get specific service of given ID</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request with service id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:param id: Service id as additional request parameter</span>
+<span class="sd">	:type id: integer</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/service?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested service , HTTP statuscode = 200</span>
+<span class="sd">	:rtype: LIST of JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;gid&quot; : &lt;gid&gt; , </span>
+<span class="sd">		  &quot;id&quot;  : &lt;sid&gt; , </span>
+<span class="sd">		  &quot;name&quot; : &lt;sname&gt; ,</span>
+<span class="sd">		  &quot;ip&quot;     : &lt;sip&gt; , </span>
+<span class="sd">		  &quot;port&quot;   : &lt;sport&gt; , </span>
+<span class="sd">		  &quot;target&quot; : &lt;starget&gt; </span>
+<span class="sd">		}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    
+    <span class="n">sid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    <span class="n">service</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveService</span><span class="p">(</span> <span class="n">sid</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">service</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/services?group=1</span>
+<div class="viewcode-block" id="getServicesOfGroup"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.getServicesOfGroup">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">getServicesOfGroup</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to retrieve all services of given group id</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request with group id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:param id: Additional request parameter</span>
+<span class="sd">	:type id: integer</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/services?group=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested service of given group id , HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example:</span>
+<span class="sd">	</span>
+<span class="sd">	Returns:</span>
+
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		[ { &quot;gid&quot; : &lt;gid&gt; , </span>
+<span class="sd">			&quot;id&quot;  : &lt;sid&gt; , </span>
+<span class="sd">			&quot;name&quot; : &lt;sname&gt; ,</span>
+<span class="sd">			&quot;ip&quot;     : &lt;sip&gt; , </span>
+<span class="sd">			&quot;port&quot;   : &lt;sport&gt; , </span>
+<span class="sd">			&quot;target&quot; : &lt;starget&gt; </span>
+<span class="sd">			} , { another Serivce }</span>
+<span class="sd">		]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">gid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;group&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveServices</span><span class="p">(</span> <span class="n">gid</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">services</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span></div>
+
+
+
+
+<span class="c1"># http://127.0.0.1:3030/delete/service?id=1</span>
+<div class="viewcode-block" id="deleteService"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.deleteService">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">deleteService</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to delete Service with given ID</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request with service id</span>
+<span class="sd">	:type request: DELETE</span>
+<span class="sd">	</span>
+<span class="sd">	:param id: Service id as additional request parameter</span>
+<span class="sd">	:type id: integer</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/delete/service?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with deleted service id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;status&quot; : &quot;Service successfully deleted. &quot; , &quot;id&quot; : &lt;sid&gt; }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">sid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">delID</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">deleteService</span><span class="p">(</span> <span class="n">sid</span> <span class="p">)</span>
+    
+    <span class="k">if</span><span class="p">(</span> <span class="n">sid</span> <span class="o">==</span> <span class="n">delID</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Service successfully deleted. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">sid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span></div>
+
+    <span class="c1">### MISSING ERROR HANDLING ###</span>
+
+<span class="c1"># http://127.0.0.1:3030/cso/create/output</span>
+<div class="viewcode-block" id="createOutput"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.createOutput">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">createOutput</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to create Output</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with JSON body</span>
+<span class="sd">	:type request: POST</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/create/output</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with created output id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;serviceid&quot; : &lt;soid&gt; , </span>
+<span class="sd">		  &quot;name&quot;      : &lt;oname&gt; , </span>
+<span class="sd">		  &quot;initialVal&quot;: &lt;ovalue&gt; </span>
+<span class="sd">		}		</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;status&quot; : &quot;Output successfully created. &quot; , &quot;id&quot; : &lt;oid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;soid&gt; : service output identifier ( integer )</span>
+<span class="sd">		&lt;ovalue&gt; : output initial value ( float )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        
+        <span class="n">oid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">createOutput</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">,</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="p">,</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="p">)</span>
+                
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;output successfully created&quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">oid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/edit/output</span>
+<div class="viewcode-block" id="editOutput"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.editOutput">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">editOutput</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to edit an output using the DatabaseManager</span>
+<span class="sd">	specific editting is possible -&gt; split request to attribute instead of full json body</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with JSON body</span>
+<span class="sd">	:type request: PUT</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/edit/output</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with edited output id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;serviceid&quot; : &lt;soid&gt; , </span>
+<span class="sd">		  &quot;id&quot;        : &lt;oid&gt; ,</span>
+<span class="sd">		  &quot;name&quot;      : &lt;oname&gt; , </span>
+<span class="sd">		  &quot;initialValue&quot;: &lt;ovalue&gt; </span>
+<span class="sd">		}		</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;status&quot; : &quot;Output successfully edited. &quot; , &quot;id&quot; : &lt;oid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;oid&gt; : output identifier ( integer )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">sid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;serviceid&quot;</span> <span class="p">]</span> <span class="p">)</span> 
+        <span class="n">oid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">oname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">oiv</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editNameOfOutput</span><span class="p">(</span> <span class="n">oid</span> <span class="p">,</span> <span class="n">oname</span> <span class="p">)</span>
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editServiceOfOutput</span><span class="p">(</span> <span class="n">oid</span> <span class="p">,</span> <span class="n">sid</span> <span class="p">)</span>
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editInitValueOfOutput</span><span class="p">(</span> <span class="n">oid</span> <span class="p">,</span> <span class="n">oiv</span> <span class="p">)</span>
+        
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;Output successfully edited. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">oid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/output?id=1</span>
+<div class="viewcode-block" id="retrieveOutput"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.retrieveOutput">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">retrieveOutput</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to get specific output of given ID</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with output id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:param id: Output id as additional request parameter</span>
+<span class="sd">	:type id: integer</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/output?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested output, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example:</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;id&quot; : &lt;oid&gt; , </span>
+<span class="sd">		  &quot;name&quot; : &lt;oname&gt; , </span>
+<span class="sd">		  &quot;initialValue&quot; : &lt;ovalue&gt;</span>
+<span class="sd">		  &quot;serviceid&quot; : &lt;sid&gt;</span>
+<span class="sd">		}</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;sid&gt; : reference to service identifier ( integer )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    
+    <span class="n">oid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveOutput</span><span class="p">(</span> <span class="n">oid</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">out</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/outputs?service=1</span>
+<div class="viewcode-block" id="serviceOutputs"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.serviceOutputs">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">serviceOutputs</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to get all outputs of specific service</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with service id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:param service: Service id as additional request parameter</span>
+<span class="sd">	:type service: integer</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/outputs?service=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested outputs of given service, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example:</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		[ { &quot;id&quot; : &lt;oid&gt; , </span>
+<span class="sd">			&quot;name&quot; : &lt;oname&gt; , </span>
+<span class="sd">			&quot;initialValue&quot; : &lt;ovalue&gt;</span>
+<span class="sd">			&quot;serviceid&quot; : &lt;sid&gt;</span>
+<span class="sd">			} , { another output }</span>
+<span class="sd">		]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">sid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;service&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">oos</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveOutputsOfService</span><span class="p">(</span> <span class="n">sid</span> <span class="p">)</span>
+    
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">oos</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/delete/output?id=1</span>
+<div class="viewcode-block" id="deleteOutput"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.deleteOutput">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">deleteOutput</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to delete specific output of given ID</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with output id</span>
+<span class="sd">	:type request: DELETE</span>
+<span class="sd">	</span>
+<span class="sd">	:param id: Output id as additional request parameter</span>
+<span class="sd">	:type id: integer</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/delete/output?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with deleted output id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example:</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Output successfully deleted. &quot; , &quot;id&quot; : &lt;oid&gt; }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">oid</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span>
+    <span class="c1">#od = dbm.deleteOutput( oid )</span>
+    <span class="n">delO</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">deleteOutput</span><span class="p">(</span> <span class="n">oid</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Output successfully deleted. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">delO</span><span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/create/input</span>
+<div class="viewcode-block" id="createInput"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.createInput">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">createInput</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to create Input</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with JSON body</span>
+<span class="sd">	:type request: POST</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/create/input</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with created input id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;serviceid&quot; : &lt;siid&gt; , </span>
+<span class="sd">		  &quot;name&quot;      : &lt;iname&gt; , </span>
+<span class="sd">		  &quot;initialVal&quot;: &lt;ivalue&gt; </span>
+<span class="sd">		}		</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;status&quot; : &quot;Input successfully created. &quot; , &quot;id&quot; : &lt;iid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;siid&gt; : service input identifier ( integer )</span>
+<span class="sd">		&lt;ivalue&gt; : input initial value ( float )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        
+        <span class="n">iid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">createInput</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;serviceID&quot;</span> <span class="p">]</span> <span class="p">,</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="p">,</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="p">)</span>
+
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;status&quot;</span> <span class="p">:</span> <span class="s2">&quot;input successfully created&quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">iid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/edit/input</span>
+<div class="viewcode-block" id="editInput"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.editInput">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">editInput</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to edit an input using the DatabaseManager</span>
+<span class="sd">	specific editting is possible -&gt; split request to attribute instead of full json body</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with JSON body</span>
+<span class="sd">	:type request: PUT</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/edit/input</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with edited input id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;serviceid&quot;   : &lt;siid&gt; , </span>
+<span class="sd">		  &quot;id&quot;          : &lt;iid&gt; ,</span>
+<span class="sd">		  &quot;name&quot;        : &lt;iname&gt; , </span>
+<span class="sd">		  &quot;initialValue&quot;: &lt;ivalue&gt; </span>
+<span class="sd">		}		</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;status&quot; : &quot;Input successfully edited. &quot; , &quot;id&quot; : &lt;iid&gt; }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">sid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;serviceid&quot;</span> <span class="p">]</span> <span class="p">)</span> 
+        <span class="n">iid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">iname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">iiv</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editNameOfInput</span><span class="p">(</span> <span class="n">iid</span> <span class="p">,</span> <span class="n">iname</span> <span class="p">)</span>
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editServiceOfInput</span><span class="p">(</span> <span class="n">iid</span> <span class="p">,</span> <span class="n">sid</span> <span class="p">)</span>
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editInitValueOfInput</span><span class="p">(</span> <span class="n">iid</span> <span class="p">,</span> <span class="n">iiv</span> <span class="p">)</span>
+        
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;Input successfully edited. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">iid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/input?id=1</span>
+<div class="viewcode-block" id="retrieveInput"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.retrieveInput">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">retrieveInput</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to get specific output of given ID</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with input id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/input?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested input, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example:</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;serviceid&quot;   : &lt;siid&gt; , </span>
+<span class="sd">		  &quot;id&quot;          : &lt;iid&gt; ,</span>
+<span class="sd">		  &quot;name&quot;        : &lt;iname&gt; , </span>
+<span class="sd">		  &quot;initialValue&quot;: &lt;ivalue&gt; </span>
+<span class="sd">		}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    
+    <span class="n">iid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">inp</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveInput</span><span class="p">(</span> <span class="n">iid</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">inp</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+
+<span class="c1"># http://127.0.0.1:3030/cso/inputs?service=1</span>
+<div class="viewcode-block" id="serviceInputs"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.serviceInputs">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">serviceInputs</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to get all inputs of specific service</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with service id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:param service: Service id as additional request parameter</span>
+<span class="sd">	:type service: integer</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/inputs?service=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested outputs of given service, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example:</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		[ { &quot;id&quot; : &lt;iid&gt; , </span>
+<span class="sd">			&quot;name&quot; : &lt;iname&gt; , </span>
+<span class="sd">			&quot;initialValue&quot; : &lt;ivalue&gt;</span>
+<span class="sd">			&quot;serviceid&quot; : &lt;sid&gt;</span>
+<span class="sd">			} , { another input }</span>
+<span class="sd">		]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">sid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;service&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">ios</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveInputsOfService</span><span class="p">(</span> <span class="n">sid</span> <span class="p">)</span>   
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">ios</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/delete/input?id=1</span>
+<div class="viewcode-block" id="deleteInput"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.deleteInput">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">deleteInput</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to delete specific input of given ID</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with input id</span>
+<span class="sd">	:type request: DELETE</span>
+<span class="sd">	</span>
+<span class="sd">	:param id: Input id as additional request parameter</span>
+<span class="sd">	:type id: integer</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/delete/input?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with deleted input id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example:</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Input successfully deleted. &quot; , &quot;id&quot; : &lt;iid&gt; }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">iid</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span>
+    
+    <span class="n">delI</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">deleteInput</span><span class="p">(</span> <span class="n">iid</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Input successfully deleted.&quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">delI</span><span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/create/mapping</span>
+<div class="viewcode-block" id="createMapping"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.createMapping">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">createMapping</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function to create mapping</span>
+
+<span class="sd">    :param request: Request is sent with JSON body</span>
+<span class="sd">	:type request: POST</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/create/mapping</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with created mapping id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;gid&quot;  : &lt;gid&gt; , </span>
+<span class="sd">		  &quot;soid&quot; : &lt;soid&gt; ,</span>
+<span class="sd">		  &quot;oid&quot;  : &lt;oid&gt; ,</span>
+<span class="sd">		  &quot;siid&quot; : &lt;siid&gt; ,</span>
+<span class="sd">		  &quot;iid&quot;  : &lt;iid&gt; </span>
+<span class="sd">		}</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;status&quot; : &quot;Mapping successfully set. &quot; , &quot;id&quot; : &lt;mid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;mid&gt; : mapping identifier ( integer )</span>
+<span class="sd">		&lt;soid&gt; , &lt;siid&gt; : service of output/input identifier ( integer )</span>
+<span class="sd">		&lt;gid&gt; : group identifier ( integer )</span>
+<span class="sd">		&lt;oid&gt; , &lt;iid&gt; : output/input identifier ( integer )</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">createMapping</span><span class="p">(</span> <span class="n">data</span> <span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Mappings successfully created.&quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">mid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span> </div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/edit/mapping</span>
+<div class="viewcode-block" id="editMapping"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.editMapping">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">editMapping</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to edit mapping using the DatabaseManager</span>
+<span class="sd">	specific editting is possible -&gt; split request to attribute instead of full json body</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with JSON body</span>
+<span class="sd">	:type request: PUT</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/edit/mapping</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with edited mapping id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;id&quot;   : &lt;mid&gt; ,</span>
+<span class="sd">		  &quot;gid&quot;  : &lt;gid&gt; , </span>
+<span class="sd">		  &quot;soid&quot; : &lt;soid&gt; ,</span>
+<span class="sd">		  &quot;oid&quot;  : &lt;oid&gt; ,</span>
+<span class="sd">		  &quot;siid&quot; : &lt;siid&gt; ,</span>
+<span class="sd">		  &quot;iid&quot;  : &lt;iid&gt; </span>
+<span class="sd">		}</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;status&quot; : &quot;Mapping successfully edited. &quot; , &quot;id&quot; : &lt;mid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;mid&gt; : mapping identifier ( integer )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">editMapping</span><span class="p">(</span> <span class="n">data</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;Mapping successfully edited. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">mid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/mappings?group=1</span>
+<div class="viewcode-block" id="retrieveMappings"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.retrieveMappings">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">retrieveMappings</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to retrieve all existing mappings of a group</span>
+
+<span class="sd">    :param request: Request is sent with group id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:param group: group identifier</span>
+<span class="sd">	:type group: integer</span>
+<span class="sd">	</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/mappings?group=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested mapping of given group id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		[ { &quot;id&quot;   : &lt;mid&gt; ,</span>
+<span class="sd">			&quot;gid&quot;  : &lt;gid&gt; , </span>
+<span class="sd">			&quot;soid&quot; : &lt;soid&gt; ,</span>
+<span class="sd">			&quot;oid&quot;  : &lt;oid&gt; ,</span>
+<span class="sd">			&quot;siid&quot; : &lt;siid&gt; ,</span>
+<span class="sd">			&quot;iid&quot;  : &lt;iid&gt; </span>
+<span class="sd">			} , { another Mapping }</span>
+<span class="sd">		]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">gid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;gid&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">maps</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveMappings</span><span class="p">(</span> <span class="n">gid</span> <span class="p">)</span>
+    
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">maps</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/mapping?id=1</span>
+<div class="viewcode-block" id="retrieveMapping"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.retrieveMapping">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">retrieveMapping</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to retrieve one specified mapping</span>
+
+<span class="sd">    :param request: Request is sent with mapping id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:param id: mapping identifier</span>
+<span class="sd">	:type id: integer</span>
+<span class="sd">	</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/mapping?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested mapping of given mapping id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;id&quot;   : &lt;mid&gt; ,</span>
+<span class="sd">		  &quot;gid&quot;  : &lt;gid&gt; , </span>
+<span class="sd">		  &quot;soid&quot; : &lt;soid&gt; ,</span>
+<span class="sd">		  &quot;oid&quot;  : &lt;oid&gt; ,</span>
+<span class="sd">		  &quot;siid&quot; : &lt;siid&gt; ,</span>
+<span class="sd">		  &quot;iid&quot;  : &lt;iid&gt; </span>
+<span class="sd">		}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">omap</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveMap</span><span class="p">(</span> <span class="n">mid</span> <span class="p">)</span>
+    
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">omap</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/delete/mapping?id=1</span>
+<div class="viewcode-block" id="deleteMapping"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.deleteMapping">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">deleteMapping</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to delete mapping</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with mapping id</span>
+<span class="sd">	:type request: DELETE</span>
+<span class="sd">	</span>
+<span class="sd">	:param id: mapping identifier</span>
+<span class="sd">	:type id: integer</span>
+<span class="sd">	</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/delete/mapping?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with deleted mapping id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Mapping successfully deleted. &quot; , &quot;id&quot; : &lt;mid&gt; }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">dMid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">deleteMapping</span><span class="p">(</span> <span class="n">mid</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span><span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Mapping successfully deleted. &quot;</span> <span class="p">,</span>  <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">dMid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/create/run</span>
+<div class="viewcode-block" id="createRun"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.createRun">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">createRun</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to create run to save table of values and corresponding configuration</span>
+
+<span class="sd">    :param request: Request is sent with JSON body</span>
+<span class="sd">	:type request: POST</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/create/run</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with created run id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;tableName&quot; : &lt;tname&gt; , </span>
+<span class="sd">		  &quot;group&quot; : &lt;gid&gt; </span>
+<span class="sd">		}		</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;status&quot; : &quot;Run successfully initiated. &quot; , &quot;id&quot; : &lt;iid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;tname&gt; : name of table where the values are logged ( string )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">tabName</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;tableName&quot;</span> <span class="p">]</span>
+        <span class="n">gid</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;group&quot;</span> <span class="p">]</span>
+        <span class="n">tid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">createRun</span><span class="p">(</span> <span class="n">tabName</span> <span class="p">,</span> <span class="n">gid</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Run successfully initiated. &quot;</span> <span class="p">,</span> <span class="s2">&quot;Table to log values of run created with id: &quot;</span><span class="p">:</span> <span class="n">tid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/logValues</span>
+<div class="viewcode-block" id="logValues"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.logValues">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">logValues</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to log run into table</span>
+
+<span class="sd">    :param request: Request is sent with JSON body</span>
+<span class="sd">	:type request: POST</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/logValues</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with row id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;runid&quot; : &lt;rid&gt; , </span>
+<span class="sd">		  &quot;inputValues&quot; : [ &lt;ival1&gt; , &lt;ival2&gt; , &lt;ival3&gt; , ... ]</span>
+<span class="sd">		  &quot;outputValues&quot; : [ &lt;oval1&gt; , &lt;oval2&gt; , &lt;oval3&gt; , ... ]</span>
+<span class="sd">		}		</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;status&quot; : &quot;Run successfully initiated. &quot; , &quot;id&quot; : &lt;iid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;ivalX&gt; : float values of respective input names ( float ), ORDER HAS TO BE FIXED</span>
+<span class="sd">		&lt;ovalX&gt; : same as above for output</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">runID</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;runID&quot;</span> <span class="p">]</span>
+        <span class="n">linputVal</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;inputValues&quot;</span> <span class="p">]</span>
+        <span class="n">loutputVal</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;outputValues&quot;</span> <span class="p">]</span>
+        <span class="n">vid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">insertValues</span><span class="p">(</span> <span class="n">runID</span> <span class="p">,</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="n">linputVal</span> <span class="p">,</span> <span class="n">loutputVal</span> <span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Values successfully stored. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">vid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/values?id=1</span>
+<div class="viewcode-block" id="retrieveValues"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.retrieveValues">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">retrieveValues</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function to retrieve value of given run id</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with run id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/values?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested values of given run id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		[</span>
+<span class="sd">			[ &lt;vid&gt; , &lt;val1&gt; , &lt;val2&gt; , ... ] , #first row of value loggs </span>
+<span class="sd">			[ &lt;vid&gt; , &lt;val1&gt; , &lt;val2&gt; , ... ] , #second row of value loggs </span>
+<span class="sd">			[ &lt;vid&gt; , &lt;val1&gt; , &lt;val2&gt; , ... ] #third row of value loggs </span>
+<span class="sd">			...</span>
+<span class="sd">		]</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;vid&gt; : identifier of value set ( integer )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">rid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    <span class="n">runs</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveValues</span><span class="p">(</span> <span class="n">rid</span> <span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">run</span><span class="p">))</span>
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">out</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/delete/valueTable?id=1</span>
+<div class="viewcode-block" id="deleteValueTable"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.deleteValueTable">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">deleteValueTable</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function to delete log table of given table id</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with run id</span>
+<span class="sd">	:type request: DELETE</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/delete/valueTable?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with deleted table name and id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example:</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Table successfully deleted. &quot; , &quot;name&quot; : &lt;tname&gt; , &quot;id&quot; : &lt;tid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;tid&gt; : table identifier ( integer )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">rid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    <span class="n">dtidmessage</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">deleteValueTable</span><span class="p">(</span> <span class="n">rid</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="n">dtidmessage</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">rid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/create/config</span>
+<div class="viewcode-block" id="createConfig"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.createConfig">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">createConfig</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function to create simulation configuration to  specific logging table</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with JSON body</span>
+<span class="sd">	:type request: POST</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/create/config</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with created simulation configuration id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">	</span>
+<span class="sd">		{ &quot;runid&quot; : &lt;rid&gt; , </span>
+<span class="sd">		  &quot;startTime&quot; : &lt;stime&gt; , </span>
+<span class="sd">		  &quot;endTime&quot; : &lt;etime&gt; , </span>
+<span class="sd">		  &quot;stepSize&quot; &lt;ssize&gt; </span>
+<span class="sd">		}</span>
+<span class="sd">	</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Simulation configuration successfully set to run. &quot; , &quot;id&quot; : &lt;cid&gt; }</span>
+<span class="sd">		</span>
+<span class="sd">	.. note:: </span>
+<span class="sd">	</span>
+<span class="sd">		&lt;cid&gt; : simulation configuration identifier ( integer ) , </span>
+<span class="sd">		&lt;stime&gt; , &lt;etime&gt; : starting time and ending time of simulation run ( integer )</span>
+<span class="sd">		&lt;ssize&gt; : step size of time steps ( float )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">rid</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;runID&quot;</span> <span class="p">]</span>
+        <span class="n">stime</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;startTime&quot;</span> <span class="p">]</span>
+        <span class="n">etime</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;endTime&quot;</span> <span class="p">]</span>
+        <span class="n">ssize</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;stepSize&quot;</span> <span class="p">]</span>
+        
+        <span class="n">cid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">setSimConfig</span><span class="p">(</span> <span class="n">rid</span> <span class="p">,</span> <span class="n">stime</span> <span class="p">,</span> <span class="n">etime</span> <span class="p">,</span> <span class="n">ssize</span> <span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Configuration successfully set to run. &quot;</span> <span class="p">,</span> <span class="s2">&quot;runID&quot;</span> <span class="p">:</span> <span class="n">rid</span>  <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">cid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+ 
+<span class="c1"># http://127.0.0.1:3030/cso/edit/config</span>
+<div class="viewcode-block" id="editConfig"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.editConfig">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">editConfig</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to edit an input using the DatabaseManager</span>
+<span class="sd">	specific editting is possible -&gt; split request to attribute instead of full json body</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with JSON body</span>
+<span class="sd">	:type request: PUT</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/edit/config</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with edited simulation configuration id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: JSON Body</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">	</span>
+<span class="sd">		{ &quot;runid&quot; : &lt;rid&gt; , </span>
+<span class="sd">		  &quot;id&quot;    : &lt;cid&gt; ,</span>
+<span class="sd">		  &quot;startTime&quot; : &lt;stime&gt; , </span>
+<span class="sd">		  &quot;endTime&quot; : &lt;etime&gt; , </span>
+<span class="sd">		  &quot;stepSize&quot; &lt;ssize&gt; </span>
+<span class="sd">		}</span>
+<span class="sd">	</span>
+<span class="sd">	</span>
+<span class="sd">	Returns: </span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">		</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Simulation configuration successfully edited. &quot; , &quot;id&quot; : &lt;cid&gt; }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body_exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">rid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;runID&quot;</span> <span class="p">]</span> <span class="p">)</span> 
+        <span class="n">cid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">stime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;startTime&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">etime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;endTime&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="n">ssize</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="s2">&quot;stepSize&quot;</span> <span class="p">]</span> <span class="p">)</span>
+        
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editStartTime</span><span class="p">(</span> <span class="n">rid</span> <span class="p">,</span> <span class="n">cid</span> <span class="p">,</span> <span class="n">stime</span> <span class="p">)</span>
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editEndTime</span><span class="p">(</span> <span class="n">rid</span> <span class="p">,</span> <span class="n">cid</span> <span class="p">,</span> <span class="n">etime</span> <span class="p">)</span>
+        <span class="n">dbm</span><span class="o">.</span><span class="n">editStepSize</span><span class="p">(</span> <span class="n">rid</span> <span class="p">,</span> <span class="n">cid</span> <span class="p">,</span> <span class="n">ssize</span> <span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;Configuration successfully edited. &quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">cid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span>    </div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/config?id=1</span>
+<div class="viewcode-block" id="retrieveConfig"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.retrieveConfig">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">retrieveConfig</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function to retrieve configuration of given config id</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with configuration id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/config?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested configuration, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+<span class="sd">	</span>
+<span class="sd">	Returns:</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">	</span>
+<span class="sd">		{ &quot;runid&quot; : &lt;rid&gt; ,</span>
+<span class="sd">		  &quot;id&quot; : &lt;cid&gt; , </span>
+<span class="sd">		  &quot;startTime&quot; : &lt;stime&gt; , </span>
+<span class="sd">		  &quot;endTime&quot; : &lt;etime&gt; , </span>
+<span class="sd">		  &quot;stepSize&quot; &lt;ssize&gt; </span>
+<span class="sd">		}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">cid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">config</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveConfig</span><span class="p">(</span> <span class="n">cid</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">config</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/configs?group=1</span>
+<div class="viewcode-block" id="retrieveConfigsOfGroup"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.retrieveConfigsOfGroup">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">retrieveConfigsOfGroup</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to retrieve all configurations of a given group</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with group id</span>
+<span class="sd">	:type request: GET</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/configs?group=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Requested configurations of given group, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+<span class="sd">	</span>
+<span class="sd">	Returns:</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">	</span>
+<span class="sd">		[ { &quot;runid&quot; : &lt;rid&gt; ,</span>
+<span class="sd">		    &quot;id&quot; : &lt;cid&gt; , </span>
+<span class="sd">		    &quot;startTime&quot; : &lt;stime&gt; , </span>
+<span class="sd">		    &quot;endTime&quot; : &lt;etime&gt; , </span>
+<span class="sd">		    &quot;stepSize&quot; &lt;ssize&gt; </span>
+<span class="sd">			} , { another config }</span>
+<span class="sd">		]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">gid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;group&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">configs</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">retrieveConfigsOfGroup</span><span class="p">(</span> <span class="n">gid</span> <span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="n">configs</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/delete/config?id=1</span>
+<div class="viewcode-block" id="deleteConfig"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.deleteConfig">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">deleteConfig</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function to delete config with given ID</span>
+<span class="sd">	</span>
+<span class="sd">	:param request: Request is sent with configuration id</span>
+<span class="sd">	:type request: DELETE</span>
+<span class="sd">	</span>
+<span class="sd">	:Endpoint: http://127.0.0.1:3030/cso/delete/config?id=1</span>
+<span class="sd">	</span>
+<span class="sd">	:returns: Statusmessage with deleted config id, HTTP statuscode = 200</span>
+<span class="sd">	:rtype: JSON , HTTP-statuscode</span>
+<span class="sd">	</span>
+<span class="sd">	:Example: </span>
+<span class="sd">	</span>
+<span class="sd">	Returns:</span>
+<span class="sd">	</span>
+<span class="sd">	.. code-block:: python</span>
+<span class="sd">	</span>
+<span class="sd">		{ &quot;Status&quot; : &quot;Successfully deleted config. &quot; , &quot;id&quot; : &lt;cid&gt; }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">cid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    
+    <span class="n">dcid</span> <span class="o">=</span> <span class="n">dbm</span><span class="o">.</span><span class="n">deleteConfig</span><span class="p">(</span> <span class="n">cid</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;Successfully deleted config&quot;</span> <span class="p">,</span> <span class="s2">&quot;id&quot;</span> <span class="p">:</span> <span class="n">dcid</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+    
+
+<span class="c1"># http://127.0.0.1:3030/cso/initiateCSM?gid=1&amp;rid=1</span>
+<div class="viewcode-block" id="initiateCSM"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.initiateCSM">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">initiateCSM</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function to initiate CoSimulationManager</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">dbm</span>
+    <span class="n">gid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_url</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;gid&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    <span class="n">rid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">request</span><span class="o">.</span><span class="n">rel_ulr</span><span class="o">.</span><span class="n">query</span><span class="p">[</span> <span class="s2">&quot;rid&quot;</span> <span class="p">]</span> <span class="p">)</span>
+    <span class="k">global</span> <span class="n">csm</span> 
+    <span class="n">csm</span> <span class="o">=</span> <span class="n">CoSimulationManager</span><span class="p">(</span> <span class="n">gid</span> <span class="p">,</span> <span class="n">rid</span> <span class="p">,</span> <span class="n">dbm</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;OK, CSM successfully initialized.&quot;</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+
+<span class="c1"># http://127.0.0.1:3030/cso/runCSM</span>
+<div class="viewcode-block" id="runCSM"><a class="viewcode-back" href="../csorest.html#CoSimulationOrchestratorREST.runCSM">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">runCSM</span><span class="p">(</span> <span class="n">request</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function to start CoSimulationManager</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">csm</span>
+    <span class="n">csm</span><span class="o">.</span><span class="n">runCoSimulation</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&quot;Status&quot;</span> <span class="p">:</span> <span class="s2">&quot;OK, CSM successfully run.&quot;</span> <span class="p">}</span> <span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">200</span> <span class="p">)</span></div>
+    
+<span class="c1">###   ###   ###   ###   </span>
+<span class="c1"># Bind paths and launch app</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">cso</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">Application</span><span class="p">(</span> <span class="p">)</span>
+    <span class="n">cso</span><span class="o">.</span><span class="n">add_routes</span><span class="p">(</span> <span class="p">[</span> <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/testConnection&quot;</span> <span class="p">,</span> <span class="n">testConnection</span> <span class="p">)</span> <span class="p">,</span>
+                      <span class="n">web</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/cso/uploadYAML&quot;</span> <span class="p">,</span> <span class="n">uploadYAML</span> <span class="p">)</span> <span class="p">,</span> 
+                      <span class="n">web</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/cso/create/group&quot;</span> <span class="p">,</span> <span class="n">createGroup</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">put</span><span class="p">(</span> <span class="s2">&quot;/cso/edit/group&quot;</span> <span class="p">,</span> <span class="n">editGroup</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/group&quot;</span> <span class="p">,</span> <span class="n">retrieveGroup</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/groups&quot;</span> <span class="p">,</span> <span class="n">groups</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/cso/delete/group&quot;</span> <span class="p">,</span> <span class="n">deleteGroup</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/cso/create/service&quot;</span> <span class="p">,</span> <span class="n">createService</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">put</span><span class="p">(</span> <span class="s2">&quot;/cso/edit/service&quot;</span> <span class="p">,</span> <span class="n">editService</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/service&quot;</span> <span class="p">,</span> <span class="n">getService</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/services&quot;</span> <span class="p">,</span> <span class="n">getServicesOfGroup</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/cso/delete/service&quot;</span> <span class="p">,</span> <span class="n">deleteService</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/cso/create/output&quot;</span> <span class="p">,</span> <span class="n">createOutput</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">put</span><span class="p">(</span> <span class="s2">&quot;/cso/edit/output&quot;</span> <span class="p">,</span> <span class="n">editOutput</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/output&quot;</span> <span class="p">,</span> <span class="n">retrieveOutput</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/outputs&quot;</span> <span class="p">,</span> <span class="n">serviceOutputs</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/cso/delete/output&quot;</span> <span class="p">,</span> <span class="n">deleteOutput</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/cso/create/input&quot;</span> <span class="p">,</span> <span class="n">createInput</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">put</span><span class="p">(</span> <span class="s2">&quot;/cso/edit/input&quot;</span> <span class="p">,</span> <span class="n">editInput</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/input&quot;</span> <span class="p">,</span> <span class="n">retrieveInput</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/inputs&quot;</span> <span class="p">,</span> <span class="n">serviceInputs</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/cso/delete/input&quot;</span> <span class="p">,</span> <span class="n">deleteInput</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/cso/create/mapping&quot;</span> <span class="p">,</span> <span class="n">createMapping</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">put</span><span class="p">(</span> <span class="s2">&quot;/cso/edit/mapping&quot;</span> <span class="p">,</span> <span class="n">editMapping</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/mappings&quot;</span> <span class="p">,</span> <span class="n">retrieveMappings</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/mapping&quot;</span> <span class="p">,</span> <span class="n">retrieveMapping</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/cso/delete/mapping&quot;</span> <span class="p">,</span> <span class="n">deleteMapping</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/cso/create/run&quot;</span> <span class="p">,</span> <span class="n">createRun</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/cso/logValues&quot;</span> <span class="p">,</span> <span class="n">logValues</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/values&quot;</span> <span class="p">,</span> <span class="n">retrieveValues</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/cso/delete/valueTable&quot;</span> <span class="p">,</span> <span class="n">deleteValueTable</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/cso/create/config&quot;</span> <span class="p">,</span> <span class="n">createConfig</span> <span class="p">)</span> <span class="p">,</span> 
+    					  <span class="n">web</span><span class="o">.</span><span class="n">put</span><span class="p">(</span> <span class="s2">&quot;/cso/edit/config&quot;</span> <span class="p">,</span> <span class="n">editConfig</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/config&quot;</span> <span class="p">,</span> <span class="n">retrieveConfig</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/configs&quot;</span> <span class="p">,</span> <span class="n">retrieveConfigsOfGroup</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/cso/delete/config&quot;</span> <span class="p">,</span> <span class="n">deleteConfig</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/initiateCSM&quot;</span> <span class="p">,</span> <span class="n">initiateCSM</span> <span class="p">)</span> <span class="p">,</span>
+    					  <span class="n">web</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/cso/runCSM&quot;</span> <span class="p">,</span> <span class="n">runCSM</span> <span class="p">)</span> <span class="p">]</span> <span class="p">)</span>
+
+    <span class="n">web</span><span class="o">.</span><span class="n">run_app</span><span class="p">(</span> <span class="n">cso</span> <span class="p">,</span> <span class="n">port</span> <span class="o">=</span> <span class="mi">3030</span> <span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">COE</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../csm.html">CoSimulationManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cso.html">CoSimulationOrchestrator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dbm.html">DatabaseManager</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, geos.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

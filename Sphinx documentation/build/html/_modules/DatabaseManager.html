@@ -1,0 +1,1827 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>DatabaseManager &#8212; COE 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for DatabaseManager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Thu Oct 18 16:06:53 2018</span>
+
+<span class="sd">.. module:: DatabaseManager</span>
+<span class="sd">   :synopsis: This module manages the editting of the service database.</span>
+
+<span class="sd">.. moduleauthor::tongo</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span> <span class="c1">#version 2.2.1</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span> <span class="c1">#version 2.6.0</span>
+
+
+<div class="viewcode-block" id="DatabaseManager"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager">[docs]</a><span class="k">class</span> <span class="nc">DatabaseManager</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    THIS IS THE DBM CLASS</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#instance attributes , if DBManager is instantiated , the connection to</span>
+    <span class="c1">#Database is automatically set</span>
+    <span class="c1">#Parameters: ( os.path JOIN )</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">pathToDB</span> <span class="p">):</span>
+        <span class="c1">#Point of error handling???</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span> <span class="n">pathToDB</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">cursor</span><span class="p">(</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;PRAGMA foreign_keys = ON&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathToDB</span> <span class="o">=</span> <span class="n">pathToDB</span>
+        
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Magic string function of class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;This is a Database manager&quot;</span> <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;It is connected to db in path: &quot;</span>  <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathToDB</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="DatabaseManager.initTables"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.initTables">[docs]</a>    <span class="k">def</span> <span class="nf">initTables</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        create table statements for sql queries, initiate tables with constraints</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">createGroup</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS groups(</span>
+<span class="s2">                                group_id integer PRIMARY KEY,</span>
+<span class="s2">                                group_name text</span>
+<span class="s2">                                );&quot;&quot;&quot;</span>
+
+        <span class="n">createSimConfig</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS simconfigs(</span>
+<span class="s2">                                config_id integer PRIMARY KEY,</span>
+<span class="s2">                                run_id integer,</span>
+<span class="s2">                                start_time integer,</span>
+<span class="s2">                                end_time integer,</span>
+<span class="s2">                                stepsize real,</span>
+<span class="s2">                                FOREIGN KEY ( run_id ) REFERENCES runs( run_id ) ON DELETE CASCADE</span>
+<span class="s2">                                );&quot;&quot;&quot;</span>
+
+        <span class="n">createServices</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS services(</span>
+<span class="s2">                                service_id integer PRIMARY KEY,</span>
+<span class="s2">                                service_name text,</span>
+<span class="s2">                                ip text,</span>
+<span class="s2">                                port text,</span>
+<span class="s2">                                target text,</span>
+<span class="s2">                                groups integer,</span>
+<span class="s2">                                FOREIGN KEY( groups ) REFERENCES groups( group_id ) ON DELETE CASCADE</span>
+<span class="s2">                                );&quot;&quot;&quot;</span>
+
+        <span class="n">createInputs</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS inputs(</span>
+<span class="s2">                                input_id integer PRIMARY KEY,</span>
+<span class="s2">                                variable_name text,</span>
+<span class="s2">                                service integer,</span>
+<span class="s2">                                initial_value real,</span>
+<span class="s2">                                FOREIGN KEY( service ) REFERENCES services( service_id ) ON DELETE CASCADE</span>
+<span class="s2">                                );&quot;&quot;&quot;</span>
+
+        <span class="n">createOutputs</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS outputs(</span>
+<span class="s2">                                output_id integer PRIMARY KEY,</span>
+<span class="s2">                                variable_name text,</span>
+<span class="s2">                                service integer,</span>
+<span class="s2">                                initial_value real,</span>
+<span class="s2">                                FOREIGN KEY( service ) REFERENCES services( service_id ) ON DELETE CASCADE</span>
+<span class="s2">                                );&quot;&quot;&quot;</span>
+
+        <span class="n">createMappings</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS mappings(</span>
+<span class="s2">                                map_id integer PRIMARY KEY,</span>
+<span class="s2">                                groups integer,</span>
+<span class="s2">                                input integer,</span>
+<span class="s2">                                serviceOfinput integer,</span>
+<span class="s2">                                output integer,</span>
+<span class="s2">                                serviceOfoutput integer,</span>
+<span class="s2">                                FOREIGN KEY( groups ) REFERENCES groups( group_id ) ON DELETE CASCADE,</span>
+<span class="s2">                                FOREIGN KEY( input ) REFERENCES inputs( input_id ) ON DELETE CASCADE,</span>
+<span class="s2">                                FOREIGN KEY( serviceOfinput ) REFERENCES services( service_id ) ON DELETE CASCADE,</span>
+<span class="s2">                                FOREIGN KEY( output ) REFERENCES outputs( output_id ) ON DELETE CASCADE,</span>
+<span class="s2">                                FOREIGN KEY( serviceOfoutput ) REFERENCES services( service_id ) ON DELETE CASCADE</span>
+<span class="s2">                                );&quot;&quot;&quot;</span>
+
+        <span class="n">createRun</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS runs(</span>
+<span class="s2">                                run_id integer PRIMARY KEY,</span>
+<span class="s2">                                valueTableName text UNIQUE,</span>
+<span class="s2">                                groups integer,</span>
+<span class="s2">                                FOREIGN KEY ( groups ) REFERENCES groups( group_id ) ON DELETE CASCADE</span>
+<span class="s2">                                );&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">createGroup</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">createRun</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">createSimConfig</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">createServices</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">createInputs</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">createOutputs</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">createMappings</span> <span class="p">)</span></div>
+
+<span class="c1">###################################################</span>
+<span class="c1">###                                             ###</span>
+<span class="c1">###               GROUP SECTION                 ###</span>
+<span class="c1">###                                             ###</span>
+<span class="c1">###################################################</span>
+
+<div class="viewcode-block" id="DatabaseManager.createGroup"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.createGroup">[docs]</a>    <span class="k">def</span> <span class="nf">createGroup</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">groupName</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a group, as an entry in connected Database.</span>
+
+<span class="sd">        :param groupName: Name of group.</span>
+<span class="sd">        :type groupName: string</span>
+
+<span class="sd">        :returns: ID of inserted entry.</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">makeGroup</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO groups ( group_name ) VALUES ( ? )&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">makeGroup</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupName</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editGroup"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editGroup">[docs]</a>    <span class="k">def</span> <span class="nf">editGroup</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">groupIdentifier</span> <span class="p">,</span> <span class="n">groupName</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits a group of given group identifier</span>
+
+<span class="sd">        :param groupIdentifier: Group identifier.</span>
+<span class="sd">        :type groupIdentifier: integer</span>
+
+<span class="sd">        :param groupName: New name of group.</span>
+<span class="sd">        :type groupName: string</span>
+
+<span class="sd">        :returns: ID of edited row.</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">editGroup</span> <span class="o">=</span> <span class="s2">&quot;UPDATE groups SET group_name = ? WHERE group_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editGroup</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupName</span> <span class="p">,</span> <span class="n">groupIdentifier</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.getAllGroups"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.getAllGroups">[docs]</a>    <span class="k">def</span> <span class="nf">getAllGroups</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets all groups and its contents</span>
+
+<span class="sd">        :returns: A list of all groups in the database.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            [ </span>
+<span class="sd">                {</span>
+<span class="sd">                &quot;id&quot;       : &lt;id_of_group&gt; ,</span>
+<span class="sd">                &quot;name&quot;     : &lt;name_of_group&gt; , </span>
+<span class="sd">                &quot;services&quot; : [ {</span>
+<span class="sd">                                    &quot;id&quot;     : &lt;id_of_service&gt; , </span>
+<span class="sd">                                    &quot;name&quot;   : &lt;name_of_service&gt; ,</span>
+<span class="sd">                                    &quot;ip&quot;     : &lt;name_of_service&gt; ,</span>
+<span class="sd">                                    &quot;port&quot;   : &lt;name_of_service&gt; ,</span>
+<span class="sd">                                    &quot;target&quot; : &lt;name_of_service&gt; ,</span>
+<span class="sd">                                    &quot;inputs&quot; : [ {</span>
+<span class="sd">                                                    &quot;id&quot;         : &lt;id_of_input&gt; ,</span>
+<span class="sd">                                                    &quot;inputName&quot;  : &lt;name_of_input&gt; ,</span>
+<span class="sd">                                                    &quot;initialVal&quot; : &lt;float_value&gt;</span>
+<span class="sd">                                                } , { another input } </span>
+<span class="sd">                                                ] , </span>
+<span class="sd">                                    &quot;outputs&quot; : [ {</span>
+<span class="sd">                                                    &quot;id&quot;         : &lt;id_of_output&gt; ,</span>
+<span class="sd">                                                    &quot;outputName&quot; : &lt;name_of_output&gt; ,</span>
+<span class="sd">                                                    &quot;initialVal&quot; : &lt;float_value&gt;</span>
+<span class="sd">                                                } , { another output } </span>
+<span class="sd">                                                ] </span>
+<span class="sd">                                } , { another Service }</span>
+<span class="sd">                             ] </span>
+<span class="sd">                } , { another group }</span>
+<span class="sd">            ]</span>
+<span class="sd">            </span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">selectGroupQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM groups&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectGroupQ</span> <span class="p">)</span>
+        <span class="n">lGroups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">(</span> <span class="p">)</span>
+
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">aGroup</span> <span class="ow">in</span> <span class="n">lGroups</span><span class="p">:</span>
+
+            <span class="n">group</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">group</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">aGroup</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+            <span class="n">group</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">aGroup</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+            <span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">group</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">groups</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.deleteGroup"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.deleteGroup">[docs]</a>    <span class="k">def</span> <span class="nf">deleteGroup</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes a group with given group identifier</span>
+
+<span class="sd">        :param groupID: Group identifier.</span>
+<span class="sd">        :type groupID: integer</span>
+<span class="sd">        :returns: Deleted row ID.</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM services WHERE groups = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">deletedService</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span>
+
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM inputs WHERE service = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">deletedService</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM outputs WHERE service = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">deletedService</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM mappings WHERE groups = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">selectQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT valueTableName FROM runs WHERE groups = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">tableName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="n">rowid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span>
+
+        <span class="k">if</span> <span class="n">tableName</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM </span><span class="si">{}</span><span class="s2"> WHERE run_id = ?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">tableName</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">rowid</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM groups WHERE group_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<span class="c1">###################################################</span>
+<span class="c1">###                                                ###</span>
+<span class="c1">###              SERVICE SECTION                    ###</span>
+<span class="c1">###                                                ###</span>
+<span class="c1">###################################################</span>
+
+
+    <span class="c1">#returns ID of inserted Service</span>
+<div class="viewcode-block" id="DatabaseManager.createService"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.createService">[docs]</a>    <span class="k">def</span> <span class="nf">createService</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceName</span> <span class="p">,</span> <span class="n">ip</span> <span class="p">,</span> <span class="n">port</span> <span class="p">,</span> <span class="n">target</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a service as an entry in database</span>
+
+<span class="sd">        :param serviceName: Name of service.</span>
+<span class="sd">        :type serviceName: string</span>
+<span class="sd">        :param ip: IP address of service.</span>
+<span class="sd">        :type ip: string</span>
+<span class="sd">        :param port: Port, service is listening on.</span>
+<span class="sd">        :type port: string</span>
+<span class="sd">        :param target: Either a path to a file or a specific address.</span>
+<span class="sd">        :type target: string</span>
+<span class="sd">        :returns: ID of created service.</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">insertService</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO services ( service_name , ip , port , target , groups ) VALUES ( ?,?,?,?,? )&quot;</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="p">(</span> <span class="n">serviceName</span> <span class="p">,</span> <span class="n">ip</span> <span class="p">,</span> <span class="n">port</span> <span class="p">,</span> <span class="n">target</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">insertService</span> <span class="p">,</span> <span class="n">vals</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.retrieveServices"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveServices">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveServices</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves services to given group id</span>
+
+<span class="sd">        :param groupID: Group identifier.</span>
+<span class="sd">        :type groupID: integer</span>
+<span class="sd">        :returns: Services with contents.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            [</span>
+<span class="sd">                {</span>
+<span class="sd">                  &quot;id&quot;       : &lt;id_of_service&gt; ,</span>
+<span class="sd">                  &quot;name&quot;   : &lt;name_of_service&gt; ,</span>
+<span class="sd">                  &quot;ip&quot;       : &lt;ip_of_service&gt; ,</span>
+<span class="sd">                  &quot;port&quot;   : &lt;port_of_service&gt;,</span>
+<span class="sd">                  &quot;target&quot; : &lt;target_of_service&gt; ,</span>
+<span class="sd">                  &quot;group&quot;  : &lt;id_of_group&gt;</span>
+<span class="sd">                } , { ... }</span>
+<span class="sd">            ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">selectQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM services WHERE groups =?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="n">lServices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">services</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;ip&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;port&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;target&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="mi">4</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;gid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">groupID</span>
+            <span class="n">lServices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">output</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">lServices</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.retrieveServicesDetailed"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveServicesDetailed">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveServicesDetailed</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves services to given group id</span>
+
+<span class="sd">        :param groupID: Group identifier.</span>
+<span class="sd">        :type groupID: integer</span>
+<span class="sd">        :returns: Services with contents.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            [</span>
+<span class="sd">                {</span>
+<span class="sd">                  &quot;id&quot;       : &lt;id_of_service&gt; ,</span>
+<span class="sd">                  &quot;name&quot;   : &lt;name_of_service&gt; ,</span>
+<span class="sd">                  &quot;ip&quot;       : &lt;ip_of_service&gt; ,</span>
+<span class="sd">                  &quot;port&quot;   : &lt;port_of_service&gt;,</span>
+<span class="sd">                  &quot;target&quot; : &lt;target_of_service&gt; ,</span>
+<span class="sd">                  &quot;group&quot;  : &lt;id_of_group&gt;</span>
+<span class="sd">                } , { ... }</span>
+<span class="sd">            ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">selectQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM services WHERE groups =?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="n">lServices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">services</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;ip&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;port&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;target&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span> <span class="mi">4</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;gid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">groupID</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;outputs&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieveOutputsOfService</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">)</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;inputs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieveInputsOfService</span><span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">)</span>
+            <span class="n">lServices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">output</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">lServices</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.retrieveService"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveService">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveService</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves a single service</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :returns: Service with contents.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            </span>
+<span class="sd">            { </span>
+<span class="sd">                &quot;id&quot;     : &lt;id_of_service&gt; ,</span>
+<span class="sd">                &quot;name&quot;   : &lt;name_of_service&gt; ,</span>
+<span class="sd">                &quot;ip&quot;     : &lt;ip_of_service&gt; ,</span>
+<span class="sd">                &quot;port&quot;   : &lt;port_of_service&gt; ,</span>
+<span class="sd">                &quot;target&quot; : &lt;target_of_service&gt; ,</span>
+<span class="sd">                &quot;group&quot;  : &lt;group_of_service&gt;</span>
+<span class="sd">            }</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">selectQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM services WHERE service_id =?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">services</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;serviceName&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">services</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;ip&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">services</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;port&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">services</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;target&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">services</span><span class="p">[</span> <span class="mi">4</span> <span class="p">]</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;group&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">services</span><span class="p">[</span> <span class="mi">5</span> <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.retrieveInputsOfService"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveInputsOfService">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveInputsOfService</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves inputs of a service</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :returns: Inputs of a service.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            [</span>
+<span class="sd">                { &quot;id&quot;           : ___ , </span>
+<span class="sd">                  &quot;name&quot;         : ___ ,</span>
+<span class="sd">                  &quot;sid&quot;          : ___ ,</span>
+<span class="sd">                  &quot;initialValue&quot; : ___</span>
+<span class="sd">                } ,</span>
+<span class="sd">              { another input } ,</span>
+<span class="sd">              [...]</span>
+<span class="sd">            ]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">selectQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM inputs WHERE service = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">temp</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+            <span class="n">temp</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+            <span class="n">temp</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;sid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>
+            <span class="n">temp</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">temp</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.retrieveOutputsOfService"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveOutputsOfService">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveOutputsOfService</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves outputs of a service</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :returns: All outputs of a service.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            [ { &quot;id&quot; : &lt;oid&gt; , </span>
+<span class="sd">                &quot;name&quot; : &lt;oname&gt; , </span>
+<span class="sd">                &quot;initialValue&quot; : &lt;ovalue&gt;</span>
+<span class="sd">                &quot;serviceid&quot; : &lt;sid&gt;</span>
+<span class="sd">              } , { another output }</span>
+<span class="sd">            ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">selectQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM outputs WHERE service = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+            <span class="n">outitem</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">outitem</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+            <span class="n">outitem</span><span class="p">[</span> <span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+            <span class="n">outitem</span><span class="p">[</span> <span class="s2">&quot;sid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>
+            <span class="n">outitem</span><span class="p">[</span> <span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">outitem</span> <span class="p">)</span>
+            
+        <span class="k">return</span> <span class="n">output</span></div>
+    
+
+<div class="viewcode-block" id="DatabaseManager.deleteService"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.deleteService">[docs]</a>    <span class="k">def</span> <span class="nf">deleteService</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes a service</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :returns: Id of deleted service.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM inputs WHERE service = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM outputs WHERE service = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM mappings WHERE serviceOfinput = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM mappings WHERE serviceOfoutput = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM services WHERE service_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editServiceName"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editServiceName">[docs]</a>    <span class="k">def</span> <span class="nf">editServiceName</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="n">newName</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the name of a service</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :param newName: New name of service.</span>
+<span class="sd">        :type newName: string</span>
+<span class="sd">        :returns: Id of edited service.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE services SET service_name = ? WHERE service_id = ? &quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newName</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.editServiceIP"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editServiceIP">[docs]</a>    <span class="k">def</span> <span class="nf">editServiceIP</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="n">newIP</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the IP of a service</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :param newIP: New ip of service.</span>
+<span class="sd">        :type newIP: string</span>
+<span class="sd">        :returns: Id of edited service.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE services SET ip = ? WHERE service_id = ? &quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newIP</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editServicePort"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editServicePort">[docs]</a>    <span class="k">def</span> <span class="nf">editServicePort</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="n">newPort</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the port of a service</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :param newPort: New port of service.</span>
+<span class="sd">        :type newPort: string</span>
+<span class="sd">        :returns: Id of edited service.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE services SET port = ? WHERE service_id = ? &quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newPort</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editServiceTarget"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editServiceTarget">[docs]</a>    <span class="k">def</span> <span class="nf">editServiceTarget</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="n">newTarget</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the target of a service</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :param newTarget: New target of service.</span>
+<span class="sd">        :type newTarget: string</span>
+<span class="sd">        :returns: Id of edited service.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE services SET target = ? WHERE service_id = ? &quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newTarget</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editServiceGroup"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editServiceGroup">[docs]</a>    <span class="k">def</span> <span class="nf">editServiceGroup</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="n">newGroup</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the group reference of a service</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :param newGroup: New group reference of service.</span>
+<span class="sd">        :type newGroup: string</span>
+<span class="sd">        :returns: Id of edited service.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE services SET groups = ? WHERE service_id = ? &quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newGroup</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<span class="c1">###################################################</span>
+<span class="c1">###                                             ###</span>
+<span class="c1">###               RUN / Values SECTION          ###</span>
+<span class="c1">###                                             ###</span>
+<span class="c1">###################################################</span>
+
+<div class="viewcode-block" id="DatabaseManager.createRun"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.createRun">[docs]</a>    <span class="k">def</span> <span class="nf">createRun</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">tableName</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a run as an entry in database</span>
+
+<span class="sd">        :param tableName: Name of table to log values of run.</span>
+<span class="sd">        :type tableName: string</span>
+<span class="sd">        :param groupID: Reference to group the run belongs to.</span>
+<span class="sd">        :type groupID: integer</span>
+<span class="sd">        :returns: Id of created run.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lVars</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">getServicesQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM services WHERE groups =?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getServicesQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span><span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">services</span><span class="p">:</span>
+            <span class="n">getInputsOfServiceQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM inputs WHERE service =?&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getInputsOfServiceQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">iitem</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+                <span class="n">lVars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">service</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_inputs_&quot;</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span> <span class="sa">r</span><span class="s1">&#39;\W+&#39;</span> <span class="p">,</span> <span class="s1">&#39;&#39;</span> <span class="p">,</span> <span class="n">iitem</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">)</span> <span class="p">)</span>
+
+            <span class="n">getInputsOfServiceQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM outputs WHERE service =?&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getInputsOfServiceQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">service</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">oitem</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+                <span class="n">lVars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">service</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_outputs_&quot;</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span> <span class="sa">r</span><span class="s1">&#39;\W+&#39;</span> <span class="p">,</span> <span class="s1">&#39;&#39;</span> <span class="p">,</span> <span class="n">oitem</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">)</span> <span class="p">)</span>
+
+
+        <span class="n">insertQ</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO runs ( valueTableName, groups) VALUES ( ? , ?)&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">insertQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">tableName</span><span class="p">,</span> <span class="n">groupID</span> <span class="p">)</span> <span class="p">)</span>
+        
+        <span class="n">createQuery</span> <span class="o">=</span> <span class="s2">&quot;CREATE TABLE </span><span class="si">{}</span><span class="s2">( values_id INTEGER PRIMARY KEY , run_id INTEGER , timestamp REAL, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">tableName</span> <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">lVars</span><span class="p">:</span>
+            <span class="n">createQuery</span> <span class="o">+=</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; real&quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+
+        <span class="n">createQuery</span> <span class="o">+=</span> <span class="s2">&quot;FOREIGN KEY( run_id ) REFERENCES runs( run_id ) ON DELETE CASCADE );&quot;</span>
+                
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">createQuery</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.retrieveTableName"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveTableName">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveTableName</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">runID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves table name of a run</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :returns: Name of table of given run id</span>
+<span class="sd">        :rtype: String.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">getTableNameQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT valueTableName FROM runs WHERE run_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getTableNameQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">runID</span> <span class="p">,</span>  <span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">tname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">tname</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.retrieveTableKeys"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveTableKeys">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveTableKeys</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">tableName</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves coloumn keys of a table</span>
+
+<span class="sd">        :param tableName: Name of table.</span>
+<span class="sd">        :type tableName: string</span>
+<span class="sd">        :returns: list of coloumn keys</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">       </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">getTableKeysQ</span> <span class="o">=</span> <span class="s2">&quot;PRAGMA table_info(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tableName</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getTableKeysQ</span> <span class="p">)</span>
+
+        <span class="n">tkeys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="n">tkeysOut</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">tkeys</span><span class="p">:</span>
+            <span class="n">tkeysOut</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            
+        <span class="k">return</span> <span class="n">tkeysOut</span></div>
+    
+<div class="viewcode-block" id="DatabaseManager.retrieveRuns"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveRuns">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveRuns</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Retrieves runs of a group</span>
+
+<span class="sd">        :param groupID: Group identifier.</span>
+<span class="sd">        :type groupID: integer</span>
+<span class="sd">        :returns: Runs of a group.</span>
+<span class="sd">        :rtype: list</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">getRunsQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM runs WHERE groups = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getRunsQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="n">runs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">run</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">run</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+            <span class="n">run</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;tableName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+            <span class="n">run</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;gid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>
+            <span class="n">runs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">run</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">runs</span></div>
+
+
+
+<div class="viewcode-block" id="DatabaseManager.editRunTableName"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editRunTableName">[docs]</a>    <span class="k">def</span> <span class="nf">editRunTableName</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">tableName</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the table name where values of runs are logged.</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :param tableName: New name of table.</span>
+<span class="sd">        :type tableName: string</span>
+<span class="sd">        :returns: Id of edited run.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">getNameQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT valueTableName FROM runs WHERE run_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getNameQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">runID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">tname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+        <span class="n">updateNameQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE runs SET valueTableName = &#39;</span><span class="si">{}</span><span class="s2">&#39; WHERE run_id = ?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">tableName</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">updateNameQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">runID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        
+
+        <span class="n">alterTableQ</span> <span class="o">=</span> <span class="s2">&quot;ALTER TABLE </span><span class="si">{}</span><span class="s2"> RENAME TO </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">tname</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">,</span> <span class="n">tableName</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">alterTableQ</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.editRunGroupRef"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editRunGroupRef">[docs]</a>    <span class="k">def</span> <span class="nf">editRunGroupRef</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">newGroupID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the group references of a run.</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :param newGroupID: New reference of group.</span>
+<span class="sd">        :type newGroupID: integer</span>
+<span class="sd">        :returns: Id of edited run.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">alterRunQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE runs SET groups = ? WHERE run_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">alterRunQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newGroupID</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.deleteRun"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.deleteRun">[docs]</a>    <span class="k">def</span> <span class="nf">deleteRun</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes run and corresponding configuration and table of logged values.</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :returns: Id of deleted run.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">getValuesQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT valueTableName FROM runs WHERE run_id = ? &quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getValuesQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">runID</span> <span class="p">,</span> <span class="p">)</span>  <span class="p">)</span>
+        <span class="n">tableName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span> <span class="mi">0</span> <span class="p">]</span>
+
+        <span class="n">deleteValueTableQ</span> <span class="o">=</span> <span class="s2">&quot;DROP TABLE </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">tableName</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteValueTableQ</span> <span class="p">)</span>
+
+        <span class="n">deleteConfigQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM simconfigs WHERE run_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteConfigQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">runID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">deleteRunQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM runs WHERE run_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteRunQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">runID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+
+<div class="viewcode-block" id="DatabaseManager.deleteValueTable"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.deleteValueTable">[docs]</a>    <span class="k">def</span> <span class="nf">deleteValueTable</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes(completely dropping) table of values of a run</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :returns: Name of deleted table.</span>
+<span class="sd">        :rtype: string</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">selectTableQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT valueTableName FROM runs WHERE run_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectTableQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">runID</span><span class="p">,</span>  <span class="p">)</span> <span class="p">)</span>
+        <span class="n">tableName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span> <span class="mi">0</span> <span class="p">]</span>
+
+        <span class="n">deleteTableQ</span> <span class="o">=</span> <span class="s2">&quot;DROP TABLE </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">tableName</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteTableQ</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;Table </span><span class="si">{}</span><span class="s2"> deleted. &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">tableName</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="DatabaseManager.insertValues"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.insertValues">[docs]</a>    <span class="k">def</span> <span class="nf">insertValues</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">timestamp</span> <span class="p">,</span> <span class="n">lVarIn</span> <span class="p">,</span> <span class="n">lVarOut</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes values to database.</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :param timestamp: Timestamp of valueset.</span>
+<span class="sd">        :type timestamp: float</span>
+<span class="sd">        :param lVarIn: List of input values.</span>
+<span class="sd">        :type lVarIn: list</span>
+<span class="sd">        :param lVarOut: List of output values.</span>
+<span class="sd">        :type lVarOut: list</span>
+<span class="sd">        :returns: Id of inserted values.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">selectTab</span> <span class="o">=</span> <span class="s2">&quot;SELECT valueTableName FROM runs WHERE run_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">selectTab</span><span class="p">,</span> <span class="p">(</span> <span class="n">runID</span><span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">tableName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+        <span class="n">insertQ</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO </span><span class="si">{}</span><span class="s2"> VALUES ( ?, ?, ?,&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">tableName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lVarIn</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span>
+
+        <span class="n">insertQ</span> <span class="o">+=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
+
+        <span class="n">insertQ</span> <span class="o">+=</span> <span class="s2">&quot;,&quot;</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lVarOut</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span>
+
+
+        <span class="n">insertQ</span> <span class="o">+=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
+
+        <span class="n">insertQ</span> <span class="o">+=</span> <span class="s2">&quot;)&quot;</span>
+
+        <span class="n">tup</span> <span class="o">=</span> <span class="p">(</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">timestamp</span> <span class="p">,</span> <span class="p">)</span>
+        <span class="n">tup_merge</span> <span class="o">=</span> <span class="n">tup</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">lVarIn</span><span class="p">)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">lVarOut</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">insertQ</span> <span class="p">,</span> <span class="n">tup_merge</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.retrieveValues"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveValues">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveValues</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves all values logged of a run</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :returns: list of tuples of values ( id , ValueOfVar1 , ValueOfVar2 , [ ... ] )</span>
+<span class="sd">        :rtype: list</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">selectQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT valueTableName FROM runs WHERE run_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">selectQ</span><span class="p">,</span> <span class="p">(</span> <span class="n">runID</span><span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+        <span class="n">selectQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM </span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">name</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectQ</span> <span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.deleteValues"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.deleteValues">[docs]</a>    <span class="k">def</span> <span class="nf">deleteValues</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">tableName</span> <span class="p">,</span> <span class="n">valuesID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes single value row from log</span>
+
+<span class="sd">        :param tableName: Name of table with logs.</span>
+<span class="sd">        :type tableName: string</span>
+<span class="sd">        :param valuesID: Value identifier.</span>
+<span class="sd">        :type valuesID: integer</span>
+<span class="sd">        :returns: Id of deleted row.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM </span><span class="si">{}</span><span class="s2"> WHERE values_id = ?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">tableName</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">valuesID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<span class="c1">###################################################</span>
+<span class="c1">###                                                ###</span>
+<span class="c1">###         SIMULATION CONFIGURATION SECTION        ###</span>
+<span class="c1">###                                                ###</span>
+<span class="c1">###################################################</span>
+
+    <span class="c1">#returns id of inserted row</span>
+<div class="viewcode-block" id="DatabaseManager.setSimConfig"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.setSimConfig">[docs]</a>    <span class="k">def</span> <span class="nf">setSimConfig</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">start_time</span> <span class="p">,</span> <span class="n">end_time</span> <span class="p">,</span> <span class="n">stepsize</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the configuration of a run.</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :param start_time: Start time.</span>
+<span class="sd">        :type start_time: integer</span>
+<span class="sd">        :param end_time: End time.</span>
+<span class="sd">        :type end_time: integer</span>
+<span class="sd">        :param stepsize: Stepsize of timeinterval.</span>
+<span class="sd">        :type stepsize: integer</span>
+<span class="sd">        :returns: Id of set configuration</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">insertQuery</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO simconfigs ( run_id , start_time , end_time , stepsize ) VALUES ( ? , ? , ? , ? )&quot;</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="n">vals</span> <span class="o">+=</span> <span class="p">(</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">start_time</span> <span class="p">,</span> <span class="n">end_time</span> <span class="p">,</span> <span class="n">stepsize</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">insertQuery</span> <span class="p">,</span> <span class="n">vals</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.retrieveConfig"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveConfig">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveConfig</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves configuration of corresponding run.</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :returns: Configuration of run.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            { &quot;id&quot;           : id_of_config , </span>
+<span class="sd">              &quot;run_id&quot;       : id_of_run_ref , </span>
+<span class="sd">              &quot;start_time&quot; : starting_time , </span>
+<span class="sd">              &quot;end_time&quot;   : end_time , </span>
+<span class="sd">              &quot;stepsize&quot;   : size_of_timesteps </span>
+<span class="sd">            }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">getRunQ</span> <span class="o">=</span><span class="s2">&quot;SELECT * FROM simconfigs WHERE run_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getRunQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">runID</span> <span class="p">,</span>  <span class="p">)</span> <span class="p">)</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">configs</span><span class="p">[</span> <span class="mi">0</span> <span class="p">][</span> <span class="mi">0</span> <span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;run_id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">configs</span><span class="p">[</span> <span class="mi">0</span> <span class="p">][</span> <span class="mi">1</span> <span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;start_time&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">configs</span><span class="p">[</span> <span class="mi">0</span> <span class="p">][</span> <span class="mi">2</span> <span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;end_time&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">configs</span><span class="p">[</span> <span class="mi">0</span> <span class="p">][</span> <span class="mi">3</span> <span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;stepsize&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">configs</span><span class="p">[</span> <span class="mi">0</span> <span class="p">][</span> <span class="mi">4</span> <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editConfig"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editConfig">[docs]</a>    <span class="k">def</span> <span class="nf">editConfig</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">cid</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">start_time</span> <span class="p">,</span> <span class="n">end_time</span> <span class="p">,</span> <span class="n">stepsize</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the configuration of a run.</span>
+
+<span class="sd">        :param id: config identifier.</span>
+<span class="sd">        :type rid: integer</span>
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :param start_time: Start time.</span>
+<span class="sd">        :type start_time: integer</span>
+<span class="sd">        :param end_time: End time.</span>
+<span class="sd">        :type end_time: integer</span>
+<span class="sd">        :param stepsize: Stepsize of timeinterval.</span>
+<span class="sd">        :type stepsize: integer</span>
+<span class="sd">        :returns: Id of set configuration</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">editQuery</span> <span class="o">=</span> <span class="s2">&quot;UPDATE simconfigs SET run_id = ? , start_time = ? , end_time = ? , stepsize = ? WHERE config_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editQuery</span> <span class="p">,</span> <span class="p">(</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">start_time</span> <span class="p">,</span> <span class="n">end_time</span> <span class="p">,</span> <span class="n">stepsize</span> <span class="p">,</span> <span class="n">cid</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.retrieveConfigsOfGroup"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveConfigsOfGroup">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveConfigsOfGroup</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves all corresponding configurations of a group.</span>
+
+<span class="sd">        :param groupID: Group identifier.</span>
+<span class="sd">        :type groupID: integer</span>
+
+<span class="sd">        :returns: a list of configurations</span>
+<span class="sd">        :rtype: list</span>
+
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            [</span>
+<span class="sd">                {</span>
+<span class="sd">                    &quot;config_id&quot; : &lt;idOfconfig&gt; ,</span>
+<span class="sd">                    &quot;run_id&quot;      : &lt;idOfrun&gt; ,</span>
+<span class="sd">                    &quot;start_time&quot;: &lt;starttime&gt; ,</span>
+<span class="sd">                    &quot;end_time&quot;    : &lt;endtime&gt; ,</span>
+<span class="sd">                    &quot;step_size&quot; : &lt;stepsize&gt;</span>
+<span class="sd">                } ,</span>
+<span class="sd">                {</span>
+<span class="sd">                    another config</span>
+<span class="sd">                } ,</span>
+
+<span class="sd">                [ ... ]</span>
+<span class="sd">            ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">selectRunsQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT run_id FROM runs WHERE groups = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectRunsQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
+            <span class="n">selectConfigQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM simconfigs WHERE run_id = ?&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectConfigQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">run</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">row</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">config</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+                <span class="n">config</span><span class="p">[</span> <span class="s2">&quot;rid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+                <span class="n">config</span><span class="p">[</span> <span class="s2">&quot;startTime&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>
+                <span class="n">config</span><span class="p">[</span> <span class="s2">&quot;endTime&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+                <span class="n">config</span><span class="p">[</span> <span class="s2">&quot;stepSize&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">4</span> <span class="p">]</span>
+                <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">config</span> <span class="p">)</span>
+            
+
+        <span class="k">return</span> <span class="n">configs</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.deleteConfig"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.deleteConfig">[docs]</a>    <span class="k">def</span> <span class="nf">deleteConfig</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">configID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes a configuration</span>
+
+<span class="sd">        :param configID: Simulation configuration identifier.</span>
+<span class="sd">        :type configID: integer</span>
+<span class="sd">        :returns: Id of deleted config.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM simconfigs WHERE config_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">configID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editStartTime"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editStartTime">[docs]</a>    <span class="k">def</span> <span class="nf">editStartTime</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">configID</span> <span class="p">,</span> <span class="n">newStartTime</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the starting time of the configuration.</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :param configID: Configuration identifier.</span>
+<span class="sd">        :type configID: integer</span>
+<span class="sd">        :param newStartTime: New starting time.</span>
+<span class="sd">        :type newStartTime: integer</span>
+<span class="sd">        :returns: Id of edited configuration.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alterConfigQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE simconfigs SET start_time = ? WHERE config_id = ? AND run_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">alterConfigQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newStartTime</span> <span class="p">,</span> <span class="n">configID</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editEndTime"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editEndTime">[docs]</a>    <span class="k">def</span> <span class="nf">editEndTime</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">configID</span> <span class="p">,</span> <span class="n">newEndTime</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the ending time of the configuration.</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :param configID: Configuration identifier.</span>
+<span class="sd">        :type configID: integer</span>
+<span class="sd">        :param newEndTime: New starting time.</span>
+<span class="sd">        :type newEndTime: integer</span>
+<span class="sd">        :returns: Id of edited configuration.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alterConfigQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE simconfigs SET end_time = ? WHERE config_id = ? AND run_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">alterConfigQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newEndTime</span> <span class="p">,</span> <span class="n">configID</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editStepSize"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editStepSize">[docs]</a>    <span class="k">def</span> <span class="nf">editStepSize</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">runID</span> <span class="p">,</span> <span class="n">configID</span> <span class="p">,</span> <span class="n">newStepSize</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits the stepsize time of the configuration.</span>
+
+<span class="sd">        :param runID: Run identifier.</span>
+<span class="sd">        :type runID: integer</span>
+<span class="sd">        :param configID: Configuration identifier.</span>
+<span class="sd">        :type configID: integer</span>
+<span class="sd">        :param newStartTime: New starting time.</span>
+<span class="sd">        :type newStartTime: integer</span>
+<span class="sd">        :returns: Id of edited configuration.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alterConfigQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE simconfigs SET stepsize = ? WHERE config_id = ? AND run_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">alterConfigQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newStepSize</span> <span class="p">,</span> <span class="n">configID</span> <span class="p">,</span> <span class="n">runID</span>  <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+<span class="c1">###################################################</span>
+<span class="c1">###                                                ###</span>
+<span class="c1">###               MAPPING SECTION                    ###</span>
+<span class="c1">###                                                ###</span>
+<span class="c1">###################################################</span>
+
+
+<div class="viewcode-block" id="DatabaseManager.createMapping"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.createMapping">[docs]</a>    <span class="k">def</span> <span class="nf">createMapping</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">mapping</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets a mapping of output to input of a group.</span>
+
+<span class="sd">        :param mapping: Output to Input mapping.</span>
+<span class="sd">        :type mapping: dict</span>
+<span class="sd">        :returns: List of IDs of mappings set.</span>
+<span class="sd">        :rtype: list of int</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;gid&quot;</span> <span class="p">]</span>
+        <span class="n">soid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;soid&quot;</span> <span class="p">]</span>
+        <span class="n">oid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;oid&quot;</span> <span class="p">]</span>
+        <span class="n">siid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;siid&quot;</span> <span class="p">]</span>
+        <span class="n">iid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;iid&quot;</span> <span class="p">]</span>
+
+        <span class="n">insertMap</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO mappings ( groups , input , serviceOfinput , output , serviceOfoutput ) VALUES ( ? , ? , ? , ? , ? )&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">insertMap</span> <span class="p">,</span> <span class="p">(</span> <span class="n">gid</span> <span class="p">,</span> <span class="n">iid</span> <span class="p">,</span> <span class="n">siid</span> <span class="p">,</span> <span class="n">oid</span> <span class="p">,</span> <span class="n">soid</span>  <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editMapping"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editMapping">[docs]</a>    <span class="k">def</span> <span class="nf">editMapping</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">mapping</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits a mapping.</span>
+
+<span class="sd">        :param mapping: Mapping of output to input</span>
+<span class="sd">        :typer mapping: integer</span>
+<span class="sd">        :returns: id of edited mapping.</span>
+<span class="sd">        :rtype: list of int</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span>
+        <span class="n">gid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;gid&quot;</span> <span class="p">]</span>
+        <span class="n">soid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;soid&quot;</span> <span class="p">]</span>
+        <span class="n">oid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;oid&quot;</span> <span class="p">]</span>
+        <span class="n">siid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;siid&quot;</span> <span class="p">]</span>
+        <span class="n">iid</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;iid&quot;</span> <span class="p">]</span>
+
+        <span class="n">updateMappingQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE mappings SET groups = ? , input = ? , serviceOfinput = ? , output = ? , serviceOfoutput = ? WHERE map_id = ? &quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">updateMappingQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">gid</span> <span class="p">,</span> <span class="n">iid</span> <span class="p">,</span> <span class="n">siid</span> <span class="p">,</span> <span class="n">oid</span> <span class="p">,</span> <span class="n">soid</span> <span class="p">,</span> <span class="n">mid</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+
+<div class="viewcode-block" id="DatabaseManager.retrieveMap"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveMap">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveMap</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves a single row of mapping.</span>
+
+<span class="sd">        :param mapID: Mapping identifier.</span>
+<span class="sd">        :type mapID: integer</span>
+<span class="sd">        :returns: Mapping item as dict</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            { &quot;id&quot; : &lt;id_of_map&gt; ,</span>
+<span class="sd">              &quot;gid&quot; : &lt;id_of_group&gt; ,</span>
+<span class="sd">              &quot;iid&quot; : &lt;id_of_input&gt; ,</span>
+<span class="sd">              &quot;siid&quot; : &lt;id_of_service&gt; ,</span>
+<span class="sd">              &quot;oid&quot; : &lt;id_of_output&gt; ,</span>
+<span class="sd">              &quot;soid&quot; : &lt;id_of_service&gt;</span>
+<span class="sd">            }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">getMapQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM mappings WHERER map_id =?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getMapQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">mapID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;gid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;iid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;siid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;oid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="mi">4</span> <span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span> <span class="s2">&quot;soid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span> <span class="mi">5</span> <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="DatabaseManager.retrieveMappings"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveMappings">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveMappings</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        retrieves mappings of a group.</span>
+
+<span class="sd">        :param groupID: Groupd identifier.</span>
+<span class="sd">        :type groupID: integer</span>
+<span class="sd">        :returns: All mappings of a group</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            [ { &quot;id&quot;     : &lt;mapping_id&gt; ,</span>
+<span class="sd">                &quot;gid&quot;     : &lt;group_id&gt; ,</span>
+<span class="sd">                &quot;iid&quot;     : &lt;input_id&gt; ,</span>
+<span class="sd">                &quot;siid&quot;     : &lt;service_input_id&gt; ,</span>
+<span class="sd">                &quot;oid&quot;     : &lt;output_id&gt; ,</span>
+<span class="sd">                &quot;soid&quot;     : &lt;service_output_id&gt;</span>
+<span class="sd">              } ,</span>
+<span class="sd">              { &quot;id&quot;     : &lt;mapping_id&gt; ,</span>
+<span class="sd">                &quot;gid&quot;     : &lt;group_id&gt; ,</span>
+<span class="sd">                &quot;iid&quot;     : &lt;input_id&gt; ,</span>
+<span class="sd">                &quot;siid&quot;     : &lt;service_input_id&gt; ,</span>
+<span class="sd">                &quot;oid&quot;     : &lt;output_id&gt; ,</span>
+<span class="sd">                &quot;soid&quot;     : &lt;service_output_id&gt;</span>
+<span class="sd">              }</span>
+<span class="sd">            ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">selectQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM mappings WHERE groups = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">selectQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">maps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">maps</span><span class="p">:</span>
+            <span class="n">lObject</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">lObject</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+            <span class="n">lObject</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;gid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">groupID</span>
+            <span class="n">lObject</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;iid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>
+            <span class="n">lObject</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;siid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+            <span class="n">lObject</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;oid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">4</span> <span class="p">]</span>
+            <span class="n">lObject</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;soid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">5</span> <span class="p">]</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">lObject</span> <span class="p">)</span>
+
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.deleteMapping"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.deleteMapping">[docs]</a>    <span class="k">def</span> <span class="nf">deleteMapping</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes a row of mapping</span>
+
+<span class="sd">        :param mapID: Mapping identifier.</span>
+<span class="sd">        :type mapID: Integer</span>
+<span class="sd">        :returns: Id of last deleted row.</span>
+<span class="sd">        :rtype: Integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM mappings WHERE map_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">mapID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.deleteMappingOfGroup"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.deleteMappingOfGroup">[docs]</a>    <span class="k">def</span> <span class="nf">deleteMappingOfGroup</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">groupID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes mapping of a group</span>
+
+<span class="sd">        :param groupID: Mapping identifier.</span>
+<span class="sd">        :type groupID: Integer</span>
+<span class="sd">        :returns: Id of deleted rows.</span>
+<span class="sd">        :rtype: Integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM mappings WHERE groups = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">groupID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editGroupOfMap"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editGroupOfMap">[docs]</a>    <span class="k">def</span> <span class="nf">editGroupOfMap</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">,</span> <span class="n">newGroupID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits group reference of map</span>
+
+<span class="sd">        :param mapID: Mapping identifier.</span>
+<span class="sd">        :type mapID: Integer</span>
+<span class="sd">        :param newGroupID: Group identifier.</span>
+<span class="sd">        :type newGroupID: Integer</span>
+<span class="sd">        :returns: Id of edited row.</span>
+<span class="sd">        :rtype: Integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editGroupQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE maps SET groups = ? WHERE map_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editGroupQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newGroupID</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editInputOfMap"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editInputOfMap">[docs]</a>    <span class="k">def</span> <span class="nf">editInputOfMap</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">,</span> <span class="n">newInputID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits input reference of map</span>
+
+<span class="sd">        :param mapID: Mapping identifier.</span>
+<span class="sd">        :type mapID: Integer</span>
+<span class="sd">        :param newInputID: Input identifier.</span>
+<span class="sd">        :type newInputID: Integer</span>
+<span class="sd">        :returns: Id of edited row.</span>
+<span class="sd">        :rtype: Integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">editInputQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE maps SET input = ? WHERE map_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editInputQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newInputID</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editOutputOfMap"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editOutputOfMap">[docs]</a>    <span class="k">def</span> <span class="nf">editOutputOfMap</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">,</span> <span class="n">newOutputID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits output reference of map</span>
+
+<span class="sd">        :param mapID: Mapping identifier.</span>
+<span class="sd">        :type mapID: Integer</span>
+<span class="sd">        :param newOutputID: Input identifier.</span>
+<span class="sd">        :type newOutputID: Integer</span>
+<span class="sd">        :returns: Id of edited row.</span>
+<span class="sd">        :rtype: Integer.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">editOutputQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE maps SET output = ? WHERE map_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editOutputQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newOutputID</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editInputServiceOfMap"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editInputServiceOfMap">[docs]</a>    <span class="k">def</span> <span class="nf">editInputServiceOfMap</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">,</span> <span class="n">newInputServiceID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits input&#39;s service reference of map</span>
+
+<span class="sd">        :param mapID: Mapping identifier.</span>
+<span class="sd">        :type mapID: Integer</span>
+<span class="sd">        :param newInputServiceID: Input&#39;s Service identifier.</span>
+<span class="sd">        :type newInputServiceID: Integer</span>
+<span class="sd">        :returns: Id of edited row.</span>
+<span class="sd">        :rtype: Integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">editInputServiceQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE maps SET serviceOfinput = ? WHERE map_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editInputServiceQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newInputServiceID</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editOutputServiceOfMap"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editOutputServiceOfMap">[docs]</a>    <span class="k">def</span> <span class="nf">editOutputServiceOfMap</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">,</span> <span class="n">newOutputServiceID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits output&#39;s service reference of map</span>
+
+<span class="sd">        :param mapID: Mapping identifier.</span>
+<span class="sd">        :type mapID: Integer</span>
+<span class="sd">        :param newOutputServiceID: Input&#39;s Service identifier.</span>
+<span class="sd">        :type newOutputServiceID: Integer</span>
+<span class="sd">        :returns: Id of edited row.</span>
+<span class="sd">        :rtype: Integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">editOutputServiceQ</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;UPDATE maps SET serviceOfoutput = ? WHERE map_id = ?&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editOutputServiceQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newOutputServiceID</span> <span class="p">,</span> <span class="n">mapID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<span class="c1">###################################################</span>
+<span class="c1">###                                                ###</span>
+<span class="c1">###               INPUT SECTION                    ###</span>
+<span class="c1">###                                                ###</span>
+<span class="c1">###################################################</span>
+
+
+    <span class="c1">#returns ID of inserted Input</span>
+<div class="viewcode-block" id="DatabaseManager.createInput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.createInput">[docs]</a>    <span class="k">def</span> <span class="nf">createInput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="n">varName</span> <span class="p">,</span> <span class="n">initialVal</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates input as an entry in database</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :param varName: Name of input.</span>
+<span class="sd">        :type varName: string</span>
+<span class="sd">        :param initialVal: The initial value of the input</span>
+<span class="sd">        :type initialVal: float</span>
+<span class="sd">        :returns: Id of created row</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">insertIn</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO inputs ( variable_name , service , initial_Value ) VALUES ( ? , ? , ? )&quot;</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="p">(</span> <span class="n">varName</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="n">initialVal</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">insertIn</span> <span class="p">,</span> <span class="n">vals</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.retrieveInput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveInput">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveInput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">inputID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves input</span>
+
+<span class="sd">        :param inputID: Input identifier</span>
+<span class="sd">        :type inputID: integer</span>
+<span class="sd">        :returns: input as a dict object</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            { &quot;id&quot;             : id_of_service ,</span>
+<span class="sd">              &quot;inputName&quot;      : name_of_input ,</span>
+<span class="sd">              &quot;serviceOfinput&quot; : id_of_service ,</span>
+<span class="sd">              &quot;initial_value&quot;  : float_value</span>
+<span class="sd">            }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">getInputQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM inputs WHERE input_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getInputQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">inputID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">inputRow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         ##### CODE IF NAME OF SERVICE IS WANTED INSTEAD OF ID #####</span>
+
+<span class="sd">         getServiceQ = &quot;SELECT * FROM services WHERE service_id = ?&quot;</span>
+<span class="sd">         self.instCursor.execute( getServiceQ , ( inputRow[ 2 ] , ) )</span>
+<span class="sd">         service = self.instCursor.fetchone()</span>
+<span class="sd">         nameOfservice = service[ 1 ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">inputRow</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">inputRow</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;serviceid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">inputRow</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">inputRow</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.retrieveInputs"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveInputs">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveInputs</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves inputs</span>
+
+<span class="sd">        </span>
+<span class="sd">        :returns: inputs as a list object</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">           [ { &quot;id&quot;              : id_of_input ,</span>
+<span class="sd">              &quot;name&quot;      : name_of_input ,</span>
+<span class="sd">              &quot;sid&quot; : id_of_service ,</span>
+<span class="sd">              &quot;initialValue&quot;   : float_value</span>
+<span class="sd">            }, { another input } , ... </span>
+<span class="sd">            ]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">getInputQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM inputs&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getInputQ</span> <span class="p">)</span>
+        <span class="n">inputRows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">inputRows</span><span class="p">:</span>
+            <span class="n">inputObj</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">inputObj</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+            <span class="n">inputObj</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+            <span class="n">inputObj</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;sid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span> 
+            <span class="n">inputObj</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+            <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inputObj</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">inputs</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.deleteInput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.deleteInput">[docs]</a>    <span class="k">def</span> <span class="nf">deleteInput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">inputID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes input.</span>
+
+<span class="sd">        :param inputID: Input identifier.</span>
+<span class="sd">        :type inputID: integer</span>
+<span class="sd">        :returns: Id of deleted row.</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM mappings WHERE input = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">inputID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM inputs WHERE input_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">inputID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editNameOfInput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editNameOfInput">[docs]</a>    <span class="k">def</span> <span class="nf">editNameOfInput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">inputID</span> <span class="p">,</span> <span class="n">newName</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits name of input</span>
+
+<span class="sd">        :param inputID: Input identifier</span>
+<span class="sd">        :type inputID: integer</span>
+<span class="sd">        :param newName: New name of input</span>
+<span class="sd">        :type newName: string</span>
+<span class="sd">        :returns: Id of row edited</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editNameQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE inputs SET variable_name = ? WHERE input_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editNameQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newName</span> <span class="p">,</span> <span class="n">inputID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editServiceOfInput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editServiceOfInput">[docs]</a>    <span class="k">def</span> <span class="nf">editServiceOfInput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">inputID</span> <span class="p">,</span> <span class="n">newServiceID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits service reference of input</span>
+
+<span class="sd">        :param inputID: Input identifier</span>
+<span class="sd">        :type inputID: integer</span>
+<span class="sd">        :param newServiceID: New service reference of input</span>
+<span class="sd">        :type newServiceID: integer</span>
+<span class="sd">        :returns: Id of row edited</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editServiceQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE inputs SET service = ? WHERE input_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editServiceQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newServiceID</span> <span class="p">,</span> <span class="n">inputID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editInitValueOfInput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editInitValueOfInput">[docs]</a>    <span class="k">def</span> <span class="nf">editInitValueOfInput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">inputID</span> <span class="p">,</span> <span class="n">newVal</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits initial value of input</span>
+
+<span class="sd">        :param inputID: Input identifier</span>
+<span class="sd">        :type inputID: integer</span>
+<span class="sd">        :param newVal: New initial value of input</span>
+<span class="sd">        :type newVal: float</span>
+<span class="sd">        :returns: Id of row edited</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE inputs SET initial_value = ? WHERE input_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newVal</span> <span class="p">,</span> <span class="n">inputID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<span class="c1">###################################################</span>
+<span class="c1">###                                                ###</span>
+<span class="c1">###               OUTPUT SECTION                    ###</span>
+<span class="c1">###                                                ###</span>
+<span class="c1">###################################################</span>
+
+
+    <span class="c1">#returns ID of inserted Output</span>
+<div class="viewcode-block" id="DatabaseManager.createOutput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.createOutput">[docs]</a>    <span class="k">def</span> <span class="nf">createOutput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="n">varName</span> <span class="p">,</span> <span class="n">initialVal</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates output as an entry in database</span>
+
+<span class="sd">        :param serviceID: Service identifier.</span>
+<span class="sd">        :type serviceID: integer</span>
+<span class="sd">        :param varName: Name of output.</span>
+<span class="sd">        :type varName: string</span>
+<span class="sd">        :param initialVal: The initial value of the output</span>
+<span class="sd">        :type initialVal: float</span>
+<span class="sd">        :returns: Id of created row</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">insertOut</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO outputs ( variable_name , service , initial_Value ) VALUES ( ? , ? , ? )&quot;</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="p">(</span> <span class="n">varName</span> <span class="p">,</span> <span class="n">serviceID</span> <span class="p">,</span> <span class="n">initialVal</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">insertOut</span> <span class="p">,</span> <span class="n">vals</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.retrieveOutput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveOutput">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveOutput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">outputID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves output</span>
+
+<span class="sd">        :param outputID: Output identifier</span>
+<span class="sd">        :type outputID: integer</span>
+<span class="sd">        :returns: output as a dict object</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            { &quot;id&quot;              : id_of_service ,</span>
+<span class="sd">              &quot;outputName&quot;      : name_of_output ,</span>
+<span class="sd">              &quot;serviceOfoutput&quot; : id_of_service ,</span>
+<span class="sd">              &quot;initial_value&quot;   : float_value</span>
+<span class="sd">            }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">getOutputQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM outputs WHERE ouzput_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getOutputQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">outputID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">outputRow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+
+        <span class="c1">##### CODE IF NAME OF SERVICE IS WANTED INSTEAD OF ID #####</span>
+
+        <span class="c1">#getServiceQ = &quot;SELECT * FROM services WHERE service_id = ?&quot;</span>
+        <span class="c1">#self.instCursor.execute( getServiceQ , ( inputRow[ 2 ] , ) )</span>
+        <span class="c1">#service = self.instCursor.fetchone()</span>
+        <span class="c1">#nameOfservice = service[ 1 ]</span>
+
+
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">outputRow</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">outputRow</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;sid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">outputRow</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span> <span class="c1"># CHANGE outputRow[ 2 ] to nameOfservice</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">outputRow</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.retrieveOutputs"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.retrieveOutputs">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveOutputs</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves outputs</span>
+
+<span class="sd">        </span>
+<span class="sd">        :returns: output as a list object</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        :Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">           [ { &quot;id&quot;              : id_of_service ,</span>
+<span class="sd">              &quot;name&quot;      : name_of_output ,</span>
+<span class="sd">              &quot;sid&quot; : id_of_service ,</span>
+<span class="sd">              &quot;initialValue&quot;   : float_value</span>
+<span class="sd">            }, { another Output } , ... </span>
+<span class="sd">            ]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">getOutputQ</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM outputs&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">getOutputQ</span> <span class="p">)</span>
+        <span class="n">outputRows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">outputRows</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;sid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span> 
+            <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.deleteOutput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.deleteOutput">[docs]</a>    <span class="k">def</span> <span class="nf">deleteOutput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">outputID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes output.</span>
+
+<span class="sd">        :param outputID: Output identifier.</span>
+<span class="sd">        :type outputID: integer</span>
+<span class="sd">        :returns: Id of deleted row.</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM mappings WHERE output = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">outputID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">deleteQ</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM outputs WHERE output_id = ?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">deleteQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">outputID</span> <span class="p">,</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editNameOfOutput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editNameOfOutput">[docs]</a>    <span class="k">def</span> <span class="nf">editNameOfOutput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">outputID</span> <span class="p">,</span> <span class="n">newName</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits name of output</span>
+
+<span class="sd">        :param outputID: Output identifier</span>
+<span class="sd">        :type outputID: integer</span>
+<span class="sd">        :param newName: New name of output</span>
+<span class="sd">        :type newName: string</span>
+<span class="sd">        :returns: Id of row edited</span>
+<span class="sd">        :rtype: integer</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editNameQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE outputs SET variable_name = ? WHERE output_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editNameQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newName</span> <span class="p">,</span> <span class="n">outputID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.editServiceOfOutput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editServiceOfOutput">[docs]</a>    <span class="k">def</span> <span class="nf">editServiceOfOutput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">outputID</span> <span class="p">,</span> <span class="n">newServiceID</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits service reference of output</span>
+
+<span class="sd">        :param outputID: Output identifier</span>
+<span class="sd">        :type outputID: integer</span>
+<span class="sd">        :param newServiceID: New service reference of output</span>
+<span class="sd">        :type newServiceID: integer</span>
+<span class="sd">        :returns: Id of row edited</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editServiceQ</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;UPDATE outputs SET service = ? WHERE output_id = ?&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editServiceQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newServiceID</span> <span class="p">,</span> <span class="n">outputID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+<div class="viewcode-block" id="DatabaseManager.editInitValueOfOutput"><a class="viewcode-back" href="../dbm.html#DatabaseManager.DatabaseManager.editInitValueOfOutput">[docs]</a>    <span class="k">def</span> <span class="nf">editInitValueOfOutput</span><span class="p">(</span> <span class="bp">self</span> <span class="p">,</span> <span class="n">outputID</span> <span class="p">,</span> <span class="n">newVal</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edits initial value of output</span>
+
+<span class="sd">        :param outputID: Output identifier</span>
+<span class="sd">        :type outputID: integer</span>
+<span class="sd">        :param newVal: New initial value of output</span>
+<span class="sd">        :type newVal: float</span>
+<span class="sd">        :returns: Id of row edited</span>
+<span class="sd">        :rtype: integer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">editQ</span> <span class="o">=</span> <span class="s2">&quot;UPDATE outputs SET initial_value = ? WHERE output_id = ?&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span> <span class="n">editQ</span> <span class="p">,</span> <span class="p">(</span> <span class="n">newVal</span> <span class="p">,</span> <span class="n">outputID</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inst_db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">lastrowid</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">COE</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../csm.html">CoSimulationManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cso.html">CoSimulationOrchestrator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dbm.html">DatabaseManager</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, geos.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

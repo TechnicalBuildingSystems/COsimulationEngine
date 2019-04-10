@@ -1,0 +1,70 @@
+{
+  "inputs": [
+    {
+      "iid": 0,
+      "name": "input1",
+      "sid": 1,
+      "initialValue": 0.34545678765
+    },
+    {
+      "iid": 1,
+      "name": "input2",
+      "sid": 1,
+      "initialValue": 0.23
+    },
+    {
+      "iid": 2,
+      "name": "input3",
+      "sid": 1,
+      "initialValue": 0.24
+    },
+    {
+      "id": 3,
+      "iid": 3,
+      "name": "P8Vr4Dhf8",
+      "sid": "5",
+      "initialValue": "0.53"
+    },
+    {
+      "id": 4,
+      "iid": 4,
+      "name": "r3YcYMO",
+      "sid": "4",
+      "initialValue": "0.22"
+    }
+  ],
+  "outputs": [
+    {
+      "oid": 0,
+      "name": "output1",
+      "sid": 1,
+      "initialValue": 0.22
+    },
+    {
+      "oid": 1,
+      "name": "output2",
+      "sid": 1,
+      "initialValue": 0.23
+    },
+    {
+      "oid": 2,
+      "name": "output3",
+      "sid": 1,
+      "initialValue": 0.24
+    },
+    {
+      "id": 3,
+      "oid": 3,
+      "name": "P8Vr4Dhf8",
+      "sid": "5",
+      "initialValue": "0.53"
+    },
+    {
+      "id": 4,
+      "oid": 4,
+      "name": "r3YcYMO",
+      "sid": "4",
+      "initialValue": "0.22"
+    }
+  ]
+}

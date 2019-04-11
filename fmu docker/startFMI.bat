@@ -1,0 +1,1 @@
+docker run -it --name fmiContainer -p 8081:8081 fmi

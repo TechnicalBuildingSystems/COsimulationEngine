@@ -1,0 +1,6 @@
+asyncio
+aiohttp
+xknx
+aiohttp_cors
+regex
+requests

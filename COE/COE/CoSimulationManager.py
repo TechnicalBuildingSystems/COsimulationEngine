@@ -76,16 +76,16 @@ class CoSimulationManager( object ):
         Function which sends an init request for all services included in this 
         co-simulation run.
         Provides the services with:
-            - target -> item, e.g. AMSNetID of Beckhoff PLC or path to FMU
-            - startTime -> Time where simulation starts, usually 0
-            - endTime -> Time where simulation is supposed to stop
-            - stepSize -> Simulation step size, i.e. time in between which 
-                          co-simulation entities needs to sync
+        - target -> item, e.g. AMSNetID of Beckhoff PLC or path to FMU
+        - startTime -> Time where simulation starts, usually 0
+        - endTime -> Time where simulation is supposed to stop
+        - stepSize -> Simulation step size, i.e. time in between which 
+        co-simulation entities needs to sync
         
         (3):
         Writes initial values to inputs and outputs of services as obtained 
         from data base. # ??? TODO Does not happen
-        
+
         """
         # (1) Set current time and currentValues to be logged
         self.currentTime = self.startTime
@@ -125,8 +125,8 @@ class CoSimulationManager( object ):
         Function which writes for all services and all inputs the last value to a 
         respective input of a service.
         Provides the service resource with:
-            - id -> id of input variable in namespace of service
-            - value -> value to which the input should be set
+        - id -> id of input variable in namespace of service
+        - value -> value to which the input should be set
 
         """
         print( "debugging services: " , self.services )
@@ -153,7 +153,7 @@ class CoSimulationManager( object ):
         """
         Function which reads for all services and all outputs the current value
         Provides the service resource with:
-            - id -> id of output variable in namespace of service
+        - id -> id of output variable in namespace of service
         Services provide in response the current values in a json structure
 
         """

@@ -1,36 +1,20 @@
 <template>
     <div id="csmComp">
         <div class="container">
-            <div class="row justify-content-md-center">
-                <div class ="col-lg-auto form-group">                
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                    THIS WILL BE PLOT<br /> 
-                </div>
-                <div class ="col-lg-auto form-group">                
-                    THIS WILL BE TABLE<br />
-                    THIS WILL BE TABLE<br />
-                    THIS WILL BE TABLE<br />
-                    THIS WILL BE TABLE<br />
-                    THIS WILL BE TABLE<br />
-                    THIS WILL BE TABLE<br />
-                    THIS WILL BE TABLE<br />
-                    THIS WILL BE TABLE<br />
-                    THIS WILL BE TABLE<br /> 
-                    THIS WILL BE TABLE<br /> 
+            <div class="row justify-content-lg-center form-group">
+                <div class="col-md-auto">
+                    STATUS MESSAGE: {{ csmInitiateStatus }}
                 </div>
             </div>
-            <div class="row justify-content-lg-center form-group">
+            <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                    <button type="button" v-on:click="initiateCSM()" class="btn primary" >Initiate CSM</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" v-on:click="runCSM()" class="btn primary" >Run CSM</button>
+                </div>
+            </div>
+            <!-- <div class="row justify-content-lg-center form-group">
                 <div class="w-100 d-none d-md-block"></div>
                 <div class="form-check form-check-inline">                   
                     <div class="col-md-auto" v-for="(coloumn, index) in tableColoumns" v-bind:key="index">
@@ -40,15 +24,7 @@
                     <br/>
                     <span>Checked Variables: {{ checkedVars }}</span>
                 </div>
-            </div>
-            <div class="row justify-content-lg-center form-group">
-                <div class="col-md-auto">
-                    STATUS MESSAGE
-                </div>
-                <div class="col-md-auto">
-                    BUTTONS
-                </div>
-            </div>
+            </div> -->           
         </div>
     </div>
 </template>
@@ -114,6 +90,7 @@ export default {
         EventBus.$on( 'config-selected' , payLoad => {
             this.tempConfig = payLoad
         })
+
     },
     mounted(){},
 
@@ -139,6 +116,7 @@ export default {
             var url = "http://" + this.ip + ":" + this.port + "/cso/runCSM";
 
             this.csmStateRunning = true;
+            this.csmInitiateStatus = 'CSM Running...';
             /*eslint no-console: ["error", { allow: ["warn", "error" , "log"] }] */
             axios({
                 method: "GET",
@@ -147,6 +125,7 @@ export default {
                 if(result.status == 200){
                     this.csmStateRunning = false;
                     this.csmSuccessful = true;
+                    this.csmInitiateStatus = 'CSM Successfully run.';
                 }
                 }, error => {
                     console.error(error);
@@ -176,7 +155,7 @@ export default {
         },
         getValues: function(){
 
-            var url = "http://" + this.ip + ":" + this.port + "/cso/values?rid=" + String(this.csmSetting.rid);
+            var url = "http://" + this.ip + ":" + this.port + "/cso/values?rid=" + String(this.csmSettings.rid);
             /*eslint no-console: ["error", { allow: ["warn", "error" , "log"] }] */
             axios({
                 method: "GET",

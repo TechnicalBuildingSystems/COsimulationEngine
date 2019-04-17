@@ -38,7 +38,7 @@ import axios from "axios";
 import { EventBus } from '../main.js';
 
 export default {
-    name: "runComp.vue",
+    name: "runComp",
 
     props: {
         ip: String,

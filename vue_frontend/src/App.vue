@@ -54,7 +54,7 @@
       
       <!-- NavTab content -->
       <div class="col-lg-3 align-self-start">
-        <groupComp ref="groupMain" v-bind:ip="this.modal.ip" v-bind:port="this.modal.port" v-on:addButton="printComponent"></groupComp>
+        <groupComp ref="groupMain" v-bind:ip="this.modal.ip" v-bind:port="this.modal.port"></groupComp>
       </div>
       <div class="col-lg-9 align-self-end">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -88,8 +88,8 @@
               <outputComp v-bind:ip="this.modal.ip" v-bind:port="this.modal.port" v-bind:serviceRef="this.service" v-show="selected=='output'"></outputComp>
               <mappingComp v-bind:ip="this.modal.ip" v-bind:port="this.modal.port" v-bind:groupRef="this.groupRefe" v-show="selected=='mapping'"></mappingComp>
               <runComp v-bind:ip="this.modal.ip" v-bind:port="this.modal.port" v-show="selected=='run'"></runComp>
-              <simconfigComp v-bind:ip="this.modal.ip" v-bind:port="this.modal.port" v-bind:group="this.groupRefe" v-show="selected=='config'"></simconfigComp>
               <csmComp v-bind:ip="this.modal.ip" v-bind:port="this.modal.port" v-show="selected=='csm'"></csmComp>
+              <simconfigComp v-bind:ip="this.modal.ip" v-bind:port="this.modal.port" v-bind:group="this.groupRefe" v-show="selected=='config'"></simconfigComp>
             </div>
           </div>
         </div>
@@ -157,7 +157,6 @@ export default {
 
   mounted(){        
     this.testConnection();
-    this.getCompNames();
   },
 
 

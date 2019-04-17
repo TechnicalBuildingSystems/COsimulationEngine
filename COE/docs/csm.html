@@ -34,7 +34,22 @@
   <div class="section" id="cosimulationmanager">
 <h1>CoSimulationManager<a class="headerlink" href="#cosimulationmanager" title="Permalink to this headline">¶</a></h1>
 <p>Created on Tue Oct 23 11:27:51 2018</p>
-<span class="target" id="module-CoSimulationManager"></span><dl class="class">
+<span class="target" id="module-CoSimulationManager"></span><p>/<strong>**************************************************************************</strong>
+* Copyright 2019 Fraunhofer Institute for Building Physics IBP. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the “License”);
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an “AS IS” BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or  implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+<strong>*************************************************************************</strong>/</p>
+<dl class="class">
 <dt>
 <em class="property">class </em><code class="descclassname">CoSimulationManager.</code><code class="descname">CoSimulationManager</code><span class="sig-paren">(</span><em>groupID</em>, <em>runID</em>, <em>startTime</em>, <em>endTime</em>, <em>stepSize</em>, <em>services</em>, <em>mappings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationManager.html#CoSimulationManager"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Class of the data base manager
@@ -47,13 +62,9 @@ serviceid_outputs_outputid</p>
 <dt>
 <code class="descname">getOutputsOfServices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationManager.html#CoSimulationManager.getOutputsOfServices"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Function which reads for all services and all outputs the current value
-Provides the service resource with:</p>
-<blockquote>
-<div><ul class="simple">
-<li>id -&gt; id of output variable in namespace of service</li>
-</ul>
-</div></blockquote>
-<p>Services provide in response the current values in a json structure</p>
+Provides the service resource with:
+- id -&gt; id of output variable in namespace of service
+Services provide in response the current values in a json structure</p>
 </dd></dl>
 
 <dl class="method">
@@ -69,19 +80,12 @@ Provides the service resource with:</p>
 <p>(2):            
 Function which sends an init request for all services included in this 
 co-simulation run.
-Provides the services with:</p>
-<blockquote>
-<div><ul class="simple">
-<li>target -&gt; item, e.g. AMSNetID of Beckhoff PLC or path to FMU</li>
-<li>startTime -&gt; Time where simulation starts, usually 0</li>
-<li>endTime -&gt; Time where simulation is supposed to stop</li>
-<li><dl class="first docutils">
-<dt>stepSize -&gt; Simulation step size, i.e. time in between which </dt>
-<dd>co-simulation entities needs to sync</dd>
-</dl>
-</li>
-</ul>
-</div></blockquote>
+Provides the services with:
+- target -&gt; item, e.g. AMSNetID of Beckhoff PLC or path to FMU
+- startTime -&gt; Time where simulation starts, usually 0
+- endTime -&gt; Time where simulation is supposed to stop
+- stepSize -&gt; Simulation step size, i.e. time in between which 
+co-simulation entities needs to sync</p>
 <p>(3):
 Writes initial values to inputs and outputs of services as obtained 
 from data base. # ??? TODO Does not happen</p>
@@ -103,13 +107,9 @@ while loop
 <code class="descname">setInputsOfServices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CoSimulationManager.html#CoSimulationManager.setInputsOfServices"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Function which writes for all services and all inputs the last value to a 
 respective input of a service.
-Provides the service resource with:</p>
-<blockquote>
-<div><ul class="simple">
-<li>id -&gt; id of input variable in namespace of service</li>
-<li>value -&gt; value to which the input should be set</li>
-</ul>
-</div></blockquote>
+Provides the service resource with:
+- id -&gt; id of input variable in namespace of service
+- value -&gt; value to which the input should be set</p>
 </dd></dl>
 
 <dl class="method">

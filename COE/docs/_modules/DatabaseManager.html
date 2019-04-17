@@ -1639,18 +1639,11 @@
         <span class="n">outputRow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instCursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
 
 
-        <span class="c1">##### CODE IF NAME OF SERVICE IS WANTED INSTEAD OF ID #####</span>
-
-        <span class="c1">#getServiceQ = &quot;SELECT * FROM services WHERE service_id = ?&quot;</span>
-        <span class="c1">#self.instCursor.execute( getServiceQ , ( inputRow[ 2 ] , ) )</span>
-        <span class="c1">#service = self.instCursor.fetchone()</span>
-        <span class="c1">#nameOfservice = service[ 1 ]</span>
-
 
         <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;id&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">outputRow</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
         <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;name&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">outputRow</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
-        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;sid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">outputRow</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span> <span class="c1"># CHANGE outputRow[ 2 ] to nameOfservice</span>
+        <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;sid&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">outputRow</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span> 
         <span class="n">output</span><span class="p">[</span> <span class="sa">u</span><span class="s2">&quot;initialValue&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">outputRow</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span>
 
         <span class="k">return</span> <span class="n">output</span></div>

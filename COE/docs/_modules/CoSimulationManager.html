@@ -38,6 +38,23 @@
 <span class="sd">    :synopsis: Something about CSM</span>
 
 <span class="sd">.. moduleauthor: geos</span>
+
+<span class="sd">/******************************************************************************</span>
+<span class="sd">* Copyright 2019 Fraunhofer Institute for Building Physics IBP. All Rights Reserved.</span>
+<span class="sd">*</span>
+<span class="sd">* Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="sd">* you may not use this file except in compliance with the License.</span>
+<span class="sd">* You may obtain a copy of the License at</span>
+<span class="sd">*</span>
+<span class="sd">*    http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="sd">*</span>
+<span class="sd">* Unless required by applicable law or agreed to in writing, software</span>
+<span class="sd">* distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="sd">* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or  implied.</span>
+<span class="sd">* See the License for the specific language governing permissions and</span>
+<span class="sd">* limitations under the License.</span>
+<span class="sd">*****************************************************************************/</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">requests</span> <span class="c1"># version 2.18.4</span>
@@ -91,16 +108,16 @@
 <span class="sd">        Function which sends an init request for all services included in this </span>
 <span class="sd">        co-simulation run.</span>
 <span class="sd">        Provides the services with:</span>
-<span class="sd">            - target -&gt; item, e.g. AMSNetID of Beckhoff PLC or path to FMU</span>
-<span class="sd">            - startTime -&gt; Time where simulation starts, usually 0</span>
-<span class="sd">            - endTime -&gt; Time where simulation is supposed to stop</span>
-<span class="sd">            - stepSize -&gt; Simulation step size, i.e. time in between which </span>
-<span class="sd">                          co-simulation entities needs to sync</span>
+<span class="sd">        - target -&gt; item, e.g. AMSNetID of Beckhoff PLC or path to FMU</span>
+<span class="sd">        - startTime -&gt; Time where simulation starts, usually 0</span>
+<span class="sd">        - endTime -&gt; Time where simulation is supposed to stop</span>
+<span class="sd">        - stepSize -&gt; Simulation step size, i.e. time in between which </span>
+<span class="sd">        co-simulation entities needs to sync</span>
 <span class="sd">        </span>
 <span class="sd">        (3):</span>
 <span class="sd">        Writes initial values to inputs and outputs of services as obtained </span>
 <span class="sd">        from data base. # ??? TODO Does not happen</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># (1) Set current time and currentValues to be logged</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span>
@@ -140,8 +157,8 @@
 <span class="sd">        Function which writes for all services and all inputs the last value to a </span>
 <span class="sd">        respective input of a service.</span>
 <span class="sd">        Provides the service resource with:</span>
-<span class="sd">            - id -&gt; id of input variable in namespace of service</span>
-<span class="sd">            - value -&gt; value to which the input should be set</span>
+<span class="sd">        - id -&gt; id of input variable in namespace of service</span>
+<span class="sd">        - value -&gt; value to which the input should be set</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;debugging services: &quot;</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span> <span class="p">)</span>
@@ -168,7 +185,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function which reads for all services and all outputs the current value</span>
 <span class="sd">        Provides the service resource with:</span>
-<span class="sd">            - id -&gt; id of output variable in namespace of service</span>
+<span class="sd">        - id -&gt; id of output variable in namespace of service</span>
 <span class="sd">        Services provide in response the current values in a json structure</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -131,6 +131,26 @@ class DatabaseManager( object ):
         self.__inst_db.commit()
         return self.instCursor.lastrowid
 
+    def getGroup( self , gid ):
+        """
+        Returns single group ( id, name)
+
+        :param gid: Group identifier.
+        :type groupName: integer
+
+        :returns: group information.
+        :rtype: json
+        """
+        getGroup = "SELECT * FROM groups WHERE group_id = {}".format( gid )
+
+        self.instCursor.execute( getGroup )
+        dbOutput = self.instCursor.fetchone()
+
+        group = {}
+        group[ "id" ] = dbOutput[ 0 ]
+        group[ "name" ] = dbOutput[ 1 ]
+
+        return group
 
     def editGroup( self , groupIdentifier , groupName ):
         """
@@ -152,7 +172,7 @@ class DatabaseManager( object ):
 
     def getAllGroups( self ):
         """
-        Gets all groups and its contents
+        Gets all groups
 
         :returns: A list of all groups in the database.
         :rtype: list

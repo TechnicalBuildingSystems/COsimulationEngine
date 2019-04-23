@@ -38,7 +38,7 @@ pathToDB = os.path.join( "C:/" ,
                          "Users" ,
                          "viho" ,
                          "Documents" ,
-						 "06a_GitRepo" ,
+						 "COsimulationEngine" ,
 						 "COE" ,
                          "test.db" )
 dbm = DatabaseManager( pathToDB )
@@ -1825,7 +1825,104 @@ async def runCSM( request ):
     csm.runCoSimulation()
     
     return web.json_response( { "description" : "OK, CSM successfully run." } , status = 200 )
-    
+
+
+# http://127.0.0.1:3030/cso/getProject?gid=X
+async def getProject( request ):
+	"""
+	Function to return snapshot of current database
+	"""
+
+	global dbm
+	gid = int( request.rel_url.query[ "gid" ] )
+	
+	
+
+	database = {}
+	database[ "group" ] = dbm.getGroup( gid )
+	database[ "mappings" ] = dbm.retrieveMappings( gid )
+	database[ "services" ] = dbm.retrieveServicesDetailed( gid )
+	#database[ "inputs" ] = []
+	#database[ "outputs" ] = []
+
+	#for service in detailedServices:
+	#	for sinputs in service[ "inputs" ]:
+	#		database[ "inputs" ].append( sinputs )
+	#
+	#	for soutputs in service[ "outputs" ]:
+	#		database[ "outputs" ].append( soutputs )
+
+	database[ "runs" ] = dbm.retrieveRuns( gid )
+	database[ "configs" ] = dbm.retrieveConfigsOfGroup( gid )
+
+
+	return web.json_response( database , status = 200 )
+
+# http://127.0.0.1:3030/cso/setProject + JSON BODY
+async def setProject( request ):
+	"""
+	Function to set full project to database
+	"""
+
+	global dbm
+	
+	if request.body_exists:
+		data = await request.read()
+		data = json.loads( data.decode( "utf-8" ) )
+
+		gid = dbm.createGroup( data[ "group" ][ "name" ] )
+		oldGid = data[ "group" ][ "id" ]
+		newmappings = data[ "mappings" ]
+		
+		for service in data[ "services" ]:
+			oldSid = service[ "id" ]
+			sid = dbm.createService( service[ "name" ] , service[ "ip" ] , service[ "port" ] , service[ "target" ] , gid  )
+
+			for newmapping in newmappings:
+
+				if newmapping[ "gid" ] == oldGid:
+					newmapping[ "gid" ] = gid
+
+				if newmapping[ "siid" ] == oldSid:
+					newmapping[ "siid" ] = sid
+			
+				if newmapping[ "soid" ] == oldSid:
+					newmapping[ "soid" ] = sid
+
+			for iinput in service[ "inputs" ]:
+				oldIid = iinput[ "id" ]
+				iid = dbm.createInput(  sid , iinput[ "name" ] , iinput[ "initialValue" ] )
+
+				for newmapping in newmappings:
+
+					if newmapping[ "iid" ] == oldIid:
+						newmapping[ "iid" ] = iid
+
+
+			for output in service[ "outputs" ]:
+				oldOid = output[ "id" ]
+				oid = dbm.createOutput(  sid , output[ "name" ] , output[ "initialValue" ] )
+
+				for newmapping in newmappings:
+
+					if newmapping[ "oid" ] == oldOid:
+						newmapping[ "oid" ] = oid
+
+		for mapping in newmappings:
+			print(mapping)
+			dbm.createMapping( mapping )
+
+		for run in data[ "runs" ]:
+			oldRid = run[ "id" ]
+			rid = dbm.createRun( run[ "tableName" ] , gid )
+
+			for config in data[ "configs" ]:
+
+				if config[ "rid" ] == oldRid:
+					dbm.setSimConfig( rid , config[ "startTime" ] , config[ "endTime" ] , config[ "stepSize" ] )
+
+	return web.json_response( { "description" : "Project successfully set." } , status = 200 )
+
 ###   ###   ###   ###   
 # Bind paths and launch app
 if __name__ == "__main__":
@@ -1874,7 +1971,9 @@ if __name__ == "__main__":
                     web.get( "/cso/configs" , retrieveConfigsOfGroup ) ,
                     web.delete( "/cso/delete/config" , deleteConfig ) ,
                     web.get( "/cso/initiateCSM" , initiateCSM ) ,
-                    web.get( "/cso/runCSM" , runCSM ) ] )
+                    web.get( "/cso/runCSM" , runCSM ) ,
+					web.get( "/cso/project" , getProject ) ,
+					web.post( "/cso/project" , setProject ) ] )
 
     cors = aiohttp_cors.setup( cso , defaults = {
 		"*" : aiohttp_cors.ResourceOptions(

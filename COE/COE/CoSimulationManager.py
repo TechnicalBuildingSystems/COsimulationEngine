@@ -233,6 +233,8 @@ class CoSimulationManager( object ):
             self.getOutputsOfServices()       
             print( "DEBUG | Current values is: " , self.currentValues )
             
+        
+        
         # end
         self.shutDownServices()    
         

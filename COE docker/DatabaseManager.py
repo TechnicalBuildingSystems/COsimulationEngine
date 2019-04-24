@@ -887,7 +887,7 @@ class DatabaseManager( object ):
             output = self.instCursor.fetchall()
 
             for item in output:
-                jsonList[ coloumn ].append( item[ 0 ] )
+                out[ coloumn ].append( item[ 0 ] )
                 
 
         return out

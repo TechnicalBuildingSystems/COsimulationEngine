@@ -35,18 +35,18 @@ import aiohttp_cors #version 0.7.0
 # Global properties and initialisation
 # 1 DatabaseManager:
 #C:\Users\viho\Documents\COE_Docker\COE docker\sharedFolder
-pathToDB = os.path.join( "C:/" ,
-                         "Users" ,
-                         "viho" ,
-                         "Documents" ,
-                         "COE_Docker" ,
-                         "COE docker" ,
-                         "sharedFolder" ,
-                         "test.db" )
+#pathToDB = os.path.join( "C:/" ,
+#                         "Users" ,
+#                         "viho" ,
+#                         "Documents" ,
+#                         "COE_Docker" ,
+#                         "COE docker" ,
+#                         "sharedFolder" ,
+#                         "test.db" )
 
-#pathToDB = os.path.join( "/" ,
-#                   "database" , 
-#                   "test.db" )
+pathToDB = os.path.join( "/" ,
+                   "database" , 
+                   "test.db" )
 dbm = DatabaseManager( pathToDB )
 dbm.initTables()
 

@@ -402,7 +402,7 @@ class DatabaseManager( object ):
         services = self.instCursor.fetchone()
         output = {}
         output[ u"id" ] = services[ 0 ]
-        output[ u"serviceName" ] = services[ 1 ]
+        output[ u"name" ] = services[ 1 ]
         output[ u"ip" ] = services[ 2 ]
         output[ u"port" ] = services[ 3 ]
         output[ u"target" ] = services[ 4 ]
@@ -830,7 +830,7 @@ class DatabaseManager( object ):
 
 
 
-    def insertValues( self , runID , timestamp , lVarIn , lVarOut ):
+    def insertValues( self , runID , coloumns , values ):
         """
         Writes values to database.
 
@@ -850,28 +850,8 @@ class DatabaseManager( object ):
         self.instCursor.execute(selectTab, ( runID, ) )
         tableName = self.instCursor.fetchone()
 
-        insertQ = "INSERT INTO {} VALUES ( ?, ?, ?,".format( tableName[0] )
-        value = ""
-        for item in lVarIn:
-            value += "?"
-
-        insertQ += ",".join( value )
-
-        insertQ += ","
-
-        value = ""
-
-        for item in lVarOut:
-            value += "?"
-
-
-        insertQ += ",".join( value )
-
-        insertQ += ")"
-
-        tup = ( None , runID , timestamp , )
-        tup_merge = tup + tuple(lVarIn) + tuple(lVarOut)
-        self.instCursor.execute( insertQ , tup_merge )
+        insertQ = "INSERT INTO {}{} VALUES {}".format( tableName[0] , coloumns , values )
+        self.instCursor.execute( insertQ )
         self.__inst_db.commit()
         return self.instCursor.lastrowid
 
@@ -1457,7 +1437,7 @@ class DatabaseManager( object ):
         output = {}
         output[ u"id" ] = inputRow[ 0 ]
         output[ u"name" ] = inputRow[ 1 ]
-        output[ u"serviceid" ] = inputRow[ 2 ]
+        output[ u"sid" ] = inputRow[ 2 ]
         output[ u"initialValue" ] = inputRow[ 3 ]
 
         return output
@@ -1619,7 +1599,7 @@ class DatabaseManager( object ):
               "initial_value"   : float_value
             }
         """
-        getOutputQ = "SELECT * FROM outputs WHERE ouzput_id = ?"
+        getOutputQ = "SELECT * FROM outputs WHERE output_id = ?"
         self.instCursor.execute( getOutputQ , ( outputID , ) )
         outputRow = self.instCursor.fetchone()
 

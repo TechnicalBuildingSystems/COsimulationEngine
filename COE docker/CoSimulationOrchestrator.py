@@ -33,18 +33,18 @@ import aiohttp_cors #version 0.7.0
 
 ###   ###   ###   ###   
 # Global properties and initialisation
-# 1 DatabaseManager: C:\Users\nuernberg_lokal\Desktop\COE\sharedFolder
-"""pathToDB = os.path.join( "C:/" ,
-                         "Users" ,
-                         "nuernberg_lokal" ,
-                         "Desktop" ,
-						 "COE" ,
-						 "sharedFolder" , 
-                         "test.db" )
-"""
+# 1 DatabaseManager:
+#pathToDB = os.path.join( "C:/" ,
+#                         "Users" ,
+#                         "nuernberg_lokal" ,
+#                         "Desktop" ,
+#                         "COE" ,
+#                         "sharedFolder" ,
+#                         "test.db" )
+
 pathToDB = os.path.join( "/" ,
-						 "database" , 
-                         "test.db" )
+                   "database" , 
+                   "test.db" )
 dbm = DatabaseManager( pathToDB )
 dbm.initTables()
 
@@ -63,23 +63,23 @@ async def testConnection( request ):
     """
     Function to test if CSO is online and operative
 
-	:param request:
-	:type http-request:
+    :param request:
+    :type http-request:
 
-	:Endpoint: http://127.0.0.1:3030/cso/testConnection
+    :Endpoint: http://127.0.0.1:3030/cso/testConnection
 
-	:returns: Statusmessage, HTTP statuscode = 200
-	:rtype: JSON
+    :returns: Statusmessage, HTTP statuscode = 200
+    :rtype: JSON
 
-	:Example:
+    :Example:
 
-	.. code-block:: python
+    .. code-block:: python
 
-		{ "Status" : "OK"}
+        { "Status" : "OK"}
 
     """
     print( "Connection works." )
-	
+    
     return web.json_response( { "status" : "OK" } , status = 200 )
 
 # http://127.0.0.1:3030/cso/uploadYAML
@@ -170,31 +170,31 @@ async def uploadYAML( request ):
 async def createGroup( request ):
     """
     Function to create a group using the DatabaseManager
-	
-	:param request: Request is sent with JSON-Body 
-	:type request: POST
+    
+    :param request: Request is sent with JSON-Body 
+    :type request: POST
 
-	:Endpoint: http://127.0.0.1:3030/cso/create/group
+    :Endpoint: http://127.0.0.1:3030/cso/create/group
 
-	:returns: Statusmessage with created group id, HTTP statuscode = 200
-	:rtype: JSON
+    :returns: Statusmessage with created group id, HTTP statuscode = 200
+    :rtype: JSON
 
-	:Example: JSON Body
+    :Example: JSON Body
 
-	.. code-block:: python
+    .. code-block:: python
 
-		{ "name" : <name_of_group> }
-	
-	Returns:
-	
-	.. code-block:: python
-		
-		{ "Status" : "Group successfully created. ", "id" : <gid> }
-	
-	.. note:: 
-		
-		<gid> : Group identifier ( integer )
-		
+        { "name" : <name_of_group> }
+    
+    Returns:
+    
+    .. code-block:: python
+        
+        { "Status" : "Group successfully created. ", "id" : <gid> }
+    
+    .. note:: 
+        
+        <gid> : Group identifier ( integer )
+        
     """
     global dbm
     if request.body_exists:
@@ -208,31 +208,31 @@ async def createGroup( request ):
 async def editGroup( request ):
     """
    Function to edit a group using the DatabaseManager
-	
-	:param request: Request is sent with JSON-Body 
-	:type request: PUT
+    
+    :param request: Request is sent with JSON-Body 
+    :type request: PUT
 
-	:Endpoint: http://127.0.0.1:3030/cso/edit/group
+    :Endpoint: http://127.0.0.1:3030/cso/edit/group
 
-	:returns: Statusmessage with edited group id , HTTP statuscode = 200
-	:rtype: JSON
-		
-	:Example: JSON Body
+    :returns: Statusmessage with edited group id , HTTP statuscode = 200
+    :rtype: JSON
+        
+    :Example: JSON Body
 
-	.. code-block:: python
+    .. code-block:: python
 
-		{ "name" : <name_of_group> , 
-		  "id"   : <gid> }
-	
-	Returns:
-	
-	.. code-block:: python
-		
-		{ "Status" : "Group successfully edited. ", "id" : <gid> }
+        { "name" : <name_of_group> , 
+          "id"   : <gid> }
+    
+    Returns:
+    
+    .. code-block:: python
+        
+        { "Status" : "Group successfully edited. ", "id" : <gid> }
 
-	.. note:: 
-		
-		<gid> : Group identifier ( integer )
+    .. note:: 
+        
+        <gid> : Group identifier ( integer )
     """
     global dbm
     if request.body_exists:
@@ -247,41 +247,41 @@ async def editGroup( request ):
 async def retrieveGroup( request ):
     """
     Function to retrieve a group
-	
-	:param request: Request with group id
-	:type request: GET
-	:param id: Additional request parameter
-	:type id: integer
+    
+    :param request: Request with group id
+    :type request: GET
+    :param id: Additional request parameter
+    :type id: integer
 
-	:Endpoint: http://127.0.0.1:3030/cso/group?id=1
+    :Endpoint: http://127.0.0.1:3030/cso/group?id=1
 
-	:returns: Requested group of given group identifier , HTTP statuscode = 200
-	:rtype: JSON
-	
-	:Example: 
+    :returns: Requested group of given group identifier , HTTP statuscode = 200
+    :rtype: JSON
+    
+    :Example: 
 
-	.. code-block:: python
+    .. code-block:: python
 
-		{ "services" : [ { 
-				"id"     : <sid> , 
-				"name"   : <name_of_service> ,
-				"ip"     : <ip_of_service> ,
-				"port"   : <port_of_service> ,
-				"target" : <address_of_service>, 
-				"inputs" : [ { 
-					"id"         : <id_of_input> , 
-					"inputName"  : <name_of_input> ,
-					"initialVal" : <float_value>
-				} , { anotherInput }  ]  ,  
-				"outputs": [ { 
-					"id"         : <id_of_output> , 
-					"inputName"  : <name_of_output>,
-					"initialVal" : <float_value> 
-				} , { anotherOutput } ]  
-		  } , { another service }
-		  ]
-		}
-		
+        { "services" : [ { 
+                "id"     : <sid> , 
+                "name"   : <name_of_service> ,
+                "ip"     : <ip_of_service> ,
+                "port"   : <port_of_service> ,
+                "target" : <address_of_service>, 
+                "inputs" : [ { 
+                    "id"         : <id_of_input> , 
+                    "inputName"  : <name_of_input> ,
+                    "initialVal" : <float_value>
+                } , { anotherInput }  ]  ,  
+                "outputs": [ { 
+                    "id"         : <id_of_output> , 
+                    "inputName"  : <name_of_output>,
+                    "initialVal" : <float_value> 
+                } , { anotherOutput } ]  
+          } , { another service }
+          ]
+        }
+        
     """
     global dbm
     gid = int( request.rel_url.query[ "id" ] )
@@ -295,41 +295,41 @@ async def retrieveGroup( request ):
 async def groups( request ):
     """
     Function to retrieve all groups
-	
-	:param request: Http request
-	:type request: GET
+    
+    :param request: Http request
+    :type request: GET
 
-	:Endpoint: http://127.0.0.1:3030/cso/groups
+    :Endpoint: http://127.0.0.1:3030/cso/groups
 
-	:returns: All groups saved in the database , HTTP statuscode = 200
-	:rtype: JSON
-	
-	:Example:
+    :returns: All groups saved in the database , HTTP statuscode = 200
+    :rtype: JSON
+    
+    :Example:
 
-	.. code-block:: python
-	
-		[ { "id"  : <gid> ,
-			"name" : <gname> , 
-			"services" : [ {
-				"id"   : <sid> , 
-				"name" : <sname> , 
-				"ip"   : <sip> , 
-				"port" : <sport> , 
-				"target" : <starget> , 
-				"inputs" : [ {
-					"id" : <iid> , 
-					"inputName" : <iname> , 
-					"initialVal" : <iinitvalue> } , { another input } 
-				] , 
-				"outputs" : [ {
-					"id" : <oid> , 
-					"outputName" : <oname> , 
-					"initialVal" : <oinitvalue> } , { another output } 
-				] } , 
-				{  another Service } 
-			]
-		  } , { another Group } 
-		]
+    .. code-block:: python
+    
+        [ { "id"  : <gid> ,
+            "name" : <gname> , 
+            "services" : [ {
+                "id"   : <sid> , 
+                "name" : <sname> , 
+                "ip"   : <sip> , 
+                "port" : <sport> , 
+                "target" : <starget> , 
+                "inputs" : [ {
+                    "id" : <iid> , 
+                    "inputName" : <iname> , 
+                    "initialVal" : <iinitvalue> } , { another input } 
+                ] , 
+                "outputs" : [ {
+                    "id" : <oid> , 
+                    "outputName" : <oname> , 
+                    "initialVal" : <oinitvalue> } , { another output } 
+                ] } , 
+                {  another Service } 
+            ]
+          } , { another Group } 
+        ]
     """
     global dbm
     lGroups = dbm.getAllGroups()
@@ -339,30 +339,30 @@ async def groups( request ):
 async def deleteGroup( request ):
     """
     Function to delete a group
-	
-	:param request: Request is sent with group id
-	:type request: DELETE
-	:param id: Additional request parameter
-	:type id: integer
-	
+    
+    :param request: Request is sent with group id
+    :type request: DELETE
+    :param id: Additional request parameter
+    :type id: integer
+    
 
-	:Endpoint: http://127.0.0.1:3030/cso/delete/group?id=1
+    :Endpoint: http://127.0.0.1:3030/cso/delete/group?id=1
 
-	:returns: Statusmessage with deleted group id , HTTP statuscode = 200
-	:rtype: JSON
-	
-	:Example: 
-	
-	Returns:
+    :returns: Statusmessage with deleted group id , HTTP statuscode = 200
+    :rtype: JSON
+    
+    :Example: 
+    
+    Returns:
 
-	.. code-block:: python
-		
-		{ "Status" : "Group successfully deleted. " ,  "id" : <gid> }
-		
-		
-	.. note::
-	
-		<gid> : group identifier
+    .. code-block:: python
+        
+        { "Status" : "Group successfully deleted. " ,  "id" : <gid> }
+        
+        
+    .. note::
+    
+        <gid> : group identifier
     """
     global dbm
     gid = int( request.rel_url.query[ "id" ] )
@@ -373,36 +373,36 @@ async def deleteGroup( request ):
 async def createService( request ):
     """
     Function to create a service of a group using the DatabaseManager
-	
-	:param request: Request is sent with JSON-Body 
-	:type request: POST
+    
+    :param request: Request is sent with JSON-Body 
+    :type request: POST
 
-	:Endpoint: http://127.0.0.1:3030/cso/create/service
+    :Endpoint: http://127.0.0.1:3030/cso/create/service
 
-	:returns: Statusmessage with created service id , HTTP statuscode = 200
-	:rtype: JSON
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ "name"   : <sname> , 
-		  "ip"     : <sip> , 
-		  "port"   : <sport> , 
-		  "target" : <starget> ,
-		  "gid"	: 	<gid>
-		}
-	
-	Returns:
+    :returns: Statusmessage with created service id , HTTP statuscode = 200
+    :rtype: JSON
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { "name"   : <sname> , 
+          "ip"     : <sip> , 
+          "port"   : <sport> , 
+          "target" : <starget> ,
+          "gid" :   <gid>
+        }
+    
+    Returns:
 
-	.. code-block:: python
-		
-		{ "Status" : "Service successfully created. " ,  "id" : <sid> }
-		
-		
-	.. note::
-	
-		<sid> : service identifier
+    .. code-block:: python
+        
+        { "Status" : "Service successfully created. " ,  "id" : <sid> }
+        
+        
+    .. note::
+    
+        <sid> : service identifier
     """
     global dbm
     sid = 0
@@ -421,31 +421,31 @@ async def createService( request ):
 async def getService( request ):
     """
     Function to get specific service of given ID
-	
-	:param request: Request with service id
-	:type request: GET
-	
-	:param id: Service id as additional request parameter
-	:type id: integer
-	
-	:Endpoint: http://127.0.0.1:3030/cso/service?id=1
-	
-	:returns: Requested service , HTTP statuscode = 200
-	:rtype: LIST of JSON , HTTP-statuscode
-	
-	:Example: 
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "gid" : <gid> , 
-		  "id"  : <sid> , 
-		  "name" : <sname> ,
-		  "ip"     : <sip> , 
-		  "port"   : <sport> , 
-		  "target" : <starget> 
-		}
+    
+    :param request: Request with service id
+    :type request: GET
+    
+    :param id: Service id as additional request parameter
+    :type id: integer
+    
+    :Endpoint: http://127.0.0.1:3030/cso/service?id=1
+    
+    :returns: Requested service , HTTP statuscode = 200
+    :rtype: LIST of JSON , HTTP-statuscode
+    
+    :Example: 
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "gid" : <gid> , 
+          "id"  : <sid> , 
+          "name" : <sname> ,
+          "ip"     : <sip> , 
+          "port"   : <sport> , 
+          "target" : <starget> 
+        }
     """
     global dbm
     
@@ -458,32 +458,32 @@ async def getService( request ):
 async def getServicesOfGroup( request ):
     """
     Function to retrieve all services of given group id
-	
-	:param request: Request with group id
-	:type request: GET
-	
-	:param id: Additional request parameter
-	:type id: integer
-	
-	:Endpoint: http://127.0.0.1:3030/cso/services?group=1
-	
-	:returns: Requested service of given group id , HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns:
+    
+    :param request: Request with group id
+    :type request: GET
+    
+    :param id: Additional request parameter
+    :type id: integer
+    
+    :Endpoint: http://127.0.0.1:3030/cso/services?group=1
+    
+    :returns: Requested service of given group id , HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns:
 
-	.. code-block:: python
-		
-		[ { "gid" : <gid> , 
-			"id"  : <sid> , 
-			"name" : <sname> ,
-			"ip"     : <sip> , 
-			"port"   : <sport> , 
-			"target" : <starget> 
-			} , { another Serivce }
-		]
+    .. code-block:: python
+        
+        [ { "gid" : <gid> , 
+            "id"  : <sid> , 
+            "name" : <sname> ,
+            "ip"     : <sip> , 
+            "port"   : <sport> , 
+            "target" : <starget> 
+            } , { another Serivce }
+        ]
     """
     global dbm
     gid = int( request.rel_url.query[ "group" ] )
@@ -496,37 +496,37 @@ async def getServicesOfGroup( request ):
 async def editService( request ):
     """
     Function to edit a service using the DatabaseManager
-	specific editting is possible -> split request to attribute instead of full json body ( implemented on request )
-	
-	:param request: Request with JSON Body
-	:type request: PUT
-	
-	:Endpoint: http://127.0.0.1:3030/cso/edit/service
-	
-	:returns: Statusmessage , HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ "gid" : <gid> , 
-		  "id"  : <sid> , 
-		  "name" : <sname> ,
-		  "ip"     : <sip> , 
-		  "port"   : <sport> , 
-		  "target" : <starget> 
-		}
-	
-	Returns:
+    specific editting is possible -> split request to attribute instead of full json body ( implemented on request )
+    
+    :param request: Request with JSON Body
+    :type request: PUT
+    
+    :Endpoint: http://127.0.0.1:3030/cso/edit/service
+    
+    :returns: Statusmessage , HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { "gid" : <gid> , 
+          "id"  : <sid> , 
+          "name" : <sname> ,
+          "ip"     : <sip> , 
+          "port"   : <sport> , 
+          "target" : <starget> 
+        }
+    
+    Returns:
 
-	.. code-block:: python
-		
-		{ "Status" : "Service successfully edited. " ,  "id" : <sid> }
-	
-	.. note::
-		
-		<gid> : group identifier ( integer )
+    .. code-block:: python
+        
+        { "Status" : "Service successfully edited. " ,  "id" : <sid> }
+    
+    .. note::
+        
+        <gid> : group identifier ( integer )
     """
     global dbm
     if request.body_exists:
@@ -552,31 +552,31 @@ async def editService( request ):
 async def retrieveService( request ):
     """
     Function to get specific service of given ID
-	
-	:param request: Request with service id
-	:type request: GET
-	
-	:param id: Service id as additional request parameter
-	:type id: integer
-	
-	:Endpoint: http://127.0.0.1:3030/cso/service?id=1
-	
-	:returns: Requested service , HTTP statuscode = 200
-	:rtype: LIST of JSON , HTTP-statuscode
-	
-	:Example: 
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "gid" : <gid> , 
-		  "id"  : <sid> , 
-		  "name" : <sname> ,
-		  "ip"     : <sip> , 
-		  "port"   : <sport> , 
-		  "target" : <starget> 
-		}
+    
+    :param request: Request with service id
+    :type request: GET
+    
+    :param id: Service id as additional request parameter
+    :type id: integer
+    
+    :Endpoint: http://127.0.0.1:3030/cso/service?id=1
+    
+    :returns: Requested service , HTTP statuscode = 200
+    :rtype: LIST of JSON , HTTP-statuscode
+    
+    :Example: 
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "gid" : <gid> , 
+          "id"  : <sid> , 
+          "name" : <sname> ,
+          "ip"     : <sip> , 
+          "port"   : <sport> , 
+          "target" : <starget> 
+        }
     """
     global dbm
     
@@ -590,25 +590,25 @@ async def retrieveService( request ):
 async def deleteService( request ):
     """
     Function to delete Service with given ID
-	
-	:param request: Request with service id
-	:type request: DELETE
-	
-	:param id: Service id as additional request parameter
-	:type id: integer
-	
-	:Endpoint: http://127.0.0.1:3030/cso/delete/service?id=1
-	
-	:returns: Statusmessage with deleted service id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: 
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Service successfully deleted. " , "id" : <sid> }
+    
+    :param request: Request with service id
+    :type request: DELETE
+    
+    :param id: Service id as additional request parameter
+    :type id: integer
+    
+    :Endpoint: http://127.0.0.1:3030/cso/delete/service?id=1
+    
+    :returns: Statusmessage with deleted service id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: 
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Service successfully deleted. " , "id" : <sid> }
     """
     global dbm
     sid = int( request.rel_url.query[ "id" ] )
@@ -624,34 +624,34 @@ async def deleteService( request ):
 async def createOutput( request ):
     """
     Function to create Output
-	
-	:param request: Request is sent with JSON body
-	:type request: POST
-	
-	:Endpoint: http://127.0.0.1:3030/cso/create/output
-	
-	:returns: Statusmessage with created output id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ "sid" : <soid> , 
-		  "name"      : <oname> , 
-		  "initialValue": <ovalue> 
-		}		
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Output successfully created. " , "id" : <oid> }
-		
-	.. note:: 
-	
-		<soid> : service output identifier ( integer )
-		<ovalue> : output initial value ( float )
+    
+    :param request: Request is sent with JSON body
+    :type request: POST
+    
+    :Endpoint: http://127.0.0.1:3030/cso/create/output
+    
+    :returns: Statusmessage with created output id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { "sid" : <soid> , 
+          "name"      : <oname> , 
+          "initialValue": <ovalue> 
+        }       
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Output successfully created. " , "id" : <oid> }
+        
+    .. note:: 
+    
+        <soid> : service output identifier ( integer )
+        <ovalue> : output initial value ( float )
     """
     global dbm
 
@@ -667,35 +667,35 @@ async def createOutput( request ):
 async def editOutput( request ):
     """
     Function to edit an output using the DatabaseManager
-	specific editting is possible -> split request to attribute instead of full json body
-	
-	:param request: Request is sent with JSON body
-	:type request: PUT
-	
-	:Endpoint: http://127.0.0.1:3030/cso/edit/output
-	
-	:returns: Statusmessage with edited output id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ "serviceid" : <soid> , 
-		  "id"        : <oid> ,
-		  "name"      : <oname> , 
-		  "initialValue": <ovalue> 
-		}		
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Output successfully edited. " , "id" : <oid> }
-		
-	.. note:: 
-	
-		<oid> : output identifier ( integer )
+    specific editting is possible -> split request to attribute instead of full json body
+    
+    :param request: Request is sent with JSON body
+    :type request: PUT
+    
+    :Endpoint: http://127.0.0.1:3030/cso/edit/output
+    
+    :returns: Statusmessage with edited output id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { "serviceid" : <soid> , 
+          "id"        : <oid> ,
+          "name"      : <oname> , 
+          "initialValue": <ovalue> 
+        }       
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Output successfully edited. " , "id" : <oid> }
+        
+    .. note:: 
+    
+        <oid> : output identifier ( integer )
     """
     global dbm
     if request.body_exists:
@@ -717,33 +717,33 @@ async def editOutput( request ):
 async def retrieveOutput( request ):
     """
     Function to get specific output of given ID
-	
-	:param request: Request is sent with output id
-	:type request: GET
-	
-	:param id: Output id as additional request parameter
-	:type id: integer
-	
-	:Endpoint: http://127.0.0.1:3030/cso/output?id=1
-	
-	:returns: Requested output, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "id" : <oid> , 
-		  "name" : <oname> , 
-		  "initialValue" : <ovalue>
-		  "serviceid" : <sid>
-		}
-		
-	.. note:: 
-	
-		<sid> : reference to service identifier ( integer )
+    
+    :param request: Request is sent with output id
+    :type request: GET
+    
+    :param id: Output id as additional request parameter
+    :type id: integer
+    
+    :Endpoint: http://127.0.0.1:3030/cso/output?id=1
+    
+    :returns: Requested output, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "id" : <oid> , 
+          "name" : <oname> , 
+          "initialValue" : <ovalue>
+          "serviceid" : <sid>
+        }
+        
+    .. note:: 
+    
+        <sid> : reference to service identifier ( integer )
     """
     global dbm
     
@@ -757,27 +757,27 @@ async def retrieveOutput( request ):
 async def outputs( request ):
     """
     Function to get all outputs
-	
-	:param request: Simple
-	:type request: GET
+    
+    :param request: Simple
+    :type request: GET
 
-	:Endpoint: http://127.0.0.1:3030/cso/alloutputs
-	
-	:returns: Requested inputs, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		[ { "id" : <oid> , 
-			"name" : <oname> , 
-			"initialValue" : <ivalue>
-			"sid" : <sid>
-			} , { another input }
-		]
+    :Endpoint: http://127.0.0.1:3030/cso/alloutputs
+    
+    :returns: Requested inputs, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        [ { "id" : <oid> , 
+            "name" : <oname> , 
+            "initialValue" : <ivalue>
+            "sid" : <sid>
+            } , { another input }
+        ]
     """
     global dbm
     
@@ -790,30 +790,30 @@ async def outputs( request ):
 async def serviceOutputs( request ):
     """
     Function to get all outputs of specific service
-	
-	:param request: Request is sent with service id
-	:type request: GET
-	
-	:param service: Service id as additional request parameter
-	:type service: integer
-	
-	:Endpoint: http://127.0.0.1:3030/cso/outputs?service=1
-	
-	:returns: Requested outputs of given service, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		[ { "id" : <oid> , 
-			"name" : <oname> , 
-			"initialValue" : <ovalue>
-			"serviceid" : <sid>
-			} , { another output }
-		]
+    
+    :param request: Request is sent with service id
+    :type request: GET
+    
+    :param service: Service id as additional request parameter
+    :type service: integer
+    
+    :Endpoint: http://127.0.0.1:3030/cso/outputs?service=1
+    
+    :returns: Requested outputs of given service, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        [ { "id" : <oid> , 
+            "name" : <oname> , 
+            "initialValue" : <ovalue>
+            "serviceid" : <sid>
+            } , { another output }
+        ]
     """
     global dbm
     sid = int( request.rel_url.query[ "service" ] )
@@ -827,25 +827,25 @@ async def serviceOutputs( request ):
 async def deleteOutput( request ):
     """
     Function to delete specific output of given ID
-	
-	:param request: Request is sent with output id
-	:type request: DELETE
-	
-	:param id: Output id as additional request parameter
-	:type id: integer
-	
-	:Endpoint: http://127.0.0.1:3030/cso/delete/output?id=1
-	
-	:returns: Statusmessage with deleted output id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "Status" : "Output successfully deleted. " , "id" : <oid> }
+    
+    :param request: Request is sent with output id
+    :type request: DELETE
+    
+    :param id: Output id as additional request parameter
+    :type id: integer
+    
+    :Endpoint: http://127.0.0.1:3030/cso/delete/output?id=1
+    
+    :returns: Statusmessage with deleted output id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "Status" : "Output successfully deleted. " , "id" : <oid> }
     """
     global dbm
     oid = request.rel_url.query[ "id" ]
@@ -856,34 +856,34 @@ async def deleteOutput( request ):
 async def createInput( request ):
     """
     Function to create Input
-	
-	:param request: Request is sent with JSON body
-	:type request: POST
-	
-	:Endpoint: http://127.0.0.1:3030/cso/create/input
-	
-	:returns: Statusmessage with created input id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ "sid" : <siid> , 
-		  "name"      : <iname> , 
-		  "initialValue": <ivalue> 
-		}		
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Input successfully created. " , "id" : <iid> }
-		
-	.. note:: 
-	
-		<siid> : service input identifier ( integer )
-		<ivalue> : input initial value ( float )
+    
+    :param request: Request is sent with JSON body
+    :type request: POST
+    
+    :Endpoint: http://127.0.0.1:3030/cso/create/input
+    
+    :returns: Statusmessage with created input id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { "sid" : <siid> , 
+          "name"      : <iname> , 
+          "initialValue": <ivalue> 
+        }       
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Input successfully created. " , "id" : <iid> }
+        
+    .. note:: 
+    
+        <siid> : service input identifier ( integer )
+        <ivalue> : input initial value ( float )
     """
     global dbm
     
@@ -900,31 +900,31 @@ async def createInput( request ):
 async def editInput( request ):
     """
     Function to edit an input using the DatabaseManager
-	specific editting is possible -> split request to attribute instead of full json body
-	
-	:param request: Request is sent with JSON body
-	:type request: PUT
-	
-	:Endpoint: http://127.0.0.1:3030/cso/edit/input
-	
-	:returns: Statusmessage with edited input id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ "sid"   : <siid> , 
-		  "id"          : <iid> ,
-		  "name"        : <iname> , 
-		  "initialValue": <ivalue> 
-		}		
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Input successfully edited. " , "id" : <iid> }
+    specific editting is possible -> split request to attribute instead of full json body
+    
+    :param request: Request is sent with JSON body
+    :type request: PUT
+    
+    :Endpoint: http://127.0.0.1:3030/cso/edit/input
+    
+    :returns: Statusmessage with edited input id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { "sid"   : <siid> , 
+          "id"          : <iid> ,
+          "name"        : <iname> , 
+          "initialValue": <ivalue> 
+        }       
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Input successfully edited. " , "id" : <iid> }
     """
     global dbm
     if request.body_exists:
@@ -946,26 +946,26 @@ async def editInput( request ):
 async def retrieveInput( request ):
     """
     Function to get specific output of given ID
-	
-	:param request: Request is sent with input id
-	:type request: GET
-	
-	:Endpoint: http://127.0.0.1:3030/cso/input?id=1
-	
-	:returns: Requested input, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "serviceid"   : <siid> , 
-		  "id"          : <iid> ,
-		  "name"        : <iname> , 
-		  "initialValue": <ivalue> 
-		}
+    
+    :param request: Request is sent with input id
+    :type request: GET
+    
+    :Endpoint: http://127.0.0.1:3030/cso/input?id=1
+    
+    :returns: Requested input, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "serviceid"   : <siid> , 
+          "id"          : <iid> ,
+          "name"        : <iname> , 
+          "initialValue": <ivalue> 
+        }
     """
     global dbm
     
@@ -980,30 +980,30 @@ async def retrieveInput( request ):
 async def serviceInputs( request ):
     """
     Function to get all inputs of specific service
-	
-	:param request: Request is sent with service id
-	:type request: GET
-	
-	:param service: Service id as additional request parameter
-	:type service: integer
-	
-	:Endpoint: http://127.0.0.1:3030/cso/inputs?service=1
-	
-	:returns: Requested outputs of given service, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		[ { "id" : <iid> , 
-			"name" : <iname> , 
-			"initialValue" : <ivalue>
-			"sid" : <sid>
-			} , { another input }
-		]
+    
+    :param request: Request is sent with service id
+    :type request: GET
+    
+    :param service: Service id as additional request parameter
+    :type service: integer
+    
+    :Endpoint: http://127.0.0.1:3030/cso/inputs?service=1
+    
+    :returns: Requested outputs of given service, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        [ { "id" : <iid> , 
+            "name" : <iname> , 
+            "initialValue" : <ivalue>
+            "sid" : <sid>
+            } , { another input }
+        ]
     """
     global dbm
     sid = int( request.rel_url.query[ "service" ] )
@@ -1016,27 +1016,27 @@ async def serviceInputs( request ):
 async def inputs( request ):
     """
     Function to get all inputs
-	
-	:param request: Simple
-	:type request: GET
+    
+    :param request: Simple
+    :type request: GET
 
-	:Endpoint: http://127.0.0.1:3030/cso/allinputs
-	
-	:returns: Requested inputs, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		[ { "id" : <iid> , 
-			"name" : <iname> , 
-			"initialValue" : <ivalue>
-			"sid" : <sid>
-			} , { another input }
-		]
+    :Endpoint: http://127.0.0.1:3030/cso/allinputs
+    
+    :returns: Requested inputs, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        [ { "id" : <iid> , 
+            "name" : <iname> , 
+            "initialValue" : <ivalue>
+            "sid" : <sid>
+            } , { another input }
+        ]
     """
     global dbm
     
@@ -1048,25 +1048,25 @@ async def inputs( request ):
 async def deleteInput( request ):
     """
     Function to delete specific input of given ID
-	
-	:param request: Request is sent with input id
-	:type request: DELETE
-	
-	:param id: Input id as additional request parameter
-	:type id: integer
-	
-	:Endpoint: http://127.0.0.1:3030/cso/delete/input?id=1
-	
-	:returns: Statusmessage with deleted input id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "Status" : "Input successfully deleted. " , "id" : <iid> }
+    
+    :param request: Request is sent with input id
+    :type request: DELETE
+    
+    :param id: Input id as additional request parameter
+    :type id: integer
+    
+    :Endpoint: http://127.0.0.1:3030/cso/delete/input?id=1
+    
+    :returns: Statusmessage with deleted input id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "Status" : "Input successfully deleted. " , "id" : <iid> }
     """
     global dbm
     iid = request.rel_url.query[ "id" ]
@@ -1080,36 +1080,36 @@ async def createMapping( request ):
     function to create mapping
 
     :param request: Request is sent with JSON body
-	:type request: POST
-	
-	:Endpoint: http://127.0.0.1:3030/cso/create/mapping
-	
-	:returns: Statusmessage with created mapping id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ "gid"  : <gid> , 
-		  "soid" : <soid> ,
-		  "oid"  : <oid> ,
-		  "siid" : <siid> ,
-		  "iid"  : <iid> 
-		}
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Mapping successfully set. " , "id" : <mid> }
-		
-	.. note:: 
-	
-		<mid> : mapping identifier ( integer )
-		<soid> , <siid> : service of output/input identifier ( integer )
-		<gid> : group identifier ( integer )
-		<oid> , <iid> : output/input identifier ( integer )
+    :type request: POST
+    
+    :Endpoint: http://127.0.0.1:3030/cso/create/mapping
+    
+    :returns: Statusmessage with created mapping id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { "gid"  : <gid> , 
+          "soid" : <soid> ,
+          "oid"  : <oid> ,
+          "siid" : <siid> ,
+          "iid"  : <iid> 
+        }
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Mapping successfully set. " , "id" : <mid> }
+        
+    .. note:: 
+    
+        <mid> : mapping identifier ( integer )
+        <soid> , <siid> : service of output/input identifier ( integer )
+        <gid> : group identifier ( integer )
+        <oid> , <iid> : output/input identifier ( integer )
     """    
     global dbm
     if request.body_exists:
@@ -1123,37 +1123,37 @@ async def createMapping( request ):
 async def editMapping( request ):
     """
     Function to edit mapping using the DatabaseManager
-	specific editting is possible -> split request to attribute instead of full json body
-	
-	:param request: Request is sent with JSON body
-	:type request: PUT
-	
-	:Endpoint: http://127.0.0.1:3030/cso/edit/mapping
-	
-	:returns: Statusmessage with edited mapping id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ "id"   : <mid> ,
-		  "gid"  : <gid> , 
-		  "soid" : <soid> ,
-		  "oid"  : <oid> ,
-		  "siid" : <siid> ,
-		  "iid"  : <iid> 
-		}
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Mapping successfully edited. " , "id" : <mid> }
-		
-	.. note:: 
-	
-		<mid> : mapping identifier ( integer )
+    specific editting is possible -> split request to attribute instead of full json body
+    
+    :param request: Request is sent with JSON body
+    :type request: PUT
+    
+    :Endpoint: http://127.0.0.1:3030/cso/edit/mapping
+    
+    :returns: Statusmessage with edited mapping id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { "id"   : <mid> ,
+          "gid"  : <gid> , 
+          "soid" : <soid> ,
+          "oid"  : <oid> ,
+          "siid" : <siid> ,
+          "iid"  : <iid> 
+        }
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Mapping successfully edited. " , "id" : <mid> }
+        
+    .. note:: 
+    
+        <mid> : mapping identifier ( integer )
     """
     global dbm
     if request.body_exists:
@@ -1169,31 +1169,31 @@ async def retrieveMappings( request ):
     Function to retrieve all existing mappings of a group
 
     :param request: Request is sent with group id
-	:type request: GET
-	
-	:param group: group identifier
-	:type group: integer
-	
-	
-	:Endpoint: http://127.0.0.1:3030/cso/mappings?group=1
-	
-	:returns: Requested mapping of given group id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: 
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		[ { "id"   : <mid> ,
-			"gid"  : <gid> , 
-			"soid" : <soid> ,
-			"oid"  : <oid> ,
-			"siid" : <siid> ,
-			"iid"  : <iid> 
-			} , { another Mapping }
-		]
+    :type request: GET
+    
+    :param group: group identifier
+    :type group: integer
+    
+    
+    :Endpoint: http://127.0.0.1:3030/cso/mappings?group=1
+    
+    :returns: Requested mapping of given group id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: 
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        [ { "id"   : <mid> ,
+            "gid"  : <gid> , 
+            "soid" : <soid> ,
+            "oid"  : <oid> ,
+            "siid" : <siid> ,
+            "iid"  : <iid> 
+            } , { another Mapping }
+        ]
     """
     global dbm
     gid = int( request.rel_url.query[ "group" ] )
@@ -1209,30 +1209,30 @@ async def retrieveMapping( request ):
     Function to retrieve one specified mapping
 
     :param request: Request is sent with mapping id
-	:type request: GET
-	
-	:param id: mapping identifier
-	:type id: integer
-	
-	
-	:Endpoint: http://127.0.0.1:3030/cso/mapping?id=1
-	
-	:returns: Requested mapping of given mapping id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: 
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "id"   : <mid> ,
-		  "gid"  : <gid> , 
-		  "soid" : <soid> ,
-		  "oid"  : <oid> ,
-		  "siid" : <siid> ,
-		  "iid"  : <iid> 
-		}
+    :type request: GET
+    
+    :param id: mapping identifier
+    :type id: integer
+    
+    
+    :Endpoint: http://127.0.0.1:3030/cso/mapping?id=1
+    
+    :returns: Requested mapping of given mapping id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: 
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "id"   : <mid> ,
+          "gid"  : <gid> , 
+          "soid" : <soid> ,
+          "oid"  : <oid> ,
+          "siid" : <siid> ,
+          "iid"  : <iid> 
+        }
     """
     global dbm
     mid = int( request.rel_url.query[ "id" ] )
@@ -1246,26 +1246,26 @@ async def retrieveMapping( request ):
 async def deleteMapping( request ):
     """
     Function to delete mapping
-	
-	:param request: Request is sent with mapping id
-	:type request: DELETE
-	
-	:param id: mapping identifier
-	:type id: integer
-	
-	
-	:Endpoint: http://127.0.0.1:3030/cso/delete/mapping?id=1
-	
-	:returns: Statusmessage with deleted mapping id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: 
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "Status" : "Mapping successfully deleted. " , "id" : <mid> }
+    
+    :param request: Request is sent with mapping id
+    :type request: DELETE
+    
+    :param id: mapping identifier
+    :type id: integer
+    
+    
+    :Endpoint: http://127.0.0.1:3030/cso/delete/mapping?id=1
+    
+    :returns: Statusmessage with deleted mapping id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: 
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "Status" : "Mapping successfully deleted. " , "id" : <mid> }
     """
     global dbm
     mid = int( request.rel_url.query[ "id" ] )
@@ -1280,30 +1280,30 @@ async def createRun( request ):
     Function to create run to save table of values and corresponding configuration
 
     :param request: Request is sent with JSON body
-	:type request: POST
-	
-	:Endpoint: http://127.0.0.1:3030/cso/create/run
-	
-	:returns: Statusmessage with created run id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ "tableName" : <tname> , 
-		  "group" : <gid> 
-		}		
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Run successfully initiated. " , "id" : <iid> }
-		
-	.. note:: 
-	
-		<tname> : name of table where the values are logged ( string )
+    :type request: POST
+    
+    :Endpoint: http://127.0.0.1:3030/cso/create/run
+    
+    :returns: Statusmessage with created run id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { "tableName" : <tname> , 
+          "group" : <gid> 
+        }       
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Run successfully initiated. " , "id" : <iid> }
+        
+    .. note:: 
+    
+        <tname> : name of table where the values are logged ( string )
     """
     global dbm
     
@@ -1322,32 +1322,32 @@ async def editRunTable( request ):
     Function to create run to save table of values and corresponding configuration
 
     :param request: Request is sent with JSON body
-	:type request: POST
-	
-	:Endpoint: http://127.0.0.1:3030/cso/edit/run
-	
-	:returns: Statusmessage with created run id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ 
-		  "id" : <rid> , 
-		  "tableName" : <tname> , 
-		  "group" : <gid> 
-		}		
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Run successfully edited. " , "id" : <rid> }
-		
-	.. note:: 
-	
-		<tname> : name of table where the values are logged ( string )
+    :type request: POST
+    
+    :Endpoint: http://127.0.0.1:3030/cso/edit/run
+    
+    :returns: Statusmessage with created run id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { 
+          "id" : <rid> , 
+          "tableName" : <tname> , 
+          "group" : <gid> 
+        }       
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Run successfully edited. " , "id" : <rid> }
+        
+    .. note:: 
+    
+        <tname> : name of table where the values are logged ( string )
     """
     global dbm
     
@@ -1363,64 +1363,64 @@ async def editRunTable( request ):
 # http://127.0.0.1:3030/cso/runs?group=1
 
 async def retrieveRuns( request ):
-	"""
-	Function to get all runs
-	
-	:param request: Simple get request
-	:type request: GET
+    """
+    Function to get all runs
+    
+    :param request: Simple get request
+    :type request: GET
 
-	:Endpoint: http://127.0.0.1:3030/cso/runs
-	
-	:returns: Requested runs, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		[ { "id" : <rid> , 
-			"valueTableName" : <tname> , 
-			"group" : <group>
-			} , { another run }
-		]
+    :Endpoint: http://127.0.0.1:3030/cso/runs
+    
+    :returns: Requested runs, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        [ { "id" : <rid> , 
+            "valueTableName" : <tname> , 
+            "group" : <group>
+            } , { another run }
+        ]
 
-	"""
+    """
 
-	global dbm
+    global dbm
 
-	gid = int( request.rel_url.query[ "group" ] )
+    gid = int( request.rel_url.query[ "group" ] )
 
-	runs = dbm.retrieveRuns( gid )
+    runs = dbm.retrieveRuns( gid )
 
-	return web.json_response( runs , status = 200 )
+    return web.json_response( runs , status = 200 )
 
 
 # http://127.0.0.1:3030/cso/delete/run?id=1
 async def deleteRun( request ):
     """
     Function to edit run using the DatabaseManager
-	specific editting is possible -> split request to attribute instead of full json body
-	
-	:param request: Request is sent with JSON body
-	:type request: DELETE
-	
-	:Endpoint: http://127.0.0.1:3030/cso/delete/run
-	
-	:returns: Statusmessage with edited mapping id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Run successfully deleted. " , "id" : <rid> }
-		
-	.. note:: 
-	
-		<rid> : run identifier ( integer )
+    specific editting is possible -> split request to attribute instead of full json body
+    
+    :param request: Request is sent with JSON body
+    :type request: DELETE
+    
+    :Endpoint: http://127.0.0.1:3030/cso/delete/run
+    
+    :returns: Statusmessage with edited mapping id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Run successfully deleted. " , "id" : <rid> }
+        
+    .. note:: 
+    
+        <rid> : run identifier ( integer )
     """
     global dbm
     rid = int( request.rel_url.query[ "id" ] )
@@ -1435,32 +1435,32 @@ async def logValues( request ):
     Function to log run into table
 
     :param request: Request is sent with JSON body
-	:type request: POST
-	
-	:Endpoint: http://127.0.0.1:3030/cso/logValues
-	
-	:returns: Statusmessage with row id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-		
-		{ "runid" : <rid> , 
-		  "inputValues" : [ <ival1> , <ival2> , <ival3> , ... ]
-		  "outputValues" : [ <oval1> , <oval2> , <oval3> , ... ]
-		}		
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "status" : "Run successfully initiated. " , "id" : <iid> }
-		
-	.. note:: 
-	
-		<ivalX> : float values of respective input names ( float ), ORDER HAS TO BE FIXED
-		<ovalX> : same as above for output
+    :type request: POST
+    
+    :Endpoint: http://127.0.0.1:3030/cso/logValues
+    
+    :returns: Statusmessage with row id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+        
+        { "runid" : <rid> , 
+          "inputValues" : [ <ival1> , <ival2> , <ival3> , ... ]
+          "outputValues" : [ <oval1> , <oval2> , <oval3> , ... ]
+        }       
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "status" : "Run successfully initiated. " , "id" : <iid> }
+        
+    .. note:: 
+    
+        <ivalX> : float values of respective input names ( float ), ORDER HAS TO BE FIXED
+        <ovalX> : same as above for output
     """
     global dbm
     if request.body_exists:
@@ -1476,94 +1476,94 @@ async def logValues( request ):
 
 # http://127.0.0.1:3030/cso/table?rid=1
 
-async def retrieveTableName( request ):	
-	"""
-	function to retrieve table name of a run.
+async def retrieveTableName( request ): 
+    """
+    function to retrieve table name of a run.
 
-	:param request: Request
-	:type request: GET
+    :param request: Request
+    :type request: GET
 
-	:Endpoint: http://127.0.0.1:3030/cso/tables?run=1
+    :Endpoint: http://127.0.0.1:3030/cso/tables?run=1
 
-	:returns: Name of requested table
-	:rtype: JSON, HTTP-Statuscode
+    :returns: Name of requested table
+    :rtype: JSON, HTTP-Statuscode
 
 
-	:Example:
+    :Example:
 
-	Returns: 
+    Returns: 
 
-	.. code-block:: python
+    .. code-block:: python
 
-		{ "table" : <tname> }
+        { "table" : <tname> }
 
-	"""
+    """
 
-	global dbm
+    global dbm
 
-	rid = int( request.rel_url.query[ "rid" ] )
+    rid = int( request.rel_url.query[ "rid" ] )
 
-	tname = dbm.retrieveTableName( rid )
-	
-	return web.json_response( tname , status = 200 )
+    tname = dbm.retrieveTableName( rid )
+    
+    return web.json_response( tname , status = 200 )
 
 # http://127.0.0.1:3030/cso/tableKeys?tname=
 
 async def retrieveTableKeys( request ):
-	"""
-	function to retrieve coloumn keys of a table
+    """
+    function to retrieve coloumn keys of a table
 
-	:param request: Request is sent with name of table
-	:type request: GET
+    :param request: Request is sent with name of table
+    :type request: GET
 
-	:Endpoint: http://127.0.0.1:3030/cso/tableKeys?tname=tableName
+    :Endpoint: http://127.0.0.1:3030/cso/tableKeys?tname=tableName
 
-	:returns: Requested coloumn names of a table
-	:rtype: JSON list, HTTP-Statuscode
+    :returns: Requested coloumn names of a table
+    :rtype: JSON list, HTTP-Statuscode
 
-	 Returns:
+     Returns:
 
         .. code-block:: python
 
             [ "value_id" , "run_id" , "timestamp" , "var1_service_input" , .... ]
 
-	"""
-	global dbm
-	tname = request.rel_url.query[ "tname" ]
-	keys = dbm.retrieveTableKeys( tname )
+    """
+    global dbm
+    tname = request.rel_url.query[ "tname" ]
+    keys = dbm.retrieveTableKeys( tname )
 
-	return web.json_response( keys , status = 200 )
+    return web.json_response( keys , status = 200 )
 
 
 # http://127.0.0.1:3030/cso/values?rid=1
 async def retrieveValues( request ):
     """
     function to retrieve value of given run id
-	
-	:param request: Request is sent with run id
-	:type request: GET
-	
-	:Endpoint: http://127.0.0.1:3030/cso/values?id=1
-	
-	:returns: Requested values of given run id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: 
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		[
-			[ <vid> , <val1> , <val2> , ... ] , #first row of value loggs 
-			[ <vid> , <val1> , <val2> , ... ] , #second row of value loggs 
-			[ <vid> , <val1> , <val2> , ... ] #third row of value loggs 
-			...
-		]
-		
-	.. note:: 
-	
-		<vid> : identifier of value set ( integer )
+    
+    :param request: Request is sent with run id
+    :type request: GET
+    
+    :Endpoint: http://127.0.0.1:3030/cso/values?id=1
+    
+    :returns: Requested values of given run id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: 
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        [
+            [ <vid> , <val1> , <val2> , ... ] , #first row of value loggs 
+            [ <vid> , <val1> , <val2> , ... ] , #second row of value loggs 
+            [ <vid> , <val1> , <val2> , ... ] #third row of value loggs 
+            ...
+        ]
+        
+    .. note:: 
+    
+        <vid> : identifier of value set ( integer )
     """
     global dbm
     rid = int( request.rel_url.query[ "rid" ] )
@@ -1573,32 +1573,32 @@ async def retrieveValues( request ):
         out.append( list( run ) )
         
     return web.json_response( out , status = 200)
-	
+    
 
 # http://127.0.0.1:3030/cso/delete/valueTable?id=1
 async def deleteValueTable( request ):
     """
     function to delete log table of given table id
-	
-	:param request: Request is sent with run id
-	:type request: DELETE
-	
-	:Endpoint: http://127.0.0.1:3030/cso/delete/valueTable?id=1
-	
-	:returns: Statusmessage with deleted table name and id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example:
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "Status" : "Table successfully deleted. " , "name" : <tname> , "id" : <tid> }
-		
-	.. note:: 
-	
-		<tid> : table identifier ( integer )
+    
+    :param request: Request is sent with run id
+    :type request: DELETE
+    
+    :Endpoint: http://127.0.0.1:3030/cso/delete/valueTable?id=1
+    
+    :returns: Statusmessage with deleted table name and id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example:
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "Status" : "Table successfully deleted. " , "name" : <tname> , "id" : <tid> }
+        
+    .. note:: 
+    
+        <tid> : table identifier ( integer )
 
     """
     global dbm
@@ -1611,37 +1611,37 @@ async def deleteValueTable( request ):
 async def createConfig( request ):
     """
     function to create simulation configuration to  specific logging table
-	
-	:param request: Request is sent with JSON body
-	:type request: POST
-	
-	:Endpoint: http://127.0.0.1:3030/cso/create/config
-	
-	:returns: Statusmessage with created simulation configuration id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-	
-		{ "rid" : <rid> , 
-		  "startTime" : <stime> , 
-		  "endTime" : <etime> , 
-		  "stepSize" <ssize> 
-		}
-	
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "Status" : "Simulation configuration successfully set to run. " , "id" : <cid> }
-		
-	.. note:: 
-	
-		<cid> : simulation configuration identifier ( integer ) , 
-		<stime> , <etime> : starting time and ending time of simulation run ( integer )
-		<ssize> : step size of time steps ( float )
+    
+    :param request: Request is sent with JSON body
+    :type request: POST
+    
+    :Endpoint: http://127.0.0.1:3030/cso/create/config
+    
+    :returns: Statusmessage with created simulation configuration id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+    
+        { "rid" : <rid> , 
+          "startTime" : <stime> , 
+          "endTime" : <etime> , 
+          "stepSize" <ssize> 
+        }
+    
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "Status" : "Simulation configuration successfully set to run. " , "id" : <cid> }
+        
+    .. note:: 
+    
+        <cid> : simulation configuration identifier ( integer ) , 
+        <stime> , <etime> : starting time and ending time of simulation run ( integer )
+        <ssize> : step size of time steps ( float )
     """
     global dbm
     if request.body_exists:
@@ -1660,33 +1660,33 @@ async def createConfig( request ):
 async def editConfig( request ):
     """
     Function to edit an input using the DatabaseManager
-	specific editting is possible -> split request to attribute instead of full json body
-	
-	:param request: Request is sent with JSON body
-	:type request: PUT
-	
-	:Endpoint: http://127.0.0.1:3030/cso/edit/config
-	
-	:returns: Statusmessage with edited simulation configuration id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: JSON Body
-	
-	.. code-block:: python
-	
-		{ "runid" : <rid> , 
-		  "id"    : <cid> ,
-		  "startTime" : <stime> , 
-		  "endTime" : <etime> , 
-		  "stepSize" <ssize> 
-		}
-	
-	
-	Returns: 
-	
-	.. code-block:: python
-		
-		{ "Status" : "Simulation configuration successfully edited. " , "id" : <cid> }
+    specific editting is possible -> split request to attribute instead of full json body
+    
+    :param request: Request is sent with JSON body
+    :type request: PUT
+    
+    :Endpoint: http://127.0.0.1:3030/cso/edit/config
+    
+    :returns: Statusmessage with edited simulation configuration id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: JSON Body
+    
+    .. code-block:: python
+    
+        { "runid" : <rid> , 
+          "id"    : <cid> ,
+          "startTime" : <stime> , 
+          "endTime" : <etime> , 
+          "stepSize" <ssize> 
+        }
+    
+    
+    Returns: 
+    
+    .. code-block:: python
+        
+        { "Status" : "Simulation configuration successfully edited. " , "id" : <cid> }
     """
     global dbm
     if request.body_exists:
@@ -1706,27 +1706,27 @@ async def editConfig( request ):
 async def retrieveConfig( request ):
     """
     function to retrieve configuration of given config id
-	
-	:param request: Request is sent with configuration id
-	:type request: GET
-	
-	:Endpoint: http://127.0.0.1:3030/cso/config?id=1
-	
-	:returns: Requested configuration, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: 
-	
-	Returns:
-	
-	.. code-block:: python
-	
-		{ "runid" : <rid> ,
-		  "id" : <cid> , 
-		  "startTime" : <stime> , 
-		  "endTime" : <etime> , 
-		  "stepSize" <ssize> 
-		}
+    
+    :param request: Request is sent with configuration id
+    :type request: GET
+    
+    :Endpoint: http://127.0.0.1:3030/cso/config?id=1
+    
+    :returns: Requested configuration, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: 
+    
+    Returns:
+    
+    .. code-block:: python
+    
+        { "runid" : <rid> ,
+          "id" : <cid> , 
+          "startTime" : <stime> , 
+          "endTime" : <etime> , 
+          "stepSize" <ssize> 
+        }
     """
     global dbm
     cid = int( request.rel_url.query[ "id" ] )
@@ -1739,28 +1739,28 @@ async def retrieveConfig( request ):
 async def retrieveConfigsOfGroup( request ):
     """
     Function to retrieve all configurations of a given group
-	
-	:param request: Request is sent with group id
-	:type request: GET
-	
-	:Endpoint: http://127.0.0.1:3030/cso/configs?group=1
-	
-	:returns: Requested configurations of given group, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: 
-	
-	Returns:
-	
-	.. code-block:: python
-	
-		[ { "rid" : <rid> ,
-		    "id" : <cid> , 
-		    "startTime" : <stime> , 
-		    "endTime" : <etime> , 
-		    "stepSize" <ssize> 
-			} , { another config }
-		]
+    
+    :param request: Request is sent with group id
+    :type request: GET
+    
+    :Endpoint: http://127.0.0.1:3030/cso/configs?group=1
+    
+    :returns: Requested configurations of given group, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: 
+    
+    Returns:
+    
+    .. code-block:: python
+    
+        [ { "rid" : <rid> ,
+            "id" : <cid> , 
+            "startTime" : <stime> , 
+            "endTime" : <etime> , 
+            "stepSize" <ssize> 
+            } , { another config }
+        ]
     """
     global dbm
     gid = int( request.rel_url.query[ "group" ] )
@@ -1774,22 +1774,22 @@ async def retrieveConfigsOfGroup( request ):
 async def deleteConfig( request ):
     """
     function to delete config with given ID
-	
-	:param request: Request is sent with configuration id
-	:type request: DELETE
-	
-	:Endpoint: http://127.0.0.1:3030/cso/delete/config?id=1
-	
-	:returns: Statusmessage with deleted config id, HTTP statuscode = 200
-	:rtype: JSON , HTTP-statuscode
-	
-	:Example: 
-	
-	Returns:
-	
-	.. code-block:: python
-	
-		{ "Status" : "Successfully deleted config. " , "id" : <cid> }
+    
+    :param request: Request is sent with configuration id
+    :type request: DELETE
+    
+    :Endpoint: http://127.0.0.1:3030/cso/delete/config?id=1
+    
+    :returns: Statusmessage with deleted config id, HTTP statuscode = 200
+    :rtype: JSON , HTTP-statuscode
+    
+    :Example: 
+    
+    Returns:
+    
+    .. code-block:: python
+    
+        { "Status" : "Successfully deleted config. " , "id" : <cid> }
     """
     global dbm
     cid = int( request.rel_url.query[ "id" ] )
@@ -1825,9 +1825,53 @@ async def runCSM( request ):
     """
     function to start CoSimulationManager
     """
+
     global csm
+    global dbm
+
     csm.runCoSimulation()
+    results = csm.getResults()
     
+    keys = results.keys()
+    
+    columnsTuple = ( 'run_id' ,list(keys)[0], )
+    for key in keys:
+
+        if( "_inputs_" in key):
+            ids = key.replace("_inputs_" , ' ').split()
+
+            sid = int( ids[ 0 ] )
+            iid = int( ids[ 1 ] )
+
+            sname = dbm.retrieveService( sid )["name"]
+            iname = dbm.retrieveInput( iid )[ "name" ]
+            columnsTuple += ( sname + "_inputs_" + iname , )
+        
+        else:
+            if( "_outputs_" in key):
+                ids = key.replace("_outputs_" , ' ').split()
+
+                sid = int( ids[ 0 ] )
+                oid = int( ids[ 1 ] )
+
+                sname = str(dbm.retrieveService( sid )[ "name" ])
+                iname = str(dbm.retrieveOutput( oid )[ "name" ])
+                columnsTuple += ( sname + "_outputs_" + iname , )
+
+    columnsString = str(columnsTuple).replace("'", '')
+
+    
+
+    for i in range( len( results[ 'timestamp' ] ) ):
+        values = ( csm.runID , )
+        for key in keys:
+            values += ( results[ key ].pop( 0 ) , )
+
+        values = str( values )
+
+        dbm.insertValues( csm.runID , columnsString , values )
+
+
     return web.json_response( { "description" : "OK, CSM successfully run." } , status = 200 )
     
 ###   ###   ###   ###   
@@ -1850,13 +1894,13 @@ if __name__ == "__main__":
                     web.put( "/cso/edit/output" , editOutput ) , 
                     web.get( "/cso/output" , retrieveOutput ) , 
                     web.get( "/cso/outputs" , serviceOutputs ) ,
-					web.get( "/cso/alloutputs" , outputs ) ,
+                    web.get( "/cso/alloutputs" , outputs ) ,
                     web.delete( "/cso/delete/output" , deleteOutput ) , 
                     web.post( "/cso/create/input" , createInput ) ,
                     web.put( "/cso/edit/input" , editInput ) ,
                     web.get( "/cso/input" , retrieveInput ) ,
                     web.get( "/cso/inputs" , serviceInputs ) ,
-					web.get( "/cso/allinputs" , inputs ) ,
+                    web.get( "/cso/allinputs" , inputs ) ,
                     web.delete( "/cso/delete/input" , deleteInput ) , 
                     web.post( "/cso/create/mapping" , createMapping ) ,
                     web.put( "/cso/edit/mapping" , editMapping ) ,
@@ -1864,13 +1908,13 @@ if __name__ == "__main__":
                     web.get( "/cso/mapping" , retrieveMapping ) ,
                     web.delete( "/cso/delete/mapping" , deleteMapping ) ,
                     web.post( "/cso/create/run" , createRun ) ,
-					web.put( "/cso/edit/run" , editRunTable ) , 
-					web.get( "/cso/runs" , retrieveRuns ) , 
-					web.delete( "/cso/delete/run" , deleteRun ) , 
+                    web.put( "/cso/edit/run" , editRunTable ) , 
+                    web.get( "/cso/runs" , retrieveRuns ) , 
+                    web.delete( "/cso/delete/run" , deleteRun ) , 
                     web.post( "/cso/logValues" , logValues ) , 
                     web.get( "/cso/values" , retrieveValues ) ,
-					web.get( "/cso/table" , retrieveTableName ) ,
-					web.get( "/cso/tableKeys" , retrieveTableKeys ) ,
+                    web.get( "/cso/table" , retrieveTableName ) ,
+                    web.get( "/cso/tableKeys" , retrieveTableKeys ) ,
                     web.delete( "/cso/delete/valueTable" , deleteValueTable ) ,
                     web.post( "/cso/create/config" , createConfig ) , 
                     web.put( "/cso/edit/config" , editConfig ) ,
@@ -1881,12 +1925,12 @@ if __name__ == "__main__":
                     web.get( "/cso/runCSM" , runCSM ) ] )
 
     cors = aiohttp_cors.setup( cso , defaults = {
-		"*" : aiohttp_cors.ResourceOptions(
-			allow_credentials = True ,
-			allow_headers = "*" ,
-			expose_headers = "*" ,
-		)
-	})
+        "*" : aiohttp_cors.ResourceOptions(
+            allow_credentials = True ,
+            allow_headers = "*" ,
+            expose_headers = "*" ,
+        )
+    })
 
     for route in list( cso.router.routes() ):
         cors.add( route )

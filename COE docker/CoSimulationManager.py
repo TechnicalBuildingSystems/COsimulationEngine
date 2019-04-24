@@ -89,10 +89,17 @@ class CoSimulationManager( object ):
         """
         # (1) Set current time and currentValues to be logged
         self.currentTime = self.startTime
-        self.currentValues[ "time" ] =  self.currentTime
-        self.allValues[ "time" ] =  [ ]
-        self.allValues[ "time" ].append( self.currentTime )
+        self.currentValues[ "timestamp" ] =  self.currentTime
+        self.allValues[ "timestamp" ] =  [ ]
+        self.allValues[ "timestamp" ].append( self.currentTime )
                 
+        for service in self.services:
+            url = "http://" + service[ "ip" ] + ":" + service[ "port" ] + "/Service/testConnection"
+            
+            r = requests.get( url )
+            print(url, " - ", r.status_code )
+
+
         # (2)
         # Initialise the services
         for service in self.services:
@@ -104,6 +111,7 @@ class CoSimulationManager( object ):
                  }
             
             r = requests.post( url , json = pl )
+
             if r.status_code == 200:
                 # Initialise all inputs and outputs in current values
                 for aInput in service[ "inputs" ]:
@@ -140,7 +148,7 @@ class CoSimulationManager( object ):
                     }
                 
                 r = requests.put( url , json = pl )
-                
+
                 if r.status_code == 200:
                     print( r.url )
                     print( "set inputs of services works - Status code is 200" )
@@ -157,8 +165,8 @@ class CoSimulationManager( object ):
         Services provide in response the current values in a json structure
 
         """
-        self.currentValues[ "time" ] = self.currentTime
-        self.allValues[ "time" ].append( self.currentTime )
+        self.currentValues[ "timestamp" ] = self.currentTime
+        self.allValues[ "timestamp" ].append( self.currentTime )
         
         for service in self.services:
             url = "http://" + service[ "ip" ] + ":" + service[ "port" ] + "/Service/read"
@@ -168,7 +176,7 @@ class CoSimulationManager( object ):
                 pl = { "id" : aOutput[ "name" ] }
                 
                 r = requests.get( url , params = pl )
-                
+
                 if r.status_code == 200:
                     print( r.url )
                     # Update outputs with new value
@@ -187,12 +195,11 @@ class CoSimulationManager( object ):
     def shutDownServices( self ):
         """
         Function which shut downs a service.
-
         """
         for service in self.services:
             url = "http://" + service[ "ip" ] + ":" + service[ "port" ] + "/Service" + "/shutdown"
             r = requests.delete( url )
-            
+
             if r.status_code == 200:
                 print( r.url )
             else:
@@ -232,7 +239,9 @@ class CoSimulationManager( object ):
             # (4) read and update
             self.getOutputsOfServices()       
             print( "DEBUG | Current values is: " , self.currentValues )
-            
+        
+
+        print(self.allValues)   
         # end
         self.shutDownServices()    
         

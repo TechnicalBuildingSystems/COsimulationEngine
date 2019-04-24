@@ -3,6 +3,7 @@
         <div class="container">
             <div class="row justify-content-lg-center form-group">
                 <div class="col-md-auto">
+                    TEST
                     STATUS MESSAGE: {{ csmInitiateStatus }}
                 </div>
             </div>

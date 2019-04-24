@@ -866,14 +866,29 @@ class DatabaseManager( object ):
         :rtype: list
 
         """
-        selectQ = "SELECT valueTableName FROM runs WHERE run_id = ?"
-        self.instCursor.execute(selectQ, ( runID, ) )
+        selectQ = "SELECT valueTableName FROM runs WHERE run_id = {}".format( runID )
+        self.instCursor.execute(selectQ )
 
-        name = self.instCursor.fetchone()
+        name = self.instCursor.fetchone()[0]
 
-        selectQ = "SELECT * FROM {} ".format( name[ 0 ] )
-        self.instCursor.execute( selectQ )
-        out = self.instCursor.fetchall()
+        self.instCursor.execute( "PRAGMA table_info({})".format( name ) )
+
+        out = {}
+        coloumns = []
+
+        for row in self.instCursor.fetchall():
+            coloumns.append(row[1])
+            out[row[1]] = []
+            
+        for coloumn in coloumns:
+            sQ = "SELECT {} FROM {}".format( coloumn , name )     
+            self.instCursor.execute( sQ )
+            
+            output = self.instCursor.fetchall()
+
+            for item in output:
+                jsonList[ coloumn ].append( item[ 0 ] )
+                
 
         return out
 

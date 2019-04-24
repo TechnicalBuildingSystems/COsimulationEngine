@@ -34,17 +34,19 @@ import aiohttp_cors #version 0.7.0
 ###   ###   ###   ###   
 # Global properties and initialisation
 # 1 DatabaseManager:
-#pathToDB = os.path.join( "C:/" ,
-#                         "Users" ,
-#                         "nuernberg_lokal" ,
-#                         "Desktop" ,
-#                         "COE" ,
-#                         "sharedFolder" ,
-#                         "test.db" )
+#C:\Users\viho\Documents\COE_Docker\COE docker\sharedFolder
+pathToDB = os.path.join( "C:/" ,
+                         "Users" ,
+                         "viho" ,
+                         "Documents" ,
+                         "COE_Docker" ,
+                         "COE docker" ,
+                         "sharedFolder" ,
+                         "test.db" )
 
-pathToDB = os.path.join( "/" ,
-                   "database" , 
-                   "test.db" )
+#pathToDB = os.path.join( "/" ,
+#                   "database" , 
+#                   "test.db" )
 dbm = DatabaseManager( pathToDB )
 dbm.initTables()
 
@@ -1873,7 +1875,22 @@ async def runCSM( request ):
 
 
     return web.json_response( { "description" : "OK, CSM successfully run." } , status = 200 )
-    
+
+
+
+# http://127.0.0.1:3030/cso/getValues?rid=1
+async def getValues( request ):
+    """
+    Function to get Values of given run
+    """
+
+    global dbm
+
+    rid = int( request.rel_url.query[ "rid" ] )
+    out = dbm.retrieveValues( rid )
+
+    return web.json_response( out , status = 200)
+
 ###   ###   ###   ###   
 # Bind paths and launch app
 if __name__ == "__main__":
@@ -1922,7 +1939,8 @@ if __name__ == "__main__":
                     web.get( "/cso/configs" , retrieveConfigsOfGroup ) ,
                     web.delete( "/cso/delete/config" , deleteConfig ) ,
                     web.get( "/cso/initiateCSM" , initiateCSM ) ,
-                    web.get( "/cso/runCSM" , runCSM ) ] )
+                    web.get( "/cso/runCSM" , runCSM ) ,
+                    web.get( "/cso/getValues" , getValues ) ] )
 
     cors = aiohttp_cors.setup( cso , defaults = {
         "*" : aiohttp_cors.ResourceOptions(

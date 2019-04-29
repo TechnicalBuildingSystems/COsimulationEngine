@@ -19,7 +19,6 @@ import App from './App.vue';
 import bootstrap from "bootstrap";
 import jquery from "jquery";
 import popper from "popper.js";
-
 export const EventBus = new Vue();
 
 Vue.config.productionTip = false;

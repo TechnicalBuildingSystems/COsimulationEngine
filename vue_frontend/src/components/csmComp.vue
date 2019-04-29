@@ -14,18 +14,23 @@
                 <div class="btn-group">
                     <button type="button" v-on:click="runCSM()" class="btn primary" >Run CSM</button>
                 </div>
+                <div class="btn-group">
+                    <button type="button" v-on:click="getValues()" class="btn primary" >getValues</button>
+                </div>
             </div>
-            <!-- <div class="row justify-content-lg-center form-group">
-                <div class="w-100 d-none d-md-block"></div>
-                <div class="form-check form-check-inline">                   
+            <div class="row justify-content-lg-center form-group">
+                <div class="w-100 d-none d-md-block">
+
+                </div>
+                <div class="form-check form-check-inline col-md-12">                   
                     <div class="col-md-auto" v-for="(coloumn, index) in tableColoumns" v-bind:key="index">
                         <input class="form-check-input" type="checkbox" v-bind:id="coloumn" v-bind:value="coloumn" v-model="checkedVars">
                         <label class="form-check-label" v-bind:for="coloumn">{{coloumn}}</label>
                     </div>
                     <br/>
-                    <span>Checked Variables: {{ checkedVars }}</span>
+                    <p>Checked Variables: {{ checkedVars }}</p>
                 </div>
-            </div> -->           
+            </div>           
         </div>
     </div>
 </template>
@@ -49,20 +54,23 @@
 
 import axios from "axios";
 import { EventBus } from '../main.js';
+import { Line } from 'vue-chartjs'
+
+
 
 export default {
-
-    name: "csmComp",
+    extends : Line,
+    name: "csmComp",    
     props: {
         ip: String,
         port: String
     },
-   
+    
+    
     data() {
 
         return {
             csmSettings: {
-                gid: 0,
                 rid: 0
             },
             tableName: '',
@@ -73,7 +81,9 @@ export default {
             csmStateRunning: false,
             csmSuccessful: false,
             csmInitiateStatus: 'not initiated',
-            tempConfig: {}
+            tempConfig: {},
+            datasets: []
+            
         }
     },
 
@@ -154,20 +164,54 @@ export default {
 
 
         },
+
+        getRandomColor: function() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+            },
+
         getValues: function(){
 
-            var url = "http://" + this.ip + ":" + this.port + "/cso/values?rid=" + String(this.csmSettings.rid);
+            var url = "http://" + this.ip + ":" + this.port + "/cso/getValues?rid=" + String(this.csmSettings.rid);
             /*eslint no-console: ["error", { allow: ["warn", "error" , "log"] }] */
             axios({
                 method: "GET",
                 "url" : url
             }).then( result => { 
-                for( var i = 0; i < result.length; i++ ){
-                    this.values.push(result[i])
+                this.tableColoumnsAll = Object.keys(result.data)
+
+                for( var j = 0; j < this.tableColoumnsAll.length; j++){
+                    
+                    if( this.tableColoumnsAll[j].includes("inputs") || this.tableColoumnsAll[j].includes("outputs") ){
+                        this.tableColoumns.push(this.tableColoumnsAll[j])
+                    }
                 }
+                
+
+                for( var i = 0; i < this.tableColoumns.length; i++){
+                    var label = this.tableColoumns[i]
+                    var set = { 
+                        "label": this.tableColoumns[i] ,  
+                        "backgroundColor": this.getRandomColor(),
+                        "data": result.data[label]
+                    }
+                    console.log("test")
+                    this.datasets.push( set )
+                }
+                
+                
+
                 }, error => {
                     console.error(error);
-                } )
+            } ),
+
+            this.renderChart( this.tableColoumns , this.datasets )
+
+
         }
     }
 }

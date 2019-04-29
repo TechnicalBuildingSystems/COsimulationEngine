@@ -41,7 +41,7 @@ The code is released by Fraunhofer Institute for Building Physics IBP under the 
 
 ## How to cite this repository
 
-Please cite this repository through its DOI in you publication [![DOI](https://zenodo.org/badge/DOI/.svg)](https://doi.org/).
+Please cite this repository through its DOI in you publication [![DOI](https://zenodo.org/badge/180122024.svg)](https://zenodo.org/badge/latestdoi/180122024).
 
 ## Acknowledgements
 

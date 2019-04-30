@@ -3,34 +3,27 @@
         <div class="container">
             <div class="row justify-content-lg-center form-group">
                 <div class="col-md-auto">
-                    TEST
                     STATUS MESSAGE: {{ csmInitiateStatus }}
                 </div>
             </div>
+            <div class="col-md-auto" style="height:50vh; width:80vw">
+                <canvas id="myChart"></canvas>
+            </div>
+
             <div class="btn-group btn-group-justified">
                 <div class="btn-group">
-                    <button type="button" v-on:click="initiateCSM()" class="btn primary" >Initiate CSM</button>
+                    <button type="button" v-on:click="initiateCSM()" class="btn btn-primary" >Initiate CSM</button>
                 </div>
                 <div class="btn-group">
-                    <button type="button" v-on:click="runCSM()" class="btn primary" >Run CSM</button>
+                    <button type="button" v-on:click="runCSM()" class="btn btn-primary" >Run CSM</button>
                 </div>
                 <div class="btn-group">
-                    <button type="button" v-on:click="getValues()" class="btn primary" >getValues</button>
+                    <button type="button" v-on:click="getValues()" class="btn btn-primary" >getValues</button>
+                </div>                
+                <div class="btn-group">
+                    <button type="button" v-on:click="renderGraph('myChart')" class="btn btn-primary" >Plot</button>
                 </div>
-            </div>
-            <div class="row justify-content-lg-center form-group">
-                <div class="w-100 d-none d-md-block">
-
-                </div>
-                <div class="form-check form-check-inline col-md-12">                   
-                    <div class="col-md-auto" v-for="(coloumn, index) in tableColoumns" v-bind:key="index">
-                        <input class="form-check-input" type="checkbox" v-bind:id="coloumn" v-bind:value="coloumn" v-model="checkedVars">
-                        <label class="form-check-label" v-bind:for="coloumn">{{coloumn}}</label>
-                    </div>
-                    <br/>
-                    <p>Checked Variables: {{ checkedVars }}</p>
-                </div>
-            </div>           
+            </div>                    
         </div>
     </div>
 </template>
@@ -55,6 +48,7 @@
 import axios from "axios";
 import { EventBus } from '../main.js';
 import { Line } from 'vue-chartjs'
+import Chart from 'chart.js';
 
 
 
@@ -82,7 +76,24 @@ export default {
             csmSuccessful: false,
             csmInitiateStatus: 'not initiated',
             tempConfig: {},
-            datasets: []
+            dbdata: {},
+            plotoptions: {
+                responsive: true,
+                lineTension: 1,
+                elements: {
+                    line: {
+                        tension: 0
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        padding: 25,
+                    }
+                    }]
+                }
+            }
             
         }
     },
@@ -94,7 +105,6 @@ export default {
             this.csmSettings.gid = payLoad.gid
             this.csmSettings.rid = payLoad.id
             this.tableName = payLoad.tableName
-            this.getTableKeys()
             this.getValues()
         }),
 
@@ -103,7 +113,9 @@ export default {
         })
 
     },
-    mounted(){},
+    mounted(){
+
+    },
 
     methods: {
 
@@ -143,34 +155,15 @@ export default {
                 } )
         },
 
-        getTableKeys: function(){
-
-            var url = "http://" + this.ip + ":" + this.port + "/cso/tableKeys?tname=" + this.tableName;
-            /*eslint no-console: ["error", { allow: ["warn", "error" , "log"] }] */
-
-            axios({
-                method: "GET",
-                "url" : url
-            }).then( result => { 
-                for( var i = 0; i < result.data.length; i++ ){
-                    if( i > 2){
-                        this.tableColoumns.push(result.data[i])
-                    }
-                    this.tableColoumnsAll.push(result.data[i])
-                }
-                }, error => {
-                    console.error(error);
-                } )
-
-
-        },
 
         getRandomColor: function() {
-            var letters = '0123456789ABCDEF';
+            var letters = '0A268BCDEF134579';
             var color = '#';
             for (var i = 0; i < 6; i++) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
+            /*eslint no-console: ["error", { allow: ["warn", "error" , "log"] }] */
+            console.log(color)
             return color;
             },
 
@@ -189,29 +182,49 @@ export default {
                     if( this.tableColoumnsAll[j].includes("inputs") || this.tableColoumnsAll[j].includes("outputs") ){
                         this.tableColoumns.push(this.tableColoumnsAll[j])
                     }
-                }
+                }                        
                 
-
-                for( var i = 0; i < this.tableColoumns.length; i++){
-                    var label = this.tableColoumns[i]
-                    var set = { 
-                        "label": this.tableColoumns[i] ,  
-                        "backgroundColor": this.getRandomColor(),
-                        "data": result.data[label]
-                    }
-                    console.log("test")
-                    this.datasets.push( set )
-                }
-                
-                
+                this.dbdata = result.data
 
                 }, error => {
                     console.error(error);
-            } ),
+            } )
+        },
 
-            this.renderChart( this.tableColoumns , this.datasets )
+
+        renderGraph: function(chartId){
+            
+            var computedData = {}
+
+            computedData.labels = this.dbdata.timestamp
+            console.log(this.dbdata)
+            computedData.datasets = []
+
+            for( var i = 0; i < this.tableColoumns.length; i++){
+
+                computedData.datasets[i] = {}
+
+                computedData.datasets[i].label = this.tableColoumns[i]
+
+                computedData.datasets[i].data = this.dbdata[this.tableColoumns[i]]
+
+                computedData.datasets[i].fill = false
+                computedData.datasets[i].borderColor = [ this.getRandomColor(), ]
+
+                computedData.datasets[i].borderWidth = 3
+
+            }
 
 
+            /*eslint no-console: ["error", { allow: ["warn", "error" , "log"] }] */
+            console.log(computedData)
+
+            const ctx = document.getElementById(chartId)
+            const myChart = new Chart( ctx , {
+                type : 'line',
+                data : computedData,
+                options: this.plotoptions
+            })
         }
     }
 }
